@@ -2,12 +2,12 @@ package francotobias.tdpproyecto;
 
 import android.location.Location;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public class RouteNumber {
-	protected LinkedList<Bus> fleet;
+	protected List<Bus> fleet;
 	protected Route route;
-	protected LinkedList<Location> stops;
+	protected List<Location> stops;
 	protected String routeID;
 	protected String company;
 
@@ -17,7 +17,7 @@ public class RouteNumber {
 		route = r;
 	}
 
-	public RouteNumber(String ID, Route r, LinkedList<Bus> f, LinkedList<Location> s) {
+	public RouteNumber(String ID, Route r, List<Bus> f, List<Location> s) {
 		routeID = ID;
 		route = r;
 		fleet = f;

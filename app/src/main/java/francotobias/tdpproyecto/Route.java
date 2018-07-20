@@ -2,10 +2,10 @@ package francotobias.tdpproyecto;
 
 import android.location.Location;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public class Route {
-	protected LinkedList<Location> routeGo, routeReturn;
+	protected List<Location> routeGo, routeReturn;
 	protected RouteNumber line;
 
 
