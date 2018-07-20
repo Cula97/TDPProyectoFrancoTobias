@@ -4,6 +4,6 @@ import android.location.Location;
 
 public class Bus {
     protected Location location;
-    protected Route route;
+//    protected Route route;
 
 }
