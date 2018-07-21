@@ -4,7 +4,7 @@ import android.location.Location;
 
 public class Bus {
 	protected Location location;
-	protected RouteNumber line;
+	protected Line line;
 	protected String busID;
 	protected int gpsNumber;
 
