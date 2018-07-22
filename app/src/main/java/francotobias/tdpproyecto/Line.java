@@ -4,20 +4,20 @@ import android.location.Location;
 
 import java.util.List;
 
-public class RouteNumber {
+public class Line {
 	protected List<Bus> fleet;
 	protected Route route;
-	protected List<Location> stops;
+	protected List<Stop> stops;
 	protected String routeID;
 	protected String company;
 
 
-	public RouteNumber(String ID, Route r) {
+	public Line(String ID, Route r) {
 		routeID = ID;
 		route = r;
 	}
 
-	public RouteNumber(String ID, Route r, List<Bus> f, List<Location> s) {
+	public Line(String ID, Route r, List<Bus> f, List<Stop> s) {
 		routeID = ID;
 		route = r;
 		fleet = f;
@@ -33,12 +33,11 @@ public class RouteNumber {
 		fleet.remove(b);
 	}
 
-	public void addStop(Location l) {
-		stops.add(l);
+	public void addStop(Stop s) {
+		stops.add(s);
 	}
 
-	public void removeStop(Location l) {
-		stops.remove(l);
+	public void removeStop(Stop s) {
+		stops.remove(s);
 	}
-
 }

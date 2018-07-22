@@ -1,23 +1,23 @@
 package francotobias.tdpproyecto;
 
-import android.location.Location;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
 public class Route {
-	protected List<Location> routeGo, routeReturn;
-	protected RouteNumber line;
+	protected List<LatLng> routeGo, routeReturn;
+	protected Line line;
 
-	public Route(List<Location> rGo, List<Location> rReturn) {
+	public Route(List<LatLng> rGo, List<LatLng> rReturn) {
 		routeGo = rGo;
 		routeReturn = rReturn;
 	}
 
-	public RouteNumber getLine() {
+	public Line getLine() {
 		return line;
 	}
 
-	public void setLine(RouteNumber l) {
+	public void setLine(Line l) {
 		line = l;
 	}
 }
