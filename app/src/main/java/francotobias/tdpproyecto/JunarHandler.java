@@ -73,6 +73,7 @@ public class JunarHandler {
 
        if(line != null)
            FILTER_URL = "&filter0=column0[==]" + line;
+       //a
 
        return new CSVWizard(makeRequest(STOPS_URL));
     }
