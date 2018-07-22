@@ -20,7 +20,6 @@ public class CSVWizard {
                 break;
             }
         }
-
     }
 
     public boolean isFinished() {
@@ -61,5 +60,7 @@ public class CSVWizard {
     }
 
     public int getColumnAmount(){ return columnAmount;}
+
+    public String requestData() {return data;}
 
 }

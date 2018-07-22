@@ -25,9 +25,9 @@ public class JunarHandler {
     private static final String GPS_URL = "GPS-TRANS/data.csv/?auth_key=";
 
 
-
     private static final String API_KEY = "2defe16a55c65963b8212e4f9a558dfa692d443d";
     private static final String LIMIT_URL = "&limit=10000";
+    private String FILTER_URL = "";
 
 // REQUEST: http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/PARAD-DE-COLEC/data.json/?auth_key=YOUR_API_KEY&limit=50
 
@@ -37,7 +37,7 @@ public class JunarHandler {
 
     private String makeRequest(String DATA_URL) {
 
-        String urlText = JUNAR_URL + DATA_URL + API_KEY + LIMIT_URL;
+        String urlText = JUNAR_URL + DATA_URL + API_KEY + FILTER_URL + LIMIT_URL;
 
         //Estas dos lineas son superrequetecontra necesarias
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -70,18 +70,24 @@ public class JunarHandler {
     }
 
     public CSVWizard requestStops(){//El de json ahora es uno de csv
+       FILTER_URL = "";
        return new CSVWizard(makeRequest(STOPS_URL));
     }
 
-    public CSVWizard requestGPS(){
+    public CSVWizard requestGPS(String line){
+        FILTER_URL = "";
+        FILTER_URL = "&filter0=column2[==]" + line;
+
         return new CSVWizard(makeRequest(GPS_URL));
     }
 
     public CSVWizard requestRoutes(){
+        FILTER_URL = "";
         return new CSVWizard(makeRequest(ROUTES_URL));
     }
 
     public CSVWizard requestLines(){
+        FILTER_URL = "";
         return new CSVWizard(makeRequest(LINES_URL));
     }
 

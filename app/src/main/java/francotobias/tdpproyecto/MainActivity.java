@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 		JunarHandler jHandler = new JunarHandler();
 
 		TextView text = findViewById(R.id.texto);
-		text.setText(Integer.toString(jHandler.requestRoutes().getColumnAmount()));
+		text.setText(jHandler.requestGPS("513").requestData());
 
 	}
 
