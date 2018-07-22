@@ -11,7 +11,7 @@ public class Line {
 	protected String routeID;
 	protected String company;
 
-	public Line(String ID, Route r) {
+	public Line(String ID) {
 		routeID = ID;
 		route = r;
 	}
@@ -23,6 +23,9 @@ public class Line {
 		stops = s;
 	}
 
+	public void setRoute(Route r) {
+		route = r;
+	}
 
 	public void addBus(Bus b) {
 		fleet.add(b);

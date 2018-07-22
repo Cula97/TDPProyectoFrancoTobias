@@ -22,13 +22,10 @@ public class JunarHandler {
 
 	private static final String API_KEY = "2defe16a55c65963b8212e4f9a558dfa692d443d";
 	private static final String LIMIT_URL = "&limit=10000";
-	private String FILTER_URL = "";
+	private static String FILTER_URL = "";
 
 // REQUEST: http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/PARAD-DE-COLEC/data.json/?auth_key=YOUR_API_KEY&limit=50
 
-	public JunarHandler() {
-
-	}
 
 	private String makeRequest(String DATA_URL) {
 
@@ -66,12 +63,13 @@ public class JunarHandler {
 		return response.toString();
 	}
 
-	public CSVWizard requestStops() {//El de json ahora es uno de csv
+	// TODO: permitir espedificar linea para paradas
+	public static CSVWizard requestStops() {
 		FILTER_URL = "";
 		return new CSVWizard(makeRequest(STOPS_URL));
 	}
 
-	public CSVWizard requestGPS(String line) {
+	public static CSVWizard requestGPS(String line) {
 		FILTER_URL = "";
 
 		if (line != null)
@@ -80,12 +78,12 @@ public class JunarHandler {
 		return new CSVWizard(makeRequest(GPS_URL));
 	}
 
-	public CSVWizard requestRoutes() {
+	public static CSVWizard requestRoutes() {
 		FILTER_URL = "";
 		return new CSVWizard(makeRequest(ROUTES_URL));
 	}
 
-	public CSVWizard requestLines() {
+	public static CSVWizard requestLines() {
 		FILTER_URL = "";
 		return new CSVWizard(makeRequest(LINES_URL));
 	}
