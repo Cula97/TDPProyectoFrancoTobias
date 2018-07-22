@@ -42,7 +42,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 	public void onMapReady(GoogleMap googleMap) {
 		mMap = googleMap;
 
-		LatLng bahia = new LatLng(-38.7171, -62.2655);
-		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bahia, 14));
+		LatLng city = new LatLng(-38.7171, -62.2655);
+		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(city, 14));
 	}
 }
