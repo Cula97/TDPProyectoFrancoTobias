@@ -30,6 +30,4 @@ public class MainActivity extends AppCompatActivity {
 		text.setText(jHandler.requestGPS("519 A").requestData());
 
 	}
-
-
 }

@@ -52,11 +52,11 @@ public class CSVWizard {
                 break;
             }
         }
-
     }
 
     public void restart() {
         position = 0;
+        advanceRow();
     }
 
     public int getColumnAmount(){ return columnAmount;}

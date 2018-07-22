@@ -11,7 +11,6 @@ public class Line {
 	protected String routeID;
 	protected String company;
 
-
 	public Line(String ID, Route r) {
 		routeID = ID;
 		route = r;
