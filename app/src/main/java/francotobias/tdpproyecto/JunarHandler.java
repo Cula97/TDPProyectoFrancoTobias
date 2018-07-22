@@ -76,7 +76,9 @@ public class JunarHandler {
 
     public CSVWizard requestGPS(String line){
         FILTER_URL = "";
-        FILTER_URL = "&filter0=column2[==]" + line;
+
+        if(line != null)
+            FILTER_URL = "&filter0=column2[==]" + line;
 
         return new CSVWizard(makeRequest(GPS_URL));
     }
