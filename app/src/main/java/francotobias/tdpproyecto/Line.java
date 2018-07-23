@@ -1,13 +1,10 @@
 package francotobias.tdpproyecto;
 
-import android.location.Location;
-
 import java.util.List;
 
 public class Line {
 	protected List<Bus> fleet;
 	protected Route route;
-	protected List<Stop> stops;
 	protected String routeID;
 	protected String company;
 
@@ -16,11 +13,10 @@ public class Line {
 		route = r;
 	}
 
-	public Line(String ID, Route r, List<Bus> f, List<Stop> s) {
+	public Line(String ID, Route r, List<Bus> f) {
 		routeID = ID;
 		route = r;
 		fleet = f;
-		stops = s;
 	}
 
 	public void setRoute(Route r) {
@@ -35,11 +31,4 @@ public class Line {
 		fleet.remove(b);
 	}
 
-	public void addStop(Stop s) {
-		stops.add(s);
-	}
-
-	public void removeStop(Stop s) {
-		stops.remove(s);
-	}
 }
