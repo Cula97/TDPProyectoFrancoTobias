@@ -24,6 +24,10 @@ public class Route {
 		line = l;
 	}
 
+	public List<Stop> getStops() {
+		return stops;
+	}
+
 	public void setStops(List<Stop> s) {
 		stops = s;
 	}

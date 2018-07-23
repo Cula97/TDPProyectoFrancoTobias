@@ -10,7 +10,6 @@ public class Line {
 
 	public Line(String ID) {
 		routeID = ID;
-		route = r;
 	}
 
 	public Line(String ID, Route r, List<Bus> f) {
@@ -21,6 +20,10 @@ public class Line {
 
 	public void setRoute(Route r) {
 		route = r;
+	}
+
+	public Route getRoute() {
+		return route;
 	}
 
 	public void addBus(Bus b) {

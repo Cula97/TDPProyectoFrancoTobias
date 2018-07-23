@@ -9,7 +9,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -44,5 +48,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 		LatLng city = new LatLng(-38.7171, -62.2655);
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(city, 14));
+	/*
+		mMap.addMarker(new MarkerOptions()
+				.position(city)
+				.icon(BitmapDescriptorFactory.fromAsset("bus_stop.png")));
+	*/
 	}
+
+	public void graphRoute(Line line) {
+
+	}
+
+	public void graphStops(Line line) {
+		List<Stop> stops = line.getRoute().getStops();
+		for (Stop s : stops)
+			// TODO: achicar el icono
+			mMap.addMarker(new MarkerOptions()
+					.position(s.getLocation())
+					.icon(BitmapDescriptorFactory.fromAsset("bus_stop.png")));
+	}
+
+
 }
