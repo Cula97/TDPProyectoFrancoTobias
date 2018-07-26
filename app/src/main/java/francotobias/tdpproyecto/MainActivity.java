@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 	/**
 		TextView text = findViewById(R.id.texto);
 		text.setMovementMethod(new ScrollingMovementMethod());
-		text.setText(JunarHandler.requestLines().requestData());
+		text.setText(JunarHandler.requestGPS(null).requestData());
 	//**/
 	}
 }

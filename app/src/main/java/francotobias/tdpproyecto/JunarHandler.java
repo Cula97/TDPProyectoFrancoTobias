@@ -25,7 +25,6 @@ public class JunarHandler {
 
 // REQUEST: http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/PARAD-DE-COLEC/data.json/?auth_key=YOUR_API_KEY&limit=50
 
-
 	private static String makeRequest(String DATA_URL) {
 
 		String urlText = JUNAR_URL + DATA_URL + API_KEY + FILTER_URL + LIMIT_URL;
@@ -71,8 +70,9 @@ public class JunarHandler {
 		return new CSVWizard(makeRequest(STOPS_URL));
 	}
 
+	// NULL returns positions of all valid buses
 	public static CSVWizard requestGPS(String line) {
-		FILTER_URL = "";
+		FILTER_URL = "&filter0=column2[!=]";
 
 		if (line != null)
 			FILTER_URL = "&filter0=column2[==]" + line;
