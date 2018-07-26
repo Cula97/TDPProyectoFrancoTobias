@@ -6,6 +6,7 @@ public class CSVWizard {
 	private int columnAmount = 0;
 
 
+
 	public CSVWizard(String data) {
 		this.data = data;
 
@@ -20,6 +21,7 @@ public class CSVWizard {
 				break;
 			}
 		}
+		restart();
 	}
 
 	public boolean isFinished() {
@@ -27,22 +29,28 @@ public class CSVWizard {
 	}
 
 	public String columnValue(int column) {
-		String res = "";
+		StringBuilder res = new StringBuilder();
 		int counter = 1;
 
 		for (int i = position; i < data.length(); i++) {
+
+			if (data.charAt(i) == '"') {
+				while (data.charAt(++i) != '"')
+					res.append(data.charAt(i));
+				break;
+			}
 
 			if ((data.charAt(i) == ',' || data.charAt(i) == '\n')
 					&& counter == column)
 				break;
 
 			if (counter == column)
-				res += data.charAt(i);
+				res.append(data.charAt(i));
 
 			if (data.charAt(i) == ',')
 				counter++;
 		}
-		return res;
+		return res.toString();
 	}
 
 	public void advanceRow() {

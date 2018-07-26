@@ -3,6 +3,7 @@ package francotobias.tdpproyecto;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,13 +24,12 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 
-		//LineFactory.initLines();
+		LineFactory.initLines();
 
-		/**
-		JunarHandler jHandler = new JunarHandler();
-
+	/**
 		TextView text = findViewById(R.id.texto);
-		text.setText(jHandler.requestGPS("519 A").requestData());
-		**/
+		text.setMovementMethod(new ScrollingMovementMethod());
+		text.setText(JunarHandler.requestLines().requestData());
+	//**/
 	}
 }

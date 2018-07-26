@@ -25,9 +25,6 @@ public class JunarHandler {
 
 // REQUEST: http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/PARAD-DE-COLEC/data.json/?auth_key=YOUR_API_KEY&limit=50
 
-	public JunarHandler() {
-
-	}
 
 	private static String makeRequest(String DATA_URL) {
 
@@ -65,7 +62,7 @@ public class JunarHandler {
 		return response.toString();
 	}
 
-	public static CSVWizard requestStops(String line) {//El de json ahora es uno de csv
+	public static CSVWizard requestStops(String line) {
 		FILTER_URL = "";
 
 		if (line != null)

@@ -5,17 +5,14 @@ import java.util.List;
 public class Line {
 	protected List<Bus> fleet;
 	protected Route route;
-	protected String routeID;
-	protected String company;
+	protected String lineID;
 
 	public Line(String ID) {
-		routeID = ID;
+		lineID = ID;
 	}
 
-	public Line(String ID, Route r, List<Bus> f) {
-		routeID = ID;
-		route = r;
-		fleet = f;
+	public String getID() {
+		return lineID;
 	}
 
 	public void setRoute(Route r) {

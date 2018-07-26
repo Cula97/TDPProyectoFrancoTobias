@@ -15,24 +15,11 @@ public class LineFactory {
 	private static final int DIRECTION_COLUMN = 2;
 
 	protected static List<Line> lines = new LinkedList<>();
-	//TODO: ArrayIndexOutOfBoundsException
 
 	public static void initLines() {
 		CSVWizard CSVlines = JunarHandler.requestLines();
 		CSVWizard CSVstops;
 
-		Log.d("1", CSVlines.columnValue(1));
-		Log.d("2", CSVlines.columnValue(2));
-		Log.d("3", CSVlines.columnValue(3));
-		Log.d("4", CSVlines.columnValue(4));
-		Log.d("5", CSVlines.columnValue(5));
-		Log.d("6", CSVlines.columnValue(6));
-		Log.d("7", CSVlines.columnValue(7));
-		Log.d("8", CSVlines.columnValue(8));
-		Log.d("9", CSVlines.columnValue(9));
-		Log.d("10", CSVlines.columnValue(10));
-		Log.d("11", CSVlines.columnValue(11));
-		Log.d("12", CSVlines.columnValue(12));
 
 		while (!CSVlines.isFinished()) {
 			String id = CSVlines.columnValue(ID_COLUMN);
@@ -60,10 +47,10 @@ public class LineFactory {
 
 			CSVlines.advanceRow();
 		}
+
 	}
 
 	protected static List<LatLng> stringToCoords(String s) {
-		Log.d("menem", s);
 		List<LatLng> toReturn = new LinkedList<>();
 		String[] coords = s.split(",0 ");
 
@@ -79,5 +66,12 @@ public class LineFactory {
 
 	}
 
+	public static Line getLine(String ID) {
+		for (Line l : lines)
+			if (ID.equals(l.getID()))
+				return l;
+
+		return null;
+	}
 
 }
