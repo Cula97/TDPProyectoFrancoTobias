@@ -23,10 +23,13 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 
+		//LineFactory.initLines();
+
+		/**
 		JunarHandler jHandler = new JunarHandler();
 
 		TextView text = findViewById(R.id.texto);
 		text.setText(jHandler.requestGPS("519 A").requestData());
-
+		**/
 	}
 }

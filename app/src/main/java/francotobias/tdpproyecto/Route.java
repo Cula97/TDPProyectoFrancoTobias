@@ -32,6 +32,14 @@ public class Route {
 		stops = s;
 	}
 
+	public List<LatLng> getGo() {
+		return routeGo;
+	}
+
+	public List<LatLng> getReturn() {
+		return routeReturn;
+	}
+
 	public void addStop(Stop s) {
 		stops.add(s);
 	}
