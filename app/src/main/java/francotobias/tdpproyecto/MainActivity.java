@@ -24,12 +24,14 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 
-		LineFactory.initLines();
+//		LineFactory.initLines();
 
-	/**
+
 		TextView text = findViewById(R.id.texto);
-		text.setMovementMethod(new ScrollingMovementMethod());
-		text.setText(JunarHandler.requestGPS(null).requestData());
-	//**/
+		//text.setMovementMethod(new ScrollingMovementMethod());
+		FileHandler file1 = new FileHandler(this,"Data"); file1.writeFileData("Hola 123 \n Holas 12345 \n Hoals 12345");
+		FileHandler file2 = new FileHandler(this,"Data");
+		text.setText(file2.requestFileData());
+
 	}
 }
