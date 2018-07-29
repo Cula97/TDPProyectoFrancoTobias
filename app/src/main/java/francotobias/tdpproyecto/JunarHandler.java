@@ -62,20 +62,24 @@ public class JunarHandler {
 	}
 
 	public static CSVWizard requestStops(String line) {
-		FILTER_URL = "";
+
 
 		if (line != null)
 			FILTER_URL = "&filter0=column0[==]" + line;
+		else
+			FILTER_URL = "";
 
 		return new CSVWizard(makeRequest(STOPS_URL));
 	}
 
 	// NULL returns positions of all valid buses
 	public static CSVWizard requestGPS(String line) {
-		FILTER_URL = "&filter0=column2[!=]";
+
 
 		if (line != null)
 			FILTER_URL = "&filter0=column2[==]" + line;
+		else
+			FILTER_URL = "&filter0=column2[!=]";
 
 		return new CSVWizard(makeRequest(GPS_URL));
 	}

@@ -34,18 +34,18 @@ public class CSVWizard {
 
 		for (int i = position; i < data.length(); i++) {
 
-			if (data.charAt(i) == '"') {
-				while (data.charAt(++i) != '"')
-					res.append(data.charAt(i));
-				break;
-			}
-
-			if ((data.charAt(i) == ',' || data.charAt(i) == '\n')
-					&& counter == column)
+			if ((data.charAt(i) == ',' || data.charAt(i) == '\n') && counter == column)
 				break;
 
-			if (counter == column)
+			if (counter == column) {
+				if (data.charAt(i) == '"') {
+					while (data.charAt(++i) != '"')
+						res.append(data.charAt(i));
+
+					break;
+				}
 				res.append(data.charAt(i));
+			}
 
 			if (data.charAt(i) == ',')
 				counter++;
