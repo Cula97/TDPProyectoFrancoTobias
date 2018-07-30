@@ -28,7 +28,7 @@ public class FileHandler {
                 String input;
 
                 while ((input = inputReader.readLine()) != null)
-                    buffer.append(input + "\n");
+                    buffer.append(input).append('\n');
 
                 inputReader.close();
             } catch (IOException e) {}
