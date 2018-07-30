@@ -1,5 +1,6 @@
 package francotobias.tdpproyecto;
 
+import android.content.Context;
 import android.os.StrictMode;
 
 import java.io.BufferedReader;
@@ -10,6 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class JunarHandler {
+	private static Context context;
+
 
 	private static final String JUNAR_URL = "http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/";
 
@@ -24,6 +27,10 @@ public class JunarHandler {
 	private static String FILTER_URL = "";
 
 // REQUEST: http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/PARAD-DE-COLEC/data.json/?auth_key=YOUR_API_KEY&limit=50
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
 
 	private static String makeRequest(String DATA_URL) {
 

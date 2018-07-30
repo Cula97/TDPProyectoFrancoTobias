@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
 //		LineFactory.initLines();
 
-
 		TextView text = findViewById(R.id.texto);
 		//text.setMovementMethod(new ScrollingMovementMethod());
 		FileHandler file1 = new FileHandler(this,"Data"); file1.writeFileData("Hola 123 \n Holas 12345 \n Hoals 12345");
