@@ -70,8 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		} catch (IOException e) {}
 		Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 128, 128, false);
 		mMap.addMarker(new MarkerOptions()
-				.position(bahia)
-		//		.icon(BitmapDescriptorFactory.fromAsset(getResources().getString(R.string.bus_stop_icon))));
+				.position(new LatLng(-38.729195 , -62.227907))
 				.icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap)));
 		/**
 		//Testeando recorridos

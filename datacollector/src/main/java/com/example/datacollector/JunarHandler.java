@@ -16,17 +16,7 @@ public class JunarHandler {
 	private static String FILTER_URL = "&filter0=column2[!=]";
 	private static String urlText = JUNAR_URL + GPS_URL + API_KEY + FILTER_URL + LIMIT_URL;
 
-	public static void main(String[] args) {
-		//	for (int i = 0; i < 3; i++)
-		try {
-			System.out.print(makeRequest());
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static StringBuffer makeRequest() {
+	public static String makeRequest() {
 		URL url;
 		HttpURLConnection connection;
 		StringBuffer response = new StringBuffer();
@@ -50,6 +40,6 @@ public class JunarHandler {
 			e.printStackTrace();
 		}
 
-		return response;
+		return response.toString();
 	}
 }
