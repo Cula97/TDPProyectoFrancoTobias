@@ -68,8 +68,8 @@ public class JunarHandler {
 		return response.toString();
 	}
 
-	public static CSVWizard requestStops(String line) {
 
+	public static CSVWizard requestStops(String line) {
 
 		if (line != null)
 			FILTER_URL = "&filter0=column0[==]" + line;
@@ -79,9 +79,9 @@ public class JunarHandler {
 		return new CSVWizard(makeRequest(STOPS_URL));
 	}
 
+
 	// NULL returns positions of all valid buses
 	public static CSVWizard requestGPS(String line) {
-
 
 		if (line != null)
 			FILTER_URL = "&filter0=column2[==]" + line;
@@ -91,10 +91,12 @@ public class JunarHandler {
 		return new CSVWizard(makeRequest(GPS_URL));
 	}
 
+
 	public static CSVWizard requestRoutes() {
 		FILTER_URL = "";
 		return new CSVWizard(makeRequest(ROUTES_URL));
 	}
+
 
 	public static CSVWizard requestLines() {
 		FILTER_URL = "";

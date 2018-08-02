@@ -23,6 +23,10 @@ public class Line {
 		return route;
 	}
 
+	public void initBuses() {
+		BusFactory.addBuses(this);
+	}
+
 	public void addBus(Bus b) {
 		fleet.add(b);
 	}

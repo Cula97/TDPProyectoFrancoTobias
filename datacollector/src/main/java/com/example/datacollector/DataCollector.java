@@ -1,6 +1,10 @@
 package com.example.datacollector;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,9 +54,18 @@ public class DataCollector {
 
 	}
 
-	// TODO: distance
-	public static double distance(double lat1, double lng1, double lat2, double lng2) {
-		return 0;
+	private static double distance(double lat1, double lon1, double lat2, double lon2) {
+		double theta = lon1 - lon2;
+		double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) +
+				Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+
+		dist = Math.acos(dist);
+		dist = Math.toDegrees(dist);
+		dist = dist * 60 * 1.1515;
+		dist = dist * 1609.344;
+
+		return (dist);
+
 	}
 
 
@@ -99,6 +112,21 @@ public class DataCollector {
 		//TODO: updateBus
 		public void update(BusData updatedBus) {
 
+		}
+
+		public String toString() {
+			Calendar cal = new GregorianCalendar();
+			cal.setTime(time);
+			DateFormat df = new SimpleDateFormat("HH:mm:ss");
+			String info = line + ", " +
+					df.format(time) + ", " +
+					lat + ", " +
+					lng + ", " +
+				//	direction(BusData) + ", " +     //TODO: computar la direccion de un colectivo ida (0) o vuelta (1)
+					vel + ", " +
+					cal.get(Calendar.DAY_OF_WEEK);
+
+			return info;
 		}
 
 	}
