@@ -11,26 +11,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class JunarHandler {
-	private static Context context;
-
-
 	private static final String JUNAR_URL = "http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/";
-
 	//URL DE DATO PEDIDO
 	private static final String STOPS_URL = "PARAD-DE-COLEC/data.csv/?auth_key=";
 	private static final String LINES_URL = "LINEA-DE-COLEC/data.csv/?auth_key=";
 	private static final String ROUTES_URL = "RECOR-DE-COLEC/data.csv/?auth_key=";
 	private static final String GPS_URL = "GPS-TRANS/data.csv/?auth_key=";
-
 	private static final String API_KEY = "2defe16a55c65963b8212e4f9a558dfa692d443d";
 	private static final String LIMIT_URL = "&limit=10000";
+	private static Context context;
 	private static String FILTER_URL = "";
 
 // REQUEST: http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/PARAD-DE-COLEC/data.json/?auth_key=YOUR_API_KEY&limit=50
-
-	public void setContext(Context context) {
-		this.context = context;
-	}
 
 	private static String makeRequest(String DATA_URL) {
 
@@ -68,7 +60,6 @@ public class JunarHandler {
 		return response.toString();
 	}
 
-
 	public static CSVWizard requestStops(String line) {
 
 		if (line != null)
@@ -78,7 +69,6 @@ public class JunarHandler {
 
 		return new CSVWizard(makeRequest(STOPS_URL));
 	}
-
 
 	// NULL returns positions of all valid buses
 	public static CSVWizard requestGPS(String line) {
@@ -91,16 +81,18 @@ public class JunarHandler {
 		return new CSVWizard(makeRequest(GPS_URL));
 	}
 
-
 	public static CSVWizard requestRoutes() {
 		FILTER_URL = "";
 		return new CSVWizard(makeRequest(ROUTES_URL));
 	}
 
-
 	public static CSVWizard requestLines() {
 		FILTER_URL = "";
 		return new CSVWizard(makeRequest(LINES_URL));
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
 	}
 
 }

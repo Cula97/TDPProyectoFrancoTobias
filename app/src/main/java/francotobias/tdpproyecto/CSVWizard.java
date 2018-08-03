@@ -1,10 +1,9 @@
 package francotobias.tdpproyecto;
 
-public class    CSVWizard {
+public class CSVWizard {
 	private String data;
 	private int position = 0;
 	private int columnAmount = 0;
-
 
 
 	public CSVWizard(String data) {

@@ -3,7 +3,6 @@ package francotobias.tdpproyecto;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,8 +27,9 @@ public class MainActivity extends AppCompatActivity {
 
 		TextView text = findViewById(R.id.texto);
 		//text.setMovementMethod(new ScrollingMovementMethod());
-		FileHandler file1 = new FileHandler(this,"Data"); file1.writeFileData("Hola 123 \n Holas 12345 \n Hoals 12345");
-		FileHandler file2 = new FileHandler(this,"Data");
+		FileHandler file1 = new FileHandler(this, "Data");
+		file1.writeFileData("Hola 123 \n Holas 12345 \n Hoals 12345");
+		FileHandler file2 = new FileHandler(this, "Data");
 		text.setText(file2.requestFileData());
 
 	}

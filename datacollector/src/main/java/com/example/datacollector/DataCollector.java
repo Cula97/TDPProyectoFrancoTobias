@@ -122,7 +122,7 @@ public class DataCollector {
 					df.format(time) + ", " +
 					lat + ", " +
 					lng + ", " +
-				//	direction(BusData) + ", " +     //TODO: computar la direccion de un colectivo ida (0) o vuelta (1)
+					//	direction(BusData) + ", " +     //TODO: computar la direccion de un colectivo ida (0) o vuelta (1)
 					vel + ", " +
 					cal.get(Calendar.DAY_OF_WEEK);
 
