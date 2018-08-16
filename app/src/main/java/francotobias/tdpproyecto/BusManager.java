@@ -5,8 +5,7 @@ import android.location.Location;
 import java.util.Calendar;
 import java.util.Map;
 
-@Deprecated
-public class BusFactory {
+public class BusManager {
 	private static final int ID_COLUMN = 2;
 	private static final int LAT_COLUMN = 5;
 	private static final int LNG_COLUMN = 6;
@@ -70,6 +69,4 @@ public class BusFactory {
 
 		}
 	}
-
-
 }

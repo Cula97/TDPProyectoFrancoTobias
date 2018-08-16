@@ -1,12 +1,13 @@
 package francotobias.tdpproyecto;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.LinkedList;
 import java.util.List;
 
-@Deprecated
-public class LineFactory {
+public class LineManager {
 	private static final int ID_COLUMN = 1;
 	private static final int COORD_COLUMN = 3;
 	private static final int LAT_COLUMN = 3;
