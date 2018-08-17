@@ -6,27 +6,51 @@
 	android:layout_height="match_parent"
 	tools:context=".MainActivity">
 
+	<Button
+		android:id="@+id/buttonDebug"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="96dp"
+		android:layout_marginEnd="16dp"
+		android:onClick="launchVisulizeDataActivit"
+		android:text="Debug"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent" />
+
 	<TextView
 		android:id="@+id/texto"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_marginBottom="8dp"
+		android:scrollbars="vertical"
 		android:text="debug manija"
-		android:scrollbars = "vertical"
-		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintBottom_toTopOf="@+id/buttonMap"
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_bias="0.266" />
+		app:layout_constraintTop_toTopOf="parent" />
 
 	<Button
 		android:id="@+id/buttonMap"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="88dp"
+		android:layout_marginBottom="200dp"
 		android:text="Map"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintHorizontal_bias="0.5"
+		app:layout_constraintStart_toStartOf="parent" />
+
+	<EditText
+		android:id="@+id/editTextDebugLine"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="8dp"
+		android:layout_marginStart="16dp"
+		android:ems="10"
+		android:hint="Linea a testear"
+		android:inputType="textPersonName"
+		app:layout_constraintBaseline_toBaselineOf="@+id/buttonDebug"
+		app:layout_constraintEnd_toStartOf="@+id/buttonDebug"
+		app:layout_constraintHorizontal_bias="0.265"
 		app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

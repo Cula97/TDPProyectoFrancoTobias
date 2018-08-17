@@ -1,6 +1,7 @@
 package francotobias.tdpproyecto;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -33,14 +34,17 @@ public class LineManager {
 			Route r = new Route(l, routeGo, routeReturn);
 
 			// Creates stops
+			// TODO: debugear direccion de las paradas (siempre da falso la comparacion)
 			CSVstops = JunarHandler.requestStops(id);
 			List<Stop> s = new LinkedList<>();
 			r.setStops(s);
+//			Log.d("linea", id);
 			while (!CSVstops.isFinished()) {
 				Double lat = Double.parseDouble(CSVstops.columnValue(LAT_COLUMN));
 				Double lng = Double.parseDouble(CSVstops.columnValue(LNG_COLUMN));
 				Character direction = CSVlines.columnValue(DIRECTION_COLUMN).charAt(0);
-				s.add(new Stop(lat, lng, direction == 'i'));
+//				Log.d("direccion", direction.toString());
+				s.add(new Stop(lat, lng, direction.equals('i')));
 
 				CSVstops.advanceRow();
 			}

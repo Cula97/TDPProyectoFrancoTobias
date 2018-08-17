@@ -2,5 +2,6 @@
 	<string name="app_name">TDP Proyecto</string>
 	<string name="title_activity_maps">TDP Proyecto</string>
 	<string name="bus_stop_icon">bus_stop.png</string>
+	<string name="title_activity_visualize_data_map">Map</string>
 
 </resources>
