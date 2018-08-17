@@ -113,7 +113,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		for (Stop s : stops)
 			mMap.addMarker(new MarkerOptions()
 					.position(s.getLocation())
-					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon)));
+					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
+					.flat(true));
 
 	}
 

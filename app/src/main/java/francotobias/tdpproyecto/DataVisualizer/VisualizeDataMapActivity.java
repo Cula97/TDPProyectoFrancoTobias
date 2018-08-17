@@ -110,7 +110,8 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 
 			mMap.addMarker(new MarkerOptions()
 					.position(stops.get(stopIndex).getLocation())
-					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon)));
+					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
+					.flat(true));
 
 		}
 		else
