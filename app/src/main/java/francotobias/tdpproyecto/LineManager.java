@@ -54,6 +54,7 @@ public class LineManager {
 				CSVstops.advanceRow();
 			}
 
+
 			CSVlines.advanceRow();
 		}
 
