@@ -60,12 +60,21 @@ public class JunarHandler {
 		return response.toString();
 	}
 
-	public static CSVWizard requestStops(String line) {
+	public static CSVWizard requestStopsGo(String line) {
+		return requestStops(line, "i");
+	}
+
+	public static CSVWizard requestStopsRet(String line) {
+		return requestStops(line, "v");
+	}
+
+	public static CSVWizard requestStops(String line, String direction) {
+		FILTER_URL = "";
 
 		if (line != null)
 			FILTER_URL = "&filter0=column0[==]" + line;
-		else
-			FILTER_URL = "";
+		if (direction != null)
+			FILTER_URL += "&filter1=column1[==]" + direction;
 
 		return new CSVWizard(makeRequest(STOPS_URL));
 	}
