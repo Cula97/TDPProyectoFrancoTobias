@@ -2,6 +2,7 @@ package francotobias.tdpproyecto;
 
 import android.content.Context;
 import android.os.StrictMode;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,6 +28,8 @@ public class JunarHandler {
 	private static String makeRequest(String DATA_URL) {
 
 		String urlText = JUNAR_URL + DATA_URL + API_KEY + FILTER_URL + LIMIT_URL;
+
+		Log.d("full url:", urlText);
 
 		//Estas dos lineas son superrequetecontra necesarias
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -74,7 +77,7 @@ public class JunarHandler {
 		if (line != null)
 			FILTER_URL = "&filter0=column0[==]" + line;
 		if (direction != null)
-			FILTER_URL += "&filter1=column1[==]" + direction;
+			FILTER_URL += "&filter1=column1[==]" + direction + "&where=(filter0)+and+(filter1)";
 
 		return new CSVWizard(makeRequest(STOPS_URL));
 	}

@@ -4,4 +4,10 @@
 	<string name="bus_stop_icon">bus_stop.png</string>
 	<string name="title_activity_visualize_data_map">Map</string>
 
+	<string-array name="debug_modes_array">
+		<item>Route</item>
+		<item>Bus</item>
+	</string-array>
+
+
 </resources>

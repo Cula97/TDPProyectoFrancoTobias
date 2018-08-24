@@ -15,7 +15,7 @@ public class Bus {
 
 	protected Location location;
 	protected Line line;
-	protected String busID;
+	public final String busID;
 	protected boolean isGo;
 	protected long lastDirectionCheckTime;
 
@@ -35,14 +35,15 @@ public class Bus {
 	}
 
 	public boolean isGo() {
-		if (lastDirectionCheckTime != 0 &&
-				Calendar.getInstance().getTimeInMillis() - lastDirectionCheckTime < DIRECTION_CHECK_TIME)
+		if (Calendar.getInstance().getTimeInMillis() - lastDirectionCheckTime < DIRECTION_CHECK_TIME)
 			return isGo;
 
 		List<LatLng> goRoute = line.getRoute().getGo();
 		List<LatLng> returnRoute = line.getRoute().getReturn();
 
-		Location minGo = new Location(""), minRet = new Location(""), routePoint = new Location("");
+		Location minGo = new Location("");
+		Location minRet = new Location("");
+		Location routePoint = new Location("");
 		LatLng minCoordGo = null, minCoordRet = null;
 		double dist, minDist = 1e10;
 
@@ -84,7 +85,7 @@ public class Bus {
 			minGoPrev.setLongitude(goRoute.get(indexMinCoord - 1).longitude);
 			goBearing1 = (int) minGoPrev.bearingTo(minGo);
 		}
-		if (indexMinCoord < goRoute.size()) {
+		if (indexMinCoord < goRoute.size() - 1) {
 			minGoNext.setLatitude(goRoute.get(indexMinCoord + 1).latitude);
 			minGoNext.setLongitude(goRoute.get(indexMinCoord + 1).longitude);
 			goBearing2 = (int) minGo.bearingTo(minGoNext);
@@ -96,12 +97,13 @@ public class Bus {
 			minRetPrev.setLongitude(returnRoute.get(indexMinCoord - 1).longitude);
 			retBearing1 = (int) minRetPrev.bearingTo(minRet);
 		}
-		if (indexMinCoord < returnRoute.size()) {
+		if (indexMinCoord < returnRoute.size() - 1) {
 			minRetNext.setLatitude(returnRoute.get(indexMinCoord + 1).latitude);
 			minRetNext.setLongitude(returnRoute.get(indexMinCoord + 1).longitude);
 			retBearing2 = (int) minRet.bearingTo(minRetNext);
 		}
 
+		//TODO: fix dis shit
 		int minGoBearing = Math.min(
 				Math.abs(
 						Math.abs(goBearing1 - 180) -

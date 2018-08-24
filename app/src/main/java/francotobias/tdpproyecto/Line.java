@@ -12,8 +12,8 @@ public class Line {
 
 	protected Map<String, Bus> fleet = new HashMap<>();
 	protected Route route;
-	protected String lineID;
-	protected long lastUpdateTime;
+	public final String lineID;
+	private long lastUpdateTime;
 
 	public Line(String ID) {
 		lineID = ID;
@@ -37,12 +37,12 @@ public class Line {
 
 	public Iterable<Bus> updateBuses() {
 		if (fleet.isEmpty()) {
-			BusFactory.addBuses(this);
+			BusManager.addBuses(this);
 			lastUpdateTime = Calendar.getInstance().getTimeInMillis();
 		}
 
 		if (Calendar.getInstance().getTimeInMillis() - lastUpdateTime > FLEET_UPDATE_TIME) {
-			BusFactory.updateBuses(this);
+			BusManager.updateBuses(this);
 			lastUpdateTime = Calendar.getInstance().getTimeInMillis();
 		}
 
@@ -93,11 +93,11 @@ public class Line {
 	}
 
 	public void addBus(Bus b) {
-		fleet.put(b.getBusID(), b);
+		fleet.put(b.busID, b);
 	}
 
 	public void removeBus(Bus b) {
-		fleet.remove(b.getBusID());
+		fleet.remove(b.busID);
 	}
 
 }

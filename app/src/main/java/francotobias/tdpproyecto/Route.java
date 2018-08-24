@@ -2,18 +2,25 @@ package francotobias.tdpproyecto;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Route {
-	protected List<LatLng> routeGo, routeReturn;
+	protected List<Section> routeGo, routeReturn;
 	protected Line line;
 	protected List<Stop> stops;
 
 	public Route(Line l, List<LatLng> rGo, List<LatLng> rReturn) {
 		line = l;
 		l.setRoute(this);
-		routeGo = rGo;
-		routeReturn = rReturn;
+		routeGo = new LinkedList<>();
+		routeReturn = new LinkedList<>();
+
+		for (int i = 0; i < rGo.size() - 1; i++)
+			routeGo.add(new Section (this, rGo.get(i), rGo.get(i+1), true));
+
+		for (int i = 0; i < rReturn.size() - 1; i++)
+			routeReturn.add(new Section (this, rReturn.get(i), rReturn.get(i+1), false));
 	}
 
 	public Line getLine() {
@@ -33,11 +40,23 @@ public class Route {
 	}
 
 	public List<LatLng> getGo() {
-		return routeGo;
+		List<LatLng> go = new LinkedList<>();
+		go.add(routeGo.get(0).startPoint);
+
+		for (Section section : routeGo)
+			go.add(section.endPoint);
+
+		return go;
 	}
 
 	public List<LatLng> getReturn() {
-		return routeReturn;
+		List<LatLng> ret = new LinkedList<>();
+		ret.add(routeReturn.get(0).startPoint);
+
+		for (Section section : routeReturn)
+			ret.add(section.endPoint);
+
+		return ret;
 	}
 
 	public void addStop(Stop s) {

@@ -96,7 +96,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 
 			String type = "_ret";
 
-			if (stops.get(stopIndex++).isGo())
+			if (stops.get(stopIndex).isGo())
 				type = "_go";
 
 			AssetManager assetManager = getAssets();
@@ -113,6 +113,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
 					.flat(true));
 
+			stopIndex += 3; // Demasiadas paradas en pantalla
 		}
 		else
 			Toast.makeText(getApplicationContext(), "No hay más paradas", Toast.LENGTH_SHORT).show();

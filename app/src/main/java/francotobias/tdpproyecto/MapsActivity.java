@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.test.suitebuilder.annotation.Suppress;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -57,34 +58,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bahia, 14));
 
-		/**
-		 //Testeando marcadores
-		 AssetManager assetManager = getAssets();
-		 Bitmap bitmap = null;
-		 try {
-		 InputStream istream = assetManager.open("bus_stop.png");
-		 bitmap = BitmapFactory.decodeStream(istream);
-		 } catch (IOException e) {}
-		 Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 128, 128, false);
-		 mMap.addMarker(new MarkerOptions()
-		 .position(new LatLng(-38.729195 , -62.227907))
-		 .icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap)));
-		 /**
-		 //Testeando recorridos
-		 LatLng l1 = new LatLng( -38.688052,-62.314912);
-		 LatLng l2 = new LatLng( -38.684719, -62.31069);
-		 LatLng l3 = new LatLng( -38.68329, -62.308978);
-		 LatLng l4 = new LatLng( -38.701691, -62.284786);
-		 LinkedList<LatLng> routeGo= new LinkedList<>();
-		 routeGo.add(l1);
-		 routeGo.add(l2);
-		 routeGo.add(l3);
-		 routeGo.add(l4);
-		 mMap.addPolyline(new PolylineOptions()
-		 .addAll(routeGo)
-		 .color(Color.BLUE)
-		 .width(10));
-		 **/
 	}
 
 	public void displayRoute(Line line) {
@@ -106,8 +79,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		try {
 			InputStream istream = assetManager.open("bus_stop.png");
 			icon = BitmapFactory.decodeStream(istream);
-		} catch (IOException e) {
-		}
+		} catch (IOException e) {}
+
 		Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
 
 		for (Stop s : stops)
@@ -115,7 +88,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 					.position(s.getLocation())
 					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
 					.flat(true));
-
 	}
 
 }

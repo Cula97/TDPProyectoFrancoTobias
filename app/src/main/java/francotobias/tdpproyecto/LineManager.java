@@ -13,7 +13,6 @@ public class LineManager {
 	private static final int COORD_COLUMN = 3;
 	private static final int LAT_COLUMN = 3;
 	private static final int LNG_COLUMN = 4;
-	private static final int DIRECTION_COLUMN = 2;
 
 	protected static List<Line> lines = new LinkedList<>();
 
@@ -54,7 +53,6 @@ public class LineManager {
 				CSVstops.advanceRow();
 			}
 
-
 			CSVlines.advanceRow();
 		}
 
@@ -81,6 +79,7 @@ public class LineManager {
 			if (ID.equals(l.getID()))
 				return l;
 
+		Log.d("Ruta no encontrada", ID + " no existe");
 		return null;
 	}
 

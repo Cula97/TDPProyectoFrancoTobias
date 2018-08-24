@@ -32,7 +32,7 @@ public class LineFactory {
 			Route r = new Route(l, routeGo, routeReturn);
 
 			// Creates stops
-			CSVstops = JunarHandler.requestStops(id);
+			CSVstops = JunarHandler.requestStopsGo(id);
 			List<Stop> s = new LinkedList<>();
 			r.setStops(s);
 			while (!CSVstops.isFinished()) {
