@@ -21,8 +21,8 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Button MapButton = findViewById(R.id.buttonMap);
 
+		Button MapButton = findViewById(R.id.buttonMap);
 		MapButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(v.getContext(), MapsActivity.class);

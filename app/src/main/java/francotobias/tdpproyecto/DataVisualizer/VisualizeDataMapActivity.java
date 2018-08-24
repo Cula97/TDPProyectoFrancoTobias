@@ -4,6 +4,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,10 +17,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import francotobias.tdpproyecto.Line;
@@ -48,7 +52,8 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 				.findFragmentById(R.id.map);
 		mapFragment.getMapAsync(this);
 
-		line = LineManager.getLine(getIntent().getStringExtra(MainActivity.DEBUG_LINE));
+		String lineID = getIntent().getStringExtra(MainActivity.DEBUG_LINE);
+		line = LineManager.getLine(lineID);
 		goSectionIndex = 0;
 		retSectionIndex = 0;
 		goSectionAmount = line.getRoute().getGo().size();
@@ -61,8 +66,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 	/**
 	 * Manipulates the map once available.
 	 * This callback is triggered when the map is ready to be used.
-	 * This is where we can add markers or lines, add listeners or move the camera. In this case,
-	 * we just add a marker near Sydney, Australia.
+	 * This is where we can add markers or lines, add listeners or move the camera.
 	 * If Google Play services is not installed on the device, the user will be prompted to install
 	 * it inside the SupportMapFragment. This method will only be triggered once the user has
 	 * installed Google Play services and returned to the app.
@@ -71,6 +75,93 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 	public void onMapReady(GoogleMap googleMap) {
 		mMap = googleMap;
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-38.7171, -62.2655), 14));
+
+		String mode = getIntent().getStringExtra(MainActivity.DEBUG_MODE);
+		displayModeInterface(mode);
+	}
+
+	private void displayModeInterface(String mode) {
+		switch (mode) {
+			case "Route":
+				displayRouteInterface();
+				break;
+			case "Bus":
+				displayBusInterface();
+				break;
+		}
+	}
+
+	private void displayRouteInterface() {
+		findViewById(R.id.buttonSection).setVisibility(View.VISIBLE);
+		findViewById(R.id.buttonStop).setVisibility(View.VISIBLE);
+	}
+
+	private void displayBusInterface() {
+		mMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+			@Override
+			public void onPolylineClick(Polyline polyline) {
+				Toast.makeText(getApplicationContext(), polyline.getTag().toString(), Toast.LENGTH_SHORT).show();
+			}
+		});
+
+/** Test
+		LatLng ll1 = new LatLng(-38.721521, -62.266075);
+		LatLng ll2 = new LatLng(-38.718508, -62.266129);
+		displaySectionAndBearing(ll1, ll2, Color.BLUE);
+
+		LatLng ll3 = new LatLng(-38.718416, -62.265099);
+		LatLng ll4 = new LatLng(-38.721354, -62.265174);
+		displaySectionAndBearing(ll3, ll4, Color.RED);
+
+		LatLng ll5 = new LatLng(-38.721254, -62.264133);
+		LatLng ll6 = new LatLng(-38.721246, -62.260024);
+		displaySectionAndBearing(ll5, ll6, Color.BLUE);
+
+		LatLng ll7 = new LatLng(-38.721798, -62.260003);
+		LatLng ll8 = new LatLng(-38.721739, -62.263973);
+		displaySectionAndBearing(ll7, ll8, Color.RED);
+**/
+
+		Iterator<LatLng> iteratorGo = line.getRoute().getGo().iterator();
+		LatLng latLng1 = iteratorGo.next();
+		LatLng latLng2;
+
+		while (iteratorGo.hasNext()) {
+			latLng2 = iteratorGo.next();
+			displaySectionAndBearing(latLng1, latLng2, Color.BLUE);
+			latLng1 = latLng2;
+		}
+
+		Iterator<LatLng> iteratorRet = line.getRoute().getReturn().iterator();
+		latLng1 = iteratorRet.next();
+
+		while (iteratorRet.hasNext()) {
+			latLng2 = iteratorRet.next();
+			displaySectionAndBearing(latLng1, latLng2, Color.RED);
+			latLng1 = latLng2;
+        }
+	}
+
+
+	private void displaySectionAndBearing(LatLng latLng1, LatLng latLng2, int color) {
+		Location loc1 = new Location("");
+		Location loc2 = new Location("");
+
+		float bearing;
+
+		loc1.setLatitude(latLng1.latitude);
+		loc1.setLongitude(latLng1.longitude);
+
+		loc2.setLatitude(latLng2.latitude);
+		loc2.setLongitude(latLng2.longitude);
+
+		bearing = loc1.bearingTo(loc2);
+
+		mMap.addPolyline(new PolylineOptions()
+				.add(latLng1, latLng2)
+				.clickable(true)
+				.color(color))
+				.setTag(bearing);
 	}
 
 	public void displaySection(View view) {

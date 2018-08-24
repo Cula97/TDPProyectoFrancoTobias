@@ -22,6 +22,7 @@
 		android:elevation="0dp"
 		android:onClick="displaySection"
 		android:text="Tramo"
+		android:visibility="gone"
 		app:layout_constraintBaseline_toBaselineOf="@+id/buttonStop"
 		app:layout_constraintEnd_toEndOf="parent" />
 
@@ -33,6 +34,7 @@
 		android:layout_marginStart="16dp"
 		android:onClick="displayStop"
 		android:text="Parada"
+		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
 

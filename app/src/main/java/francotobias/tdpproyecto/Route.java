@@ -39,6 +39,17 @@ public class Route {
 		stops = s;
 	}
 
+	public List<Section> getSectionsGo() {
+
+		return null;
+	}
+
+	public List<Section> getSectionsReturn() {
+
+		return null;
+	}
+
+	@Deprecated
 	public List<LatLng> getGo() {
 		List<LatLng> go = new LinkedList<>();
 		go.add(routeGo.get(0).startPoint);
@@ -49,6 +60,7 @@ public class Route {
 		return go;
 	}
 
+	@Deprecated
 	public List<LatLng> getReturn() {
 		List<LatLng> ret = new LinkedList<>();
 		ret.add(routeReturn.get(0).startPoint);
