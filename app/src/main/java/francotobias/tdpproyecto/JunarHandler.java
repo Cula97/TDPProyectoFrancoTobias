@@ -1,6 +1,5 @@
 package francotobias.tdpproyecto;
 
-import android.content.Context;
 import android.os.StrictMode;
 import android.util.Log;
 
@@ -20,7 +19,6 @@ public class JunarHandler {
 	private static final String GPS_URL = "GPS-TRANS/data.csv/?auth_key=";
 	private static final String API_KEY = "2defe16a55c65963b8212e4f9a558dfa692d443d";
 	private static final String LIMIT_URL = "&limit=10000";
-	private static Context context;
 	private static String FILTER_URL = "";
 
 // REQUEST: http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/PARAD-DE-COLEC/data.json/?auth_key=YOUR_API_KEY&limit=50
@@ -101,10 +99,6 @@ public class JunarHandler {
 	public static CSVWizard requestLines() {
 		FILTER_URL = "";
 		return new CSVWizard(makeRequest(LINES_URL));
-	}
-
-	public void setContext(Context context) {
-		this.context = context;
 	}
 
 }
