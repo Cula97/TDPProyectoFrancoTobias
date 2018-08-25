@@ -1,6 +1,7 @@
 package francotobias.tdpproyecto;
 
 import android.location.Location;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Map;
@@ -24,6 +25,12 @@ public class BusManager {
 			int vel = Integer.parseInt(CSVgps.columnValue(VEL_COLUMN));
 			int ang = Integer.parseInt(CSVgps.columnValue(ANGLE_COLUMN));
 
+		/**
+			Log.d("Leido", line.lineID + " " + id + " " +
+					Double.toString(lat) + " " + Double.toString(lng) + " " +
+					ang + " " + vel);
+		**/
+
 			Location loc = new Location(PROVIDER_NAME);
 			loc.setLatitude(lat);
 			loc.setLongitude(lng);
@@ -32,6 +39,8 @@ public class BusManager {
 			loc.setTime(Calendar.getInstance().getTimeInMillis());
 
 			line.addBus(new Bus(id, line, loc));
+
+			CSVgps.advanceRow();
 		}
 	}
 
@@ -67,6 +76,8 @@ public class BusManager {
 				line.addBus(new Bus(id, line, loc));
 			}
 
+			CSVgps.advanceRow();
 		}
 	}
+
 }

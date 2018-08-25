@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 		FileHandler file2 = new FileHandler(this, "Data");
 		text.setText(file2.requestFileData());
 
-		Spinner spinner = (Spinner) findViewById(R.id.spinnerMode);
+		Spinner spinner = findViewById(R.id.spinnerMode);
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 				R.array.debug_modes_array, android.R.layout.simple_spinner_item);
@@ -61,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
 		Intent intent = new Intent(this, VisualizeDataMapActivity.class);
 		EditText editText = findViewById(R.id.editTextDebugLine);
 		String line = editText.getText().toString();
+		if (line.equals(""))
+			line = "502";
+
 		intent.putExtra(DEBUG_LINE, line);
 
 		Spinner spinner = findViewById(R.id.spinnerMode);
