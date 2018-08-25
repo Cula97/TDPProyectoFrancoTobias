@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 		FileHandler file2 = new FileHandler(this, "Data");
 		text.setText(file2.requestFileData());
 
-		Spinner spinner = (Spinner) findViewById(R.id.spinnerMode);
+		Spinner spinner = findViewById(R.id.spinnerMode);
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 				R.array.debug_modes_array, android.R.layout.simple_spinner_item);
