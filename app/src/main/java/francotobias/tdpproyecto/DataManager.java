@@ -53,7 +53,7 @@ public class DataManager {
 
                 // RET
                 file = new FileHandler(context, STOPSRET_FILENAME+id);
-                updatedData = JunarHandler.requestStopsGo(id);
+                updatedData = JunarHandler.requestStopsRet(id);
                 file.writeFileData(updatedData.requestData());
 
                 CSVlines.advanceRow();
