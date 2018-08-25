@@ -57,7 +57,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		bahia = new LatLng(-38.7171, -62.2655);
 
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bahia, 14));
-
 	}
 
 	public void displayRoute(Line line) {

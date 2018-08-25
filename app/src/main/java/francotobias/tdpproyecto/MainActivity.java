@@ -61,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
 		Intent intent = new Intent(this, VisualizeDataMapActivity.class);
 		EditText editText = findViewById(R.id.editTextDebugLine);
 		String line = editText.getText().toString();
+		if (line.equals(""))
+			line = "502";
+
 		intent.putExtra(DEBUG_LINE, line);
 
 		Spinner spinner = findViewById(R.id.spinnerMode);

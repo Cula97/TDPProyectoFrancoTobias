@@ -5,8 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -23,9 +25,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
+import francotobias.tdpproyecto.Bus;
 import francotobias.tdpproyecto.Line;
 import francotobias.tdpproyecto.LineManager;
 import francotobias.tdpproyecto.MainActivity;
@@ -33,7 +35,6 @@ import francotobias.tdpproyecto.R;
 import francotobias.tdpproyecto.Stop;
 
 public class VisualizeDataMapActivity extends FragmentActivity implements OnMapReadyCallback {
-
 	private GoogleMap mMap;
 	private Line line;
 	private int goSectionIndex;
@@ -42,6 +43,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 	private int retSectionAmount;
 	private int stopIndex;
 	private int stopAmount;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		displayModeInterface(mode);
 	}
 
+
 	private void displayModeInterface(String mode) {
 		switch (mode) {
 			case "Route":
@@ -91,12 +94,20 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		}
 	}
 
+
 	private void displayRouteInterface() {
 		findViewById(R.id.buttonSection).setVisibility(View.VISIBLE);
 		findViewById(R.id.buttonStop).setVisibility(View.VISIBLE);
 	}
 
+
 	private void displayBusInterface() {
+		displayRoutesWithBearings();
+		displayBusesWithBearings();
+	}
+
+
+	private void displayRoutesWithBearings() {
 		mMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
 			@Override
 			public void onPolylineClick(Polyline polyline) {
@@ -104,7 +115,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 			}
 		});
 
-/** Test
+/**     Test
 		LatLng ll1 = new LatLng(-38.721521, -62.266075);
 		LatLng ll2 = new LatLng(-38.718508, -62.266129);
 		displaySectionAndBearing(ll1, ll2, Color.BLUE);
@@ -120,7 +131,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		LatLng ll7 = new LatLng(-38.721798, -62.260003);
 		LatLng ll8 = new LatLng(-38.721739, -62.263973);
 		displaySectionAndBearing(ll7, ll8, Color.RED);
-**/
+ **/
 
 		Iterator<LatLng> iteratorGo = line.getRoute().getGo().iterator();
 		LatLng latLng1 = iteratorGo.next();
@@ -139,7 +150,38 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 			latLng2 = iteratorRet.next();
 			displaySectionAndBearing(latLng1, latLng2, Color.RED);
 			latLng1 = latLng2;
-        }
+		}
+	}
+
+
+	private void displayBusesWithBearings() {
+		mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+			@Override
+			public boolean onMarkerClick(Marker marker) {
+				return false;
+			}
+		});
+
+		Iterable<Bus> buses = line.updateBuses();
+
+		AssetManager assetManager = getAssets();
+		Bitmap icon = null;
+		try {
+			InputStream istream = assetManager.open("bus.png");
+			icon = BitmapFactory.decodeStream(istream);
+		} catch (IOException e) {
+		}
+
+		Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
+
+		for (Bus bus : buses) {
+		LatLng position = new LatLng( bus.getLocation().getLatitude(), bus.getLocation().getLongitude());
+
+			mMap.addMarker(new MarkerOptions()
+				.position(position)
+				.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
+				.title(Float.toString(bus.getLocation().getBearing())));
+		}
 	}
 
 
@@ -164,6 +206,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 				.setTag(bearing);
 	}
 
+
 	public void displaySection(View view) {
 		List<LatLng> routeGo = line.getRoute().getGo();
 		List<LatLng> routeRet = line.getRoute().getReturn();
@@ -172,14 +215,14 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 			mMap.addPolyline(new PolylineOptions()
 					.add(routeGo.get(goSectionIndex), routeGo.get(++goSectionIndex))
 					.color(Color.BLUE));
+		else if (retSectionIndex < retSectionAmount - 1)
+			mMap.addPolyline(new PolylineOptions()
+					.add(routeRet.get(retSectionIndex), routeRet.get(++retSectionIndex))
+					.color(Color.RED));
 		else
-			if (retSectionIndex < retSectionAmount - 1)
-				mMap.addPolyline(new PolylineOptions()
-						.add(routeRet.get(retSectionIndex), routeRet.get(++retSectionIndex))
-						.color(Color.RED));
-			else
-				Toast.makeText(getApplicationContext(), "Recorrido finalizado", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Recorrido finalizado", Toast.LENGTH_SHORT).show();
 	}
+
 
 	public void displayStop(View view) {
 		if (stopIndex < stopAmount) {
@@ -193,9 +236,10 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 			AssetManager assetManager = getAssets();
 			Bitmap icon = null;
 			try {
-				InputStream istream = assetManager.open("bus_stop"+ type +".png");
+				InputStream istream = assetManager.open("bus_stop" + type + ".png");
 				icon = BitmapFactory.decodeStream(istream);
-			} catch (IOException e) {}
+			} catch (IOException e) {
+			}
 
 			Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
 
@@ -205,8 +249,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 					.flat(true));
 
 			stopIndex += 3; // Demasiadas paradas en pantalla
-		}
-		else
+		} else
 			Toast.makeText(getApplicationContext(), "No hay más paradas", Toast.LENGTH_SHORT).show();
 	}
 

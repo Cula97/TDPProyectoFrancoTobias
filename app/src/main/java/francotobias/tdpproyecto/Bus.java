@@ -134,4 +134,12 @@ public class Bus {
 		return false;
 	}
 
+	@Override
+	public String toString() {
+		return line.lineID + " " + busID + " " +
+				Double.toString(location.getLatitude()) + " " +
+				Double.toString(location.getLongitude())  + " " +
+				location.getBearing() + " " +
+				location.getSpeed();
+	}
 }
