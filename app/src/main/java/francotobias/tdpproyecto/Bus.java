@@ -12,10 +12,9 @@ import java.util.List;
 public class Bus {
 	private static final int MINIMUM_ANGLE_THRESHOLD = 15;
 	private static final int DIRECTION_CHECK_TIME = 600000; // Check every 10 mins
-
+	public final String busID;
 	protected Location location;
 	protected Line line;
-	public final String busID;
 	protected boolean isGo;
 	protected long lastDirectionCheckTime;
 
@@ -138,7 +137,7 @@ public class Bus {
 	public String toString() {
 		return line.lineID + " " + busID + " " +
 				Double.toString(location.getLatitude()) + " " +
-				Double.toString(location.getLongitude())  + " " +
+				Double.toString(location.getLongitude()) + " " +
 				location.getBearing() + " " +
 				location.getSpeed();
 	}

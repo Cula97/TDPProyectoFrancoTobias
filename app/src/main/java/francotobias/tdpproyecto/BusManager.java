@@ -1,7 +1,8 @@
 package francotobias.tdpproyecto;
 
 import android.location.Location;
-import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
 import java.util.Map;
@@ -25,11 +26,15 @@ public class BusManager {
 			int vel = Integer.parseInt(CSVgps.columnValue(VEL_COLUMN));
 			int ang = Integer.parseInt(CSVgps.columnValue(ANGLE_COLUMN));
 
-		/**
-			Log.d("Leido", line.lineID + " " + id + " " +
-					Double.toString(lat) + " " + Double.toString(lng) + " " +
-					ang + " " + vel);
-		**/
+			// Normale angle
+			if (180 < ang && ang <= 360)
+				ang -= 360;
+
+			/**
+			 Log.d("Leido", line.lineID + " " + id + " " +
+			 Double.toString(lat) + " " + Double.toString(lng) + " " +
+			 ang + " " + vel);
+			 **/
 
 			Location loc = new Location(PROVIDER_NAME);
 			loc.setLatitude(lat);
@@ -56,6 +61,10 @@ public class BusManager {
 			int vel = Integer.parseInt(CSVgps.columnValue(VEL_COLUMN));
 			int ang = Integer.parseInt(CSVgps.columnValue(ANGLE_COLUMN));
 
+			// Normalize angle
+			if (180 < ang && ang <= 360)
+				ang -= 360;
+
 			if (savedFleet.containsKey(id)) {
 				bus = savedFleet.get(id);
 				Location busLoc = bus.getLocation();
@@ -78,6 +87,17 @@ public class BusManager {
 
 			CSVgps.advanceRow();
 		}
+	}
+
+	public static Location latLngToLocation(LatLng latLng, String provider) {
+		if (provider == null)
+			provider = "";
+
+		Location location = new Location(provider);
+		location.setLatitude(latLng.latitude);
+		location.setLongitude(latLng.longitude);
+
+		return location;
 	}
 
 }

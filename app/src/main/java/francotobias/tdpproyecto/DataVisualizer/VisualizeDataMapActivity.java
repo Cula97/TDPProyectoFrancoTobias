@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -116,21 +115,21 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		});
 
 /**     Test
-		LatLng ll1 = new LatLng(-38.721521, -62.266075);
-		LatLng ll2 = new LatLng(-38.718508, -62.266129);
-		displaySectionAndBearing(ll1, ll2, Color.BLUE);
+ LatLng ll1 = new LatLng(-38.721521, -62.266075);
+ LatLng ll2 = new LatLng(-38.718508, -62.266129);
+ displaySectionAndBearing(ll1, ll2, Color.BLUE);
 
-		LatLng ll3 = new LatLng(-38.718416, -62.265099);
-		LatLng ll4 = new LatLng(-38.721354, -62.265174);
-		displaySectionAndBearing(ll3, ll4, Color.RED);
+ LatLng ll3 = new LatLng(-38.718416, -62.265099);
+ LatLng ll4 = new LatLng(-38.721354, -62.265174);
+ displaySectionAndBearing(ll3, ll4, Color.RED);
 
-		LatLng ll5 = new LatLng(-38.721254, -62.264133);
-		LatLng ll6 = new LatLng(-38.721246, -62.260024);
-		displaySectionAndBearing(ll5, ll6, Color.BLUE);
+ LatLng ll5 = new LatLng(-38.721254, -62.264133);
+ LatLng ll6 = new LatLng(-38.721246, -62.260024);
+ displaySectionAndBearing(ll5, ll6, Color.BLUE);
 
-		LatLng ll7 = new LatLng(-38.721798, -62.260003);
-		LatLng ll8 = new LatLng(-38.721739, -62.263973);
-		displaySectionAndBearing(ll7, ll8, Color.RED);
+ LatLng ll7 = new LatLng(-38.721798, -62.260003);
+ LatLng ll8 = new LatLng(-38.721739, -62.263973);
+ displaySectionAndBearing(ll7, ll8, Color.RED);
  **/
 
 		Iterator<LatLng> iteratorGo = line.getRoute().getGo().iterator();
@@ -175,12 +174,12 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
 
 		for (Bus bus : buses) {
-		LatLng position = new LatLng( bus.getLocation().getLatitude(), bus.getLocation().getLongitude());
+			LatLng position = new LatLng(bus.getLocation().getLatitude(), bus.getLocation().getLongitude());
 
 			mMap.addMarker(new MarkerOptions()
-				.position(position)
-				.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
-				.title(Float.toString(bus.getLocation().getBearing())));
+					.position(position)
+					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
+					.title(Float.toString(bus.getLocation().getBearing())));
 		}
 	}
 

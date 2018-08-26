@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.test.suitebuilder.annotation.Suppress;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -78,7 +77,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		try {
 			InputStream istream = assetManager.open("bus_stop.png");
 			icon = BitmapFactory.decodeStream(istream);
-		} catch (IOException e) {}
+		} catch (IOException e) {
+		}
 
 		Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
 

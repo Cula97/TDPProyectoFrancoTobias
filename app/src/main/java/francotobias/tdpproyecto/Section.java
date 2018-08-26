@@ -4,15 +4,16 @@ import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Section {
-	private Route route;
 	public final LatLng startPoint;
 	public final LatLng endPoint;
 	public final int bearing;
 	public final float size;
 	public final boolean isGo;
+	private Route route;
 	private List<Stop> stops;
 	private List<Float> distances;
 
@@ -23,13 +24,33 @@ public class Section {
 		this.endPoint = endPoint;
 		this.isGo = isGo;
 
-		Location start = new Location("");
-		Location end = new Location("");
-		start.setLatitude(startPoint.latitude);
-		start.setLongitude(startPoint.longitude);
-		end.setLatitude(endPoint.latitude);
-		end.setLongitude(endPoint.longitude);
+		Location start = BusManager.latLngToLocation(startPoint, "");
+		Location end = BusManager.latLngToLocation(endPoint, "");
+
 		bearing = (int) start.bearingTo(end);
 		size = start.distanceTo(end);
+	}
+
+	public void addStop(Stop stop) {
+		Stop lastStop;
+
+		if (stops == null) {
+			stops = new LinkedList<>();
+			distances = new LinkedList<>();
+			distances.add(0f);      // This value will be removed
+
+			lastStop = new Stop(startPoint.latitude, startPoint.longitude, stop.isGo);
+		} else
+			lastStop = stops.get(stops.size() - 1);
+
+
+		Location stopLoc = BusManager.latLngToLocation(stop.location, "");
+		Location lastStopLoc = BusManager.latLngToLocation(lastStop.location, "");
+		Location end = BusManager.latLngToLocation(endPoint, "");
+
+		stops.add(stop);
+		distances.remove(distances.size() - 1);         // Remove distance from previous last stop to endPoint
+		distances.add(lastStopLoc.distanceTo(stopLoc));   // Add distance from previous last stop to new last stop
+		distances.add(stopLoc.distanceTo(end));           // Add dsitance from new last stop to endPoint
 	}
 }
