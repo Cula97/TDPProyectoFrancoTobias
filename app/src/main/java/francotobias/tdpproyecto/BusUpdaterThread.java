@@ -36,5 +36,4 @@ public class BusUpdaterThread implements Runnable {
     public Line getLine(){return this.line;}
 
     public boolean isActive(){ return active;}
-
 }

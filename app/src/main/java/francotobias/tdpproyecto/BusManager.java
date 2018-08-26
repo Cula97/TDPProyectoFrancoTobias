@@ -16,7 +16,7 @@ public class BusManager {
 
 
 	public static void addBuses(Line line) {
-		CSVWizard CSVgps = DataManager.requestGPS(line.getID());
+		CSVWizard CSVgps = DataManager.getInstance().requestGPS(line.getID());
 
 		while (!CSVgps.isFinished()) {
 			String id = CSVgps.columnValue(ID_COLUMN);
@@ -45,7 +45,7 @@ public class BusManager {
 	}
 
 	public static void updateBuses(Line line) {
-		CSVWizard CSVgps = DataManager.requestGPS(line.getID());
+		CSVWizard CSVgps = DataManager.getInstance().requestGPS(line.getID());
 		Map<String, Bus> savedFleet = line.getFleet();
 		Bus bus;
 

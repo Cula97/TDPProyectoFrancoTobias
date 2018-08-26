@@ -15,11 +15,24 @@ public class DataManager {
 	private static String STOPSRET_FILENAME = "StopsRetFile";
 	private static String STOPS_FILENAME = "StopsFile";
 
+	private Context context;
 
-	public static Context context;
+	private static DataManager singleObject = null;
+
+	private DataManager(){
+	}
+
+	public static DataManager getInstance(){
+		if(singleObject == null)
+			singleObject = new DataManager();
+
+		return singleObject;
+	}
+
+	public void startUpdater(Context c){ context = c;  }
 
 
-	public static void forceUpdate() {
+	public void forceUpdate() {
 		CSVWizard updatedData, CSVlines;
 		FileHandler file;
 
@@ -57,11 +70,7 @@ public class DataManager {
 
 	}
 
-	public static void startUpdater(Context c) {
-		context = c;
-	}
-
-	public static boolean needUpdate() {
+	public boolean needUpdate() {
 		boolean FT = false;
 		SharedPreferences sp = context.getSharedPreferences("UpdateInformation", 0);
 		if (sp.getBoolean(FIRST_TIME_KEY, true)) {
@@ -74,34 +83,34 @@ public class DataManager {
 		return FT;
 	}
 
-	public static void update() {
+	public void update() {
 		if (needUpdate())
 			forceUpdate();
 	}
 
 
-	public static CSVWizard requestStopsGo(String line) {
+	public CSVWizard requestStopsGo(String line) {
 		FileHandler file = new FileHandler(context, STOPSGO_FILENAME + line);
 		return new CSVWizard(file.requestFileData());
 	}
 
-	public static CSVWizard requestStopsRet(String line) {
+	public CSVWizard requestStopsRet(String line) {
 		FileHandler file = new FileHandler(context, STOPSRET_FILENAME + line);
 		return new CSVWizard(file.requestFileData());
 	}
 
 	// No es guardado
-	public static CSVWizard requestGPS(String line) {
+	public CSVWizard requestGPS(String line) {
 		return JunarHandler.requestGPS(line);
 	}
 
-	public static CSVWizard requestRoutes() {
+	public CSVWizard requestRoutes() {
 		FileHandler file = new FileHandler(context, ROUTES_FILENAME);
 		return new CSVWizard(file.requestFileData());
 
 	}
 
-	public static CSVWizard requestLines() {
+	public CSVWizard requestLines() {
 		FileHandler file = new FileHandler(context, LINES_FILENAME);
 		return new CSVWizard(file.requestFileData());
 	}
