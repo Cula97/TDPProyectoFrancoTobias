@@ -16,8 +16,8 @@ public class BusUpdaterThread implements Runnable {
             handler.postDelayed(this,10000);
     }
 
-    public BusUpdaterThread(Handler h, Line line){
-        handler = h;
+    public BusUpdaterThread(Line line){
+        handler = new Handler();
         active = false;
         this.line = line;
     }
