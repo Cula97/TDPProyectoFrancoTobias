@@ -27,8 +27,8 @@ public class JunarHandler {
 
 		String urlText = JUNAR_URL + DATA_URL + API_KEY + FILTER_URL + LIMIT_URL;
 
-		Log.d("full url:", urlText);
-
+		Log.d("D", urlText);
+		// http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/GPS-TRANS/data.csv/?auth_key=2defe16a55c65963b8212e4f9a558dfa692d443d&filter0=column2[==]513
 		//Estas dos lineas son superrequetecontra necesarias
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
@@ -69,7 +69,7 @@ public class JunarHandler {
 		return requestStops(line, "v");
 	}
 
-	public static CSVWizard requestStops(String line, String direction) {
+	private static CSVWizard requestStops(String line, String direction) {
 		FILTER_URL = "";
 
 		if (line != null)
@@ -82,7 +82,6 @@ public class JunarHandler {
 
 	// NULL returns positions of all valid buses
 	public static CSVWizard requestGPS(String line) {
-
 		if (line != null)
 			FILTER_URL = "&filter0=column2[==]" + line;
 		else

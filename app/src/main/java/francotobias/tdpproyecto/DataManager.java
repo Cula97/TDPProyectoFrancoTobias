@@ -90,12 +90,6 @@ public class DataManager {
 		return new CSVWizard(file.requestFileData());
 	}
 
-	// Tengo que ver como tratar la dirección posiblemente si es mapeado a GO o RET
-	public static CSVWizard requestStops(String line, String direction) {
-		return JunarHandler.requestStops(line, direction);
-	}
-
-
 	// No es guardado
 	public static CSVWizard requestGPS(String line) {
 		return JunarHandler.requestGPS(line);

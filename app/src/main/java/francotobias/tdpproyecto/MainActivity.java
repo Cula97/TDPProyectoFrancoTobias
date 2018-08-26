@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
 		DataManager.startUpdater(this);
 		DataManager.update();
 
-
 		LineManager.initLines();
 
 		TextView text = findViewById(R.id.texto);
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 		FileHandler file1 = new FileHandler(this, "Data");
 		file1.writeFileData("Hola 123 \n Holas 12345 \n Hoals 12345");
 		FileHandler file2 = new FileHandler(this, "Data");
-		text.setText(file2.requestFileData());
+		text.setText(DataManager.requestGPS("513").requestData());
 
 		Spinner spinner = findViewById(R.id.spinnerMode);
 		// Create an ArrayAdapter using the string array and a default spinner layout
