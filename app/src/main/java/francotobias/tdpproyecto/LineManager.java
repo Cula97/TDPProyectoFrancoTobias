@@ -17,7 +17,7 @@ public class LineManager {
 	protected static List<Line> lines = new LinkedList<>();
 
 	public static void initLines() {
-		CSVWizard CSVlines = DataManager.requestLines();
+		CSVWizard CSVlines = DataManager.getInstance().requestLines();
 		CSVWizard CSVstops;
 
 
@@ -33,7 +33,7 @@ public class LineManager {
 			Route r = new Route(l, routeGo, routeReturn);
 
 			// Creates stops
-			CSVstops = DataManager.requestStopsGo(id);
+			CSVstops = DataManager.getInstance().requestStopsGo(id);
 			List<Stop> s = new LinkedList<>();
 			r.setStops(s);
 			while (!CSVstops.isFinished()) {
@@ -44,7 +44,7 @@ public class LineManager {
 				CSVstops.advanceRow();
 			}
 
-			CSVstops = DataManager.requestStopsRet(id);
+			CSVstops = DataManager.getInstance().requestStopsRet(id);
 			while (!CSVstops.isFinished()) {
 				Double lat = Double.parseDouble(CSVstops.columnValue(LAT_COLUMN));
 				Double lng = Double.parseDouble(CSVstops.columnValue(LNG_COLUMN));
