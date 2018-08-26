@@ -24,6 +24,8 @@ public class BusManager {
 			double lng = Double.parseDouble(CSVgps.columnValue(LNG_COLUMN));
 			int vel = Integer.parseInt(CSVgps.columnValue(VEL_COLUMN));
 			int ang = Integer.parseInt(CSVgps.columnValue(ANGLE_COLUMN));
+			if (180 < ang && ang <= 360)
+				ang -= 360;
 
 		/**
 			Log.d("Leido", line.lineID + " " + id + " " +
@@ -55,6 +57,8 @@ public class BusManager {
 			double lng = Double.parseDouble(CSVgps.columnValue(LNG_COLUMN));
 			int vel = Integer.parseInt(CSVgps.columnValue(VEL_COLUMN));
 			int ang = Integer.parseInt(CSVgps.columnValue(ANGLE_COLUMN));
+			if (180 < ang && ang <= 360)
+				ang -= 360;
 
 			if (savedFleet.containsKey(id)) {
 				bus = savedFleet.get(id);
