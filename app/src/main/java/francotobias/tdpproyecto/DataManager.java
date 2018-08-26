@@ -4,20 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class DataManager {
+	public static Context context;
 	//Nota: debe ser una clase estática.
 	private static String UPDATE_FILENAME = "UpdateInformation";
 	private static String LASTDATE_KEY = "LastDate";
 	private static String FIRST_TIME_KEY = "FirstTime";
-
 	private static String ROUTES_FILENAME = "RouteFile";
 	private static String LINES_FILENAME = "LinesFile";
 	private static String STOPSGO_FILENAME = "StopsGoFile";
 	private static String STOPSRET_FILENAME = "StopsRetFile";
 	private static String STOPS_FILENAME = "StopsFile";
-
-
-	public static Context context;
-
 
 	public static void forceUpdate() {
 		CSVWizard updatedData, CSVlines;

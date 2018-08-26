@@ -1,6 +1,5 @@
 package francotobias.tdpproyecto;
 
-import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -14,6 +13,7 @@ public class LineManager {
 	private static final int LAT_COLUMN = 3;
 	private static final int LNG_COLUMN = 4;
 
+	// TODO: Reemplazar por un Map<lineID, ID> maybe?
 	protected static List<Line> lines = new LinkedList<>();
 
 	public static void initLines() {

@@ -9,10 +9,9 @@ import java.util.Map;
 
 public class Line {
 	private static final long FLEET_UPDATE_TIME = 20000; // Update every 20 sec at max
-
+	public final String lineID;
 	protected Map<String, Bus> fleet = new HashMap<>();
 	protected Route route;
-	public final String lineID;
 	private long lastUpdateTime;
 
 	public Line(String ID) {
@@ -35,6 +34,11 @@ public class Line {
 		return fleet;
 	}
 
+
+	/** TODO: Refactory de esto, este metodo no deberia encargarse de chequear si hay que
+	 *        hay que actulizar las posiciones de los colectivos, eso deberia ser responsabilidad
+	 *        del BusManager.
+	 */
 	public Iterable<Bus> updateBuses() {
 		if (fleet.isEmpty()) {
 			BusManager.addBuses(this);
