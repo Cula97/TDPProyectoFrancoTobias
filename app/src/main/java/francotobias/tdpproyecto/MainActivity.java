@@ -66,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
 	}
 
-	public void launchVisulizeDataActivit(View view) {
+
+	public void launchVisulizeDataActivity(View view) {
 		Intent intent = new Intent(this, VisualizeDataMapActivity.class);
 		EditText editText = findViewById(R.id.editTextDebugLine);
 		String line = editText.getText().toString();
@@ -83,13 +84,6 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 
-
-
-
-
-
-
-
 	public void askLocationPermission() {
 		if(ContextCompat.checkSelfPermission(MainActivity.this,
 				Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -99,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 			requestLocationPermission();
 		}
 	}
+
 
 	public void requestLocationPermission(){
 		if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -124,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 			ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 		}
 	}
+
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

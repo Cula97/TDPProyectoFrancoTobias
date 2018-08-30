@@ -40,9 +40,9 @@ public class Section {
 			distances.add(0f);      // This value will be removed
 
 			lastStop = new Stop(startPoint.latitude, startPoint.longitude, stop.isGo);
-		} else
+		}
+		else
 			lastStop = stops.get(stops.size() - 1);
-
 
 		Location stopLoc = BusManager.latLngToLocation(stop.location, "");
 		Location lastStopLoc = BusManager.latLngToLocation(lastStop.location, "");

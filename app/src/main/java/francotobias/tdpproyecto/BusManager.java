@@ -26,7 +26,7 @@ public class BusManager {
 			int vel = Integer.parseInt(CSVgps.columnValue(VEL_COLUMN));
 			int ang = Integer.parseInt(CSVgps.columnValue(ANGLE_COLUMN));
 
-			// Normale angle
+			// Normalize angle
 			if (180 < ang && ang <= 360)
 				ang -= 360;
 

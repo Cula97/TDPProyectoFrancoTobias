@@ -28,7 +28,7 @@ public class JunarHandler {
 		String urlText = JUNAR_URL + DATA_URL + API_KEY + FILTER_URL + LIMIT_URL;
 
 		Log.d("D", urlText);
-		// http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/GPS-TRANS/data.csv/?auth_key=2defe16a55c65963b8212e4f9a558dfa692d443d&filter0=column2[==]513
+
 		//Estas dos lineas son superrequetecontra necesarias
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);

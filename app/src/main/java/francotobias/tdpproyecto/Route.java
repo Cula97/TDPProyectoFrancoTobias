@@ -1,5 +1,7 @@
 package francotobias.tdpproyecto;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.LinkedList;
@@ -39,7 +41,56 @@ public class Route {
 	}
 
 	public void setStops(List<Stop> s) {
-		// TODO: falta asosciar las paradas a las secciones, no se si en este metodo o en LineManager
+		// TODO: codigo repetido, revisar.
+		int stopIndex = s.size(), goIndex = 0, retIndex = 0;
+		float  newDistance, lastDistance = 100000;
+
+		Section sectionGo = routeSectionGo.get(goIndex);
+		Section sectionRet = routeSectionReturn.get(retIndex);
+		Stop stop;
+
+		Location stopLoc, epLoc = BusManager.latLngToLocation(sectionGo.endPoint, "");
+		// Associates stops in te go route to the corresponding sections
+		for (int i = 0; i < stopIndex; i++) {
+			stop = s.get(i);
+
+			if (!stop.isGo) {
+				stopIndex = s.indexOf(stop);
+				break;
+			}
+
+			stopLoc = BusManager.latLngToLocation(stop.location, "");
+			newDistance = stopLoc.distanceTo(epLoc);
+
+			if (newDistance < lastDistance)
+				lastDistance = newDistance;
+			else {
+				sectionGo = routeSectionGo.get(++goIndex);
+				epLoc = BusManager.latLngToLocation(sectionGo.endPoint, "");
+				lastDistance = stopLoc.distanceTo(epLoc);
+			}
+			sectionGo.addStop(stop);
+		}
+
+
+		lastDistance = 100000;
+		epLoc = BusManager.latLngToLocation(sectionRet.endPoint, "");
+		// Associates stops in te ret route to the corresponding sections
+		for  (int i = s.size() - 1; i >= stopIndex; i--) {
+			stop = s.get(i);
+			stopLoc = BusManager.latLngToLocation(stop.location, "");
+			newDistance = stopLoc.distanceTo(epLoc);
+
+			if (newDistance < lastDistance)
+				lastDistance = newDistance;
+			else {
+				sectionRet = routeSectionReturn.get(++retIndex);
+				epLoc = BusManager.latLngToLocation(sectionRet.endPoint, "");
+				lastDistance = stopLoc.distanceTo(epLoc);
+			}
+			sectionRet.addStop(stop);
+		}
+
 		stops = s;
 	}
 
