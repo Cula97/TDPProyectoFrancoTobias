@@ -6,8 +6,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,6 +32,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 	private GoogleMap mMap;
 	private LatLng bahia;
+	private EditText searchBox;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +46,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map);
 		mapFragment.getMapAsync(this);
+
+		searchBox = (EditText) findViewById(R.id.input_search);
 	}
 
 
@@ -56,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		bahia = new LatLng(-38.7171, -62.2655);
 
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bahia, 14));
+		init();
 	}
 
 	public void displayRoute(Line line) {
@@ -87,6 +98,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 					.position(s.getLocation())
 					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
 					.flat(true));
+	}
+
+	private void init() {
+
+		searchBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+				if(i == EditorInfo.IME_ACTION_SEARCH || EditorInfo.IME_ACTION_DONE == i || KeyEvent.KEYCODE_ENTER == keyEvent.getAction() || KeyEvent.ACTION_DOWN == keyEvent.getAction()) {
+					Toast.makeText(getApplicationContext(), "Buscando "+searchBox.getText(), Toast.LENGTH_LONG).show();
+					searchMap();
+				}
+
+				return false;
+			}
+		});
+
+	}
+
+	private void searchMap() {
+
 	}
 
 }

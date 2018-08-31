@@ -18,29 +18,50 @@
 		app:layout_constraintStart_toStartOf="parent"
 		tools:context=".MapsActivity" />
 
-	<SearchView
-		android:id="@+id/searchViewAdress"
-		android:layout_width="288dp"
-		android:layout_height="39dp"
-		android:layout_marginStart="16dp"
-		android:layout_marginTop="16dp"
-		android:background="@color/colorPrimary"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent">
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		android:layout_marginTop="10dp"
+		android:layout_marginRight="0dp"
+		android:layout_marginLeft="0dp"
+		android:elevation="10dp"
+		android:background="#fff"
+		android:id="@+id/relativeLayout1">
 
-	</SearchView>
+		<ImageView
+			android:layout_width="20dp"
+			android:layout_height="20dp"
+			android:id="@+id/ic_magnify"
+			android:layout_centerVertical = "true"
+			android:layout_marginLeft="10dp"
+			android:src="@drawable/ic_magnify"
+			/>
 
-	<Spinner
-		android:id="@+id/spinner"
-		android:layout_width="47dp"
-		android:layout_height="40dp"
-		android:layout_marginEnd="16dp"
-		android:layout_marginStart="16dp"
-		android:layout_marginTop="16dp"
-		android:background="?attr/actionModeSplitBackground"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toEndOf="@+id/searchViewAdress"
-		app:layout_constraintTop_toTopOf="parent" />
+		<EditText
+			android:layout_marginLeft="10dp"
+			android:layout_width="200dp"
+			android:layout_height="match_parent"
+			android:layout_toRightOf="@+id/ic_magnify"
+			android:layout_centerVertical="true"
+			android:textSize="15sp"
+			android:textColor="#000"
+			android:id="@+id/input_search"
+			android:background="@null"
+			android:hint="Search"
+			android:maxLines="1"
+			android:inputType="text"
+			/>
+
+		<Spinner
+			android:layout_marginLeft="10dp"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_toRightOf="@+id/input_search"
+			android:entries="@array/bus_list"
+			android:prompt="@string/app_name"
+		/>
+
+	</RelativeLayout>
 
 	<android.support.design.widget.FloatingActionButton
 		android:id="@+id/floatingActionButton"
