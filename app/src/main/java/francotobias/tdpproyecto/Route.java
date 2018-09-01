@@ -1,6 +1,7 @@
 package francotobias.tdpproyecto;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -65,7 +66,11 @@ public class Route {
 			if (newDistance < lastDistance)
 				lastDistance = newDistance;
 			else {
-				sectionGo = routeSectionGo.get(++goIndex);
+				// TODO: fix dis
+				int aux = routeSectionGo.size() - 1;
+				sectionGo = routeSectionGo.get(Math.min(++goIndex, aux));                // <-- FIX!!!
+				if (aux < goIndex)
+					Log.d("parada ida",((Integer) goIndex).toString());
 				epLoc = BusManager.latLngToLocation(sectionGo.endPoint, "");
 				lastDistance = stopLoc.distanceTo(epLoc);
 			}
@@ -84,7 +89,11 @@ public class Route {
 			if (newDistance < lastDistance)
 				lastDistance = newDistance;
 			else {
-				sectionRet = routeSectionReturn.get(++retIndex);
+				//TODO: fix dis too
+				int aux = routeSectionReturn.size() - 1;
+				sectionRet = routeSectionReturn.get(Math.min(++retIndex, aux));        // <-- FIX!!!
+				if (aux < retIndex)
+					Log.d("parada vuelta",((Integer) retIndex).toString());
 				epLoc = BusManager.latLngToLocation(sectionRet.endPoint, "");
 				lastDistance = stopLoc.distanceTo(epLoc);
 			}

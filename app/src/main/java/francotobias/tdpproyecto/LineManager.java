@@ -35,7 +35,7 @@ public class LineManager {
 			// Creates stops
 			CSVstops = DataManager.getInstance().requestStopsGo(id);
 			List<Stop> s = new LinkedList<>();
-			r.setStops(s);
+
 			while (!CSVstops.isFinished()) {
 				Double lat = Double.parseDouble(CSVstops.columnValue(LAT_COLUMN));
 				Double lng = Double.parseDouble(CSVstops.columnValue(LNG_COLUMN));
@@ -53,6 +53,7 @@ public class LineManager {
 				CSVstops.advanceRow();
 			}
 
+			r.setStops(s);
 			CSVlines.advanceRow();
 		}
 

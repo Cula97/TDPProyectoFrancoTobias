@@ -25,12 +25,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import francotobias.tdpproyecto.Bus;
+import francotobias.tdpproyecto.BusManager;
 import francotobias.tdpproyecto.Line;
 import francotobias.tdpproyecto.LineManager;
 import francotobias.tdpproyecto.MainActivity;
 import francotobias.tdpproyecto.R;
+import francotobias.tdpproyecto.Route;
+import francotobias.tdpproyecto.Section;
 import francotobias.tdpproyecto.Stop;
 
 public class VisualizeDataMapActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -90,9 +94,11 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 			case "Bus":
 				displayBusInterface();
 				break;
+			case "Section":
+				displaySectionInterface();
+				break;
 		}
 	}
-
 
 	private void displayRouteInterface() {
 		findViewById(R.id.buttonSection).setVisibility(View.VISIBLE);
@@ -105,6 +111,20 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		displayBusesWithBearings();
 	}
 
+	private void displaySectionInterface() {
+		displayRouteButNowInAProperWay();
+
+
+		// Change the Line Listener
+		mMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+			@Override
+			public void onPolylineClick(Polyline polyline) {
+				Section section = (Section) polyline.getTag();
+				displayStopsWithDetails(section);
+			}
+		});
+	}
+
 
 	private void displayRoutesWithBearings() {
 		mMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
@@ -113,24 +133,6 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 				Toast.makeText(getApplicationContext(), polyline.getTag().toString(), Toast.LENGTH_SHORT).show();
 			}
 		});
-
-/**     Test
- LatLng ll1 = new LatLng(-38.721521, -62.266075);
- LatLng ll2 = new LatLng(-38.718508, -62.266129);
- displaySectionAndBearing(ll1, ll2, Color.BLUE);
-
- LatLng ll3 = new LatLng(-38.718416, -62.265099);
- LatLng ll4 = new LatLng(-38.721354, -62.265174);
- displaySectionAndBearing(ll3, ll4, Color.RED);
-
- LatLng ll5 = new LatLng(-38.721254, -62.264133);
- LatLng ll6 = new LatLng(-38.721246, -62.260024);
- displaySectionAndBearing(ll5, ll6, Color.BLUE);
-
- LatLng ll7 = new LatLng(-38.721798, -62.260003);
- LatLng ll8 = new LatLng(-38.721739, -62.263973);
- displaySectionAndBearing(ll7, ll8, Color.RED);
- **/
 
 		Iterator<LatLng> iteratorGo = line.getRoute().getGo().iterator();
 		LatLng latLng1 = iteratorGo.next();
@@ -223,12 +225,12 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 	}
 
 
+	// Muestra las paradas de a una usando los metodos viejos
 	public void displayStop(View view) {
 		if (stopIndex < stopAmount) {
 			List<Stop> stops = line.getRoute().getStops();
 
 			String type = "_ret";
-
 			if (stops.get(stopIndex).isGo())
 				type = "_go";
 
@@ -252,5 +254,69 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 			Toast.makeText(getApplicationContext(), "No hay más paradas", Toast.LENGTH_SHORT).show();
 	}
 
+	// Muestra las paradas asociadas a una seccion
+	private void displayStopsWithDetails(Section section) {
+		mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+			@Override
+			public boolean onMarkerClick(Marker marker) {
+				return false;
+			}
+		});
+
+		List<Stop> stops = section.getStops();
+
+		String type = "_ret";
+		if (section.isGo)
+			type = "_go";
+
+		AssetManager assetManager = getAssets();
+		Bitmap icon = null;
+		try {
+			InputStream istream = assetManager.open("bus_stop" + type + ".png");
+			icon = BitmapFactory.decodeStream(istream);
+		} catch (IOException e) {
+		}
+
+		Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
+
+		Integer i = 0;
+		Location newLoc, prevLoc = BusManager.latLngToLocation(section.startPoint, "");
+		Float distance;
+		for (Stop stop : stops) {
+			newLoc = BusManager.latLngToLocation(stop.location, "");
+			distance = prevLoc.distanceTo(newLoc);
+
+			mMap.addMarker(new MarkerOptions()
+					.position(stop.location)
+					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
+					.title((++i).toString())
+					.snippet(distance.toString()));
+
+			prevLoc = newLoc;
+		}
+	}
+
+
+	// Usa las secciones para crear la ruta, cada tramo tiene una una polylinea con su seccion asociada
+	private void displayRouteButNowInAProperWay() {
+		List<Section> sectionsGo = line.getRoute().getSectionsGo();
+		List<Section> sectionsRet = line.getRoute().getSectionsReturn();
+
+		for (Section section : sectionsGo) {
+			mMap.addPolyline(new PolylineOptions()
+					.add(section.startPoint, section.endPoint)
+					.color(Color.BLUE)
+					.clickable(true))
+					.setTag(section);
+		}
+
+		for (Section section : sectionsRet) {
+			mMap.addPolyline(new PolylineOptions()
+					.add(section.startPoint, section.endPoint)
+					.color(Color.RED)
+					.clickable(true))
+					.setTag(section);
+		}
+	}
 
 }

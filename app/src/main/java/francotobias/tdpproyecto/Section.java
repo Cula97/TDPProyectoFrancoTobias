@@ -53,4 +53,8 @@ public class Section {
 		distances.add(lastStopLoc.distanceTo(stopLoc));   // Add distance from previous last stop to new last stop
 		distances.add(stopLoc.distanceTo(end));           // Add dsitance from new last stop to endPoint
 	}
+
+	public List<Stop> getStops() {
+		return stops;
+	}
 }
