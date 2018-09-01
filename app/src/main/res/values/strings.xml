@@ -11,4 +11,10 @@
 	</string-array>
 
 
+	<string-array name="bus_list">
+		<item>513</item>
+		<item>502</item>
+		<item>505</item>
+	</string-array>
+
 </resources>
