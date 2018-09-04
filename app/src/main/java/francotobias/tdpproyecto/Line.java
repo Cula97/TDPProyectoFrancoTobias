@@ -36,7 +36,7 @@ public class Line {
 
 
 	/** TODO: Refactory de esto, este metodo no deberia encargarse de chequear si hay que
-	 *        hay que actulizar las posiciones de los colectivos, eso deberia ser responsabilidad
+	 *        actulizar las posiciones de los colectivos, eso deberia ser responsabilidad
 	 *        del BusManager.
 	 */
 	public Iterable<Bus> updateBuses() {
@@ -60,8 +60,8 @@ public class Line {
 		Location stop = new Location("");
 
 		for (Stop s : stops) {
-			stop.setLatitude(s.getLocation().latitude);
-			stop.setLatitude(s.getLocation().longitude);
+			stop.setLatitude(s.location.latitude);
+			stop.setLatitude(s.location.longitude);
 			dist = location.distanceTo(stop);
 			if (dist < minDistGo && s.isGo()) {
 				minDistGo = dist;

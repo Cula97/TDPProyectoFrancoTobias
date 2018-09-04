@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -112,14 +113,26 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 	}
 
 	private void displaySectionInterface() {
+		findViewById(R.id.checkBoxSectionsGo).setVisibility(View.VISIBLE);
+		findViewById(R.id.checkBoxSectionsReturn).setVisibility(View.VISIBLE);
+
 		displayRouteButNowInAProperWay();
 
+		mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+			@Override
+			public void onMapClick(LatLng latLng) {
+				mMap.clear();
+				displayRouteButNowInAProperWay();
+			}
+		});
 
 		// Change the Line Listener
 		mMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
 			@Override
 			public void onPolylineClick(Polyline polyline) {
 				Section section = (Section) polyline.getTag();
+				if (section.getStops() != null)
+					mMap.clear();
 				displayStopsWithDetails(section);
 			}
 		});
@@ -249,7 +262,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
 					.flat(true));
 
-			stopIndex += 3; // Demasiadas paradas en pantalla
+			stopIndex++; // Demasiadas paradas en pantalla
 		} else
 			Toast.makeText(getApplicationContext(), "No hay más paradas", Toast.LENGTH_SHORT).show();
 	}
@@ -265,9 +278,16 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 
 		List<Stop> stops = section.getStops();
 
+		int color = Color.RED;
 		String type = "_ret";
-		if (section.isGo)
+		if (section.isGo) {
 			type = "_go";
+			color = Color.BLUE;
+		}
+
+		mMap.addPolyline(new PolylineOptions()
+				.add(section.startPoint, section.endPoint)
+				.color(color));
 
 		AssetManager assetManager = getAssets();
 		Bitmap icon = null;
@@ -282,6 +302,12 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		Integer i = 0;
 		Location newLoc, prevLoc = BusManager.latLngToLocation(section.startPoint, "");
 		Float distance;
+
+		if (stops == null) {
+			Toast.makeText(getApplicationContext(), "Tramo sin paradas", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
 		for (Stop stop : stops) {
 			newLoc = BusManager.latLngToLocation(stop.location, "");
 			distance = prevLoc.distanceTo(newLoc);
@@ -301,22 +327,27 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 	private void displayRouteButNowInAProperWay() {
 		List<Section> sectionsGo = line.getRoute().getSectionsGo();
 		List<Section> sectionsRet = line.getRoute().getSectionsReturn();
+		boolean showGo = ((CheckBox) findViewById(R.id.checkBoxSectionsGo)).isChecked();
+		boolean showRet = ((CheckBox) findViewById(R.id.checkBoxSectionsReturn)).isChecked();
 
-		for (Section section : sectionsGo) {
-			mMap.addPolyline(new PolylineOptions()
-					.add(section.startPoint, section.endPoint)
-					.color(Color.BLUE)
-					.clickable(true))
-					.setTag(section);
-		}
+		if (showGo)
+			for (Section section : sectionsGo) {
+				mMap.addPolyline(new PolylineOptions()
+						.add(section.startPoint, section.endPoint)
+						.color(Color.BLUE)
+						.clickable(true))
+						.setTag(section);
+			}
 
-		for (Section section : sectionsRet) {
-			mMap.addPolyline(new PolylineOptions()
-					.add(section.startPoint, section.endPoint)
-					.color(Color.RED)
-					.clickable(true))
-					.setTag(section);
-		}
-	}
+		if (showRet)
+			for (Section section : sectionsRet) {
+				mMap.addPolyline(new PolylineOptions()
+						.add(section.startPoint, section.endPoint)
+						.color(Color.RED)
+						.clickable(true))
+						.setTag(section);
+			}
+
+    }
 
 }

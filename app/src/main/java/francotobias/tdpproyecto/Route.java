@@ -12,6 +12,7 @@ public class Route {
 	protected List<Section> routeSectionGo, routeSectionReturn;
 	protected List<LatLng> routeGo, routeReturn;
 	protected Line line;
+	protected boolean validStops;
 	protected List<Stop> stops;
 
 	public Route(Line l, List<LatLng> rGo, List<LatLng> rReturn) {
@@ -41,8 +42,16 @@ public class Route {
 		return stops;
 	}
 
+
+	/**
+	 * La lista de entrada contiene las paradas de ida en el sentido del recorrido (de ida)
+	 * y las de vuelta en sentido opuesto al recorrido (arrancan al final de trayecto de vuelta)
+	 */
 	public void setStops(List<Stop> s) {
-		// TODO: codigo repetido, revisar.
+		stops = s;
+
+		// TODO: algunas paradas se asocian mal pq hay tramos sin paradas, agregar distancia minima a inicio y final del tramo.
+		// Associates stops in te go route to the corresponding sections
 		int stopIndex = s.size(), goIndex = 0, retIndex = 0;
 		float  newDistance, lastDistance = 100000;
 
@@ -50,8 +59,9 @@ public class Route {
 		Section sectionRet = routeSectionReturn.get(retIndex);
 		Stop stop;
 
-		Location stopLoc, epLoc = BusManager.latLngToLocation(sectionGo.endPoint, "");
-		// Associates stops in te go route to the corresponding sections
+		Location stopLoc;
+		Location epLoc = BusManager.latLngToLocation(sectionGo.endPoint, "");
+
 		for (int i = 0; i < stopIndex; i++) {
 			stop = s.get(i);
 
@@ -66,21 +76,27 @@ public class Route {
 			if (newDistance < lastDistance)
 				lastDistance = newDistance;
 			else {
-				// TODO: fix dis
-				int aux = routeSectionGo.size() - 1;
-				sectionGo = routeSectionGo.get(Math.min(++goIndex, aux));                // <-- FIX!!!
-				if (aux < goIndex)
-					Log.d("parada ida",((Integer) goIndex).toString());
+				// Orden de paradas invalido
+				if (++goIndex >= routeSectionGo.size()) {
+					Log.d("pi " + line.lineID + " defasada",  ((Integer)routeSectionGo.size()).toString()+"    "+ ((Integer)goIndex).toString());
+					sectionGo = routeSectionGo.get(0);      // for debugging
+					validStops = false;
+				//	return;
+				}
+				else
+					sectionGo = routeSectionGo.get(goIndex);
+
 				epLoc = BusManager.latLngToLocation(sectionGo.endPoint, "");
 				lastDistance = stopLoc.distanceTo(epLoc);
 			}
+
 			sectionGo.addStop(stop);
 		}
 
 
 		lastDistance = 100000;
 		epLoc = BusManager.latLngToLocation(sectionRet.endPoint, "");
-		// Associates stops in te ret route to the corresponding sections
+		// Associates stops in the ret route to the corresponding sections
 		for  (int i = s.size() - 1; i >= stopIndex; i--) {
 			stop = s.get(i);
 			stopLoc = BusManager.latLngToLocation(stop.location, "");
@@ -89,18 +105,24 @@ public class Route {
 			if (newDistance < lastDistance)
 				lastDistance = newDistance;
 			else {
-				//TODO: fix dis too
-				int aux = routeSectionReturn.size() - 1;
-				sectionRet = routeSectionReturn.get(Math.min(++retIndex, aux));        // <-- FIX!!!
-				if (aux < retIndex)
-					Log.d("parada vuelta",((Integer) retIndex).toString());
+				// Orden deparadas invalido
+				if (++retIndex >= routeSectionReturn.size()) {
+					Log.d("pv " + line.lineID + " defasada",  ((Integer)routeSectionReturn.size()).toString()+"    "+ ((Integer)retIndex).toString());
+					sectionRet = routeSectionReturn.get(0);     // for debugging
+					validStops = false;
+				//	return;
+				}
+				else
+					sectionRet = routeSectionReturn.get(retIndex);
+
 				epLoc = BusManager.latLngToLocation(sectionRet.endPoint, "");
 				lastDistance = stopLoc.distanceTo(epLoc);
 			}
+
 			sectionRet.addStop(stop);
 		}
 
-		stops = s;
+		validStops = true;
 	}
 
 	public List<Section> getSectionsGo() {
@@ -118,6 +140,8 @@ public class Route {
 	public List<LatLng> getReturn() {
 		return routeReturn;
 	}
+
+//	public boolean
 
 	public void addStop(Stop s) {
 		stops.add(s);

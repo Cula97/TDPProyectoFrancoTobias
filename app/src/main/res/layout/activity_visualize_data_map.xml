@@ -38,4 +38,32 @@
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
 
+	<CheckBox
+		android:id="@+id/checkBoxSectionsGo"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="4dp"
+		android:layout_marginTop="4dp"
+		android:checked="true"
+		android:layoutDirection="rtl"
+		android:text="Ruta Ida"
+		android:textAlignment="viewEnd"
+		android:visibility="visible"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<CheckBox
+		android:id="@+id/checkBoxSectionsReturn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="4dp"
+		android:layout_marginTop="4dp"
+		android:checked="false"
+		android:layoutDirection="rtl"
+		android:text="Ruta Vuelta"
+		android:textAlignment="viewEnd"
+		android:visibility="visible"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/checkBoxSectionsGo" />
+
 </android.support.constraint.ConstraintLayout>
