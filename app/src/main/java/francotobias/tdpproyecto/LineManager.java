@@ -65,7 +65,7 @@ public class LineManager {
 
 		for (int i = 0; i < coords.length; i++) {
 			String latsLngs[] = coords[i].split(",");
-			//El archivo contiene Long Lat
+			//El archivo contiene Lng Lat
 			Double lat = Double.parseDouble(latsLngs[1]);
 			Double lng = Double.parseDouble(latsLngs[0]);
 			toReturn.add(new LatLng(lat, lng));
@@ -80,7 +80,8 @@ public class LineManager {
 			if (ID.equals(l.getID()))
 				return l;
 
-		Log.d("Ruta no encontrada", ID + " no existe");
+		Log.d("Ruta no existe", ID);
+
 		return null;
 	}
 

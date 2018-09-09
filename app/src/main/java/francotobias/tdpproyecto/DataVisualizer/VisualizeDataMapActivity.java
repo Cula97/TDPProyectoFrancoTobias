@@ -60,12 +60,20 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 
 		String lineID = getIntent().getStringExtra(MainActivity.DEBUG_LINE);
 		line = LineManager.getLine(lineID);
+		if (line == null) {
+			Toast.makeText(getApplicationContext(), lineID + " no existe", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
 		goSectionIndex = 0;
 		retSectionIndex = 0;
 		goSectionAmount = line.getRoute().getGo().size();
 		retSectionAmount = line.getRoute().getReturn().size();
 		stopIndex = 0;
-		stopAmount = line.getRoute().getStops().size();
+
+		if (line.getRoute().getStops() != null) {
+			stopAmount = line.getRoute().getStops().size();
+		}
 	}
 
 
@@ -262,7 +270,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
 					.flat(true));
 
-			stopIndex++; // Demasiadas paradas en pantalla
+			stopIndex++;        // Demasiadas paradas en pantalla
 		} else
 			Toast.makeText(getApplicationContext(), "No hay más paradas", Toast.LENGTH_SHORT).show();
 	}

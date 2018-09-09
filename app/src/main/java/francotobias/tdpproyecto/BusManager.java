@@ -89,6 +89,7 @@ public class BusManager {
 		}
 	}
 
+	// Crear clase Util?
 	public static Location latLngToLocation(LatLng latLng, String provider) {
 		if (provider == null)
 			provider = "";

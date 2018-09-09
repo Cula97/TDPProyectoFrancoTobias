@@ -53,6 +53,7 @@ public class Line {
 		return fleet.values();
 	}
 
+	// Mover a Route?
 	public Stop[] getClosestStops(Location location) {
 		List<Stop> stops = route.getStops();
 		Stop[] toReturn = new Stop[2];
@@ -63,7 +64,7 @@ public class Line {
 			stop.setLatitude(s.location.latitude);
 			stop.setLatitude(s.location.longitude);
 			dist = location.distanceTo(stop);
-			if (dist < minDistGo && s.isGo()) {
+			if (dist < minDistGo && s.isGo) {
 				minDistGo = dist;
 				toReturn[0] = new Stop(stop.getLatitude(), stop.getLongitude(), true);
 			}
