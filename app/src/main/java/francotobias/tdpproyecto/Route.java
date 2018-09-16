@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,13 +85,18 @@ public class Route {
 		this.stops.addAll(stopsGo);
 		this.stops.addAll(stopsRet);
 
-		addStopsToSections(stopsGo);
-		addStopsToSections(stopsRet);
+		addStopsToSections(stopsGo, routeSectionGo);
+		addStopsToSections(stopsRet, routeSectionReturn);
 	}
 
 
-	private void addStopsToSections(List<Stop> stops) {
-		List<Section> sections = stops.get(0).isGo ? routeSectionGo : routeSectionReturn;
+	private void addStopsToSections(List<Stop> stops, List<Section> sections) {
+		// Algunas listas de paradas vienen invertidas
+		if (PolyUtil.distanceToLine(stops.get(0).location, sections.get(0).startPoint, sections.get(0).endPoint) > 5e3f) {
+			Collections.reverse(stops);
+			Log.d("Paradas Invertidas", sections.get(0).getRoute().getLine().lineID);
+		}
+
 		Iterator<Section> sectionIterator = sections.iterator();
 		Iterator<Stop> stopIterator = stops.iterator();
 		float distance, lastDistance = -1;

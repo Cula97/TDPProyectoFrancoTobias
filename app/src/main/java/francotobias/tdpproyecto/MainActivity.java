@@ -18,6 +18,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import francotobias.tdpproyecto.DataVisualizer.VisualizeDataMapActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -64,20 +66,37 @@ public class MainActivity extends AppCompatActivity {
 
 		spinner.setSelection(0);
 
+
+		ArrayList<String> lines = new ArrayList<>();
+		for (Line line : LineManager.lines())
+			if (line.getRoute().validStops())
+				lines.add(line.lineID);
+		lines.add("-----");
+		for (Line line : LineManager.lines())
+			if (!line.getRoute().validStops() && line.getRoute().getStops() != null)
+				lines.add(line.lineID);
+
+		Spinner lineSpinner = findViewById(R.id.spinnerLines);
+		ArrayAdapter<String> lineSpinnerAdapter = new ArrayAdapter<>
+				(this, android.R.layout.simple_spinner_item, lines);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		lineSpinner.setAdapter(lineSpinnerAdapter);
+
+		lineSpinner.setSelection(lines.indexOf("504"));
 	}
 
 
 	public void launchVisulizeDataActivity(View view) {
 		Intent intent = new Intent(this, VisualizeDataMapActivity.class);
-		EditText editText = findViewById(R.id.editTextDebugLine);
-		String line = editText.getText().toString();
+		Spinner lineSpinner = findViewById(R.id.spinnerLines);
+		String line = lineSpinner.getSelectedItem().toString();
 		if (line.equals(""))
 			line = "504";
 
 		intent.putExtra(DEBUG_LINE, line);
 
-		Spinner spinner = findViewById(R.id.spinnerMode);
-		String mode = spinner.getSelectedItem().toString();
+		Spinner modeSpinner = findViewById(R.id.spinnerMode);
+		String mode = modeSpinner.getSelectedItem().toString();
 		intent.putExtra(DEBUG_MODE, mode);
 
 		startActivity(intent);
