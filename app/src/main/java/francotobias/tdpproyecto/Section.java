@@ -15,7 +15,7 @@ public class Section {
 	public final boolean isGo;
 	private Route route;
 	private List<Stop> stops;
-	private List<Float> distances;
+	private List<Float> distances;  // Innecesario? se pueden computar las distancias de la parada al principio y final del tramo
 
 
 	public Section(Route route, LatLng startPoint, LatLng endPoint, boolean isGo) {
@@ -24,18 +24,19 @@ public class Section {
 		this.endPoint = endPoint;
 		this.isGo = isGo;
 
-		Location start = BusManager.latLngToLocation(startPoint, "");
-		Location end = BusManager.latLngToLocation(endPoint, "");
+		Location start = BusManager.latLngToLocation(startPoint, null);
+		Location end = BusManager.latLngToLocation(endPoint, null);
 
 		bearing = (int) start.bearingTo(end);
 		size = start.distanceTo(end);
 	}
 
 	public void addStop(Stop stop) {
+		stop.setSection(this);
 		Stop lastStop;
 
 		if (stops == null) {
-			stops = new LinkedList<>();
+			stops = new LinkedList<>();     // ArrayList?
 			distances = new LinkedList<>();
 			distances.add(0f);      // This value will be removed
 
@@ -44,9 +45,9 @@ public class Section {
 		else
 			lastStop = stops.get(stops.size() - 1);
 
-		Location stopLoc = BusManager.latLngToLocation(stop.location, "");
-		Location lastStopLoc = BusManager.latLngToLocation(lastStop.location, "");
-		Location end = BusManager.latLngToLocation(endPoint, "");
+		Location stopLoc = BusManager.latLngToLocation(stop.location, null);
+		Location lastStopLoc = BusManager.latLngToLocation(lastStop.location, null);
+		Location end = BusManager.latLngToLocation(endPoint, null);
 
 		stops.add(stop);
 		distances.remove(distances.size() - 1);         // Remove distance from previous last stop to endPoint
@@ -58,4 +59,7 @@ public class Section {
 		return stops;
 	}
 
+	public Route getRoute() {
+		return route;
+	}
 }

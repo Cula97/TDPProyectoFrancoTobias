@@ -25,6 +25,7 @@ public class Bus {
 		this.location = location;
 	}
 
+	@Deprecated
 	public String getBusID() {
 		return busID;
 	}

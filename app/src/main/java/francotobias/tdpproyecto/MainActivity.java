@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 		EditText editText = findViewById(R.id.editTextDebugLine);
 		String line = editText.getText().toString();
 		if (line.equals(""))
-			line = "502";
+			line = "504";
 
 		intent.putExtra(DEBUG_LINE, line);
 

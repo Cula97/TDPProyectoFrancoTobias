@@ -12,10 +12,10 @@ import java.util.List;
 
 public class Route {
 	protected List<Section> routeSectionGo, routeSectionReturn;
-	protected List<LatLng> routeGo, routeReturn;    // Se pueden computar
+	protected List<LatLng> routeGo, routeReturn;            // Se pueden computar
 	protected Line line;
 	protected boolean validStops = true;
-	protected List<Stop> stops;     // Se puede computar
+	protected List<Stop> stops;                             // Se puede computar
 	protected static double MIN_DISTANCE_THRESHOLD = 250;   // Podria ser menor si la data fuera mejor
 
 
@@ -62,7 +62,7 @@ public class Route {
 
 	/**
 	 * La lista de entrada contiene las paradas de ida en el sentido del recorrido (de ida)
-	 * y las de vuelta en sentido opuesto al recorrido (arrancan al final de trayecto de vuelta)
+	 * y las de vuelta en sentido opuesto al recorrido (arrancan al final de trayecto de vuelta
 	 */
 	public void setStops(List<Stop> stops) {
 		if (stops.size() == 0) {
@@ -96,12 +96,12 @@ public class Route {
 		float distance, lastDistance = -1;
 		double distanceToLine = -1;
 		Section section = sections.get(0);
-		Location stopLocation, epLocation = BusManager.latLngToLocation(section.endPoint, "");
+		Location stopLocation, epLocation = BusManager.latLngToLocation(section.endPoint, null);
 		Stop stop;
 
 		while (stopIterator.hasNext()) {
 			stop = stopIterator.next();
-			stopLocation = BusManager.latLngToLocation(stop.location, "");
+			stopLocation = BusManager.latLngToLocation(stop.location, null);
 			distance = stopLocation.distanceTo(epLocation);         // Mas barato
 
 			if (distance > lastDistance)
@@ -110,7 +110,7 @@ public class Route {
 					distanceToLine = PolyUtil.distanceToLine(stop.location, section.startPoint, section.endPoint);
 
 					if (distanceToLine <= MIN_DISTANCE_THRESHOLD) {
-						epLocation = BusManager.latLngToLocation(section.endPoint, "");
+						epLocation = BusManager.latLngToLocation(section.endPoint, null);
 						distance = stopLocation.distanceTo(epLocation);
 						break;
 					}
@@ -126,6 +126,10 @@ public class Route {
 			lastDistance = distance;
 			section.addStop(stop);
 		}
+
+		// Debugging
+		if (validStops)
+			Log.d("Paradas Validas", line.lineID);
 	}
 
 
@@ -156,6 +160,61 @@ public class Route {
 		}
 
 		return toRetrun;
+	}
+
+
+	public float distanceBetweenStops(Stop start, Stop end) {
+		Section sectionStart = start.getSection();
+		Section sectionEnd = end.getSection();
+
+		if (sectionStart.getRoute() != sectionEnd.getRoute() ||
+				sectionStart.getRoute() != this)
+			return -1;
+
+		if (sectionStart == sectionEnd)
+			return BusManager.latLngToLocation(start.location, null).distanceTo(BusManager.latLngToLocation(end.location, null));
+
+		float distance = 0;
+
+		// Distance from start to end of section
+		Location locationStop = BusManager.latLngToLocation(start.location, null);
+		Location locationOnSection = BusManager.latLngToLocation(sectionStart.endPoint, null);
+		distance += locationStop.distanceTo(locationOnSection);
+
+		// Distance from start of last section to end
+		locationStop = BusManager.latLngToLocation(end.location, null);
+		locationOnSection = BusManager.latLngToLocation(sectionEnd.startPoint, null);
+		distance += locationOnSection.distanceTo(locationStop);
+
+		// Iterator for the sections with the starting stop
+		Iterator<Section> iterator = start.isGo ?
+				routeSectionGo.listIterator(routeSectionGo.indexOf(sectionStart)) :
+				routeSectionReturn.listIterator(routeSectionReturn.indexOf(sectionStart));
+
+		// Skip the section that contains the startig stop
+		if (iterator.hasNext())
+			iterator.next();
+
+		while (iterator.hasNext()) {
+			sectionStart = iterator.next();
+			if (sectionStart == sectionEnd)
+				return distance;
+			distance += sectionStart.size;
+		}
+
+		// Iterator for the sections that contain the ending stop if it wasn't with the other ones
+		iterator = !start.isGo ?
+				routeSectionGo.iterator() :
+				routeSectionReturn.iterator();
+
+		while (iterator.hasNext()) {
+			sectionStart = iterator.next();
+			if (sectionStart == sectionEnd)
+				return distance;
+			distance += sectionStart.size;
+		}
+
+		return -1;
 	}
 
 

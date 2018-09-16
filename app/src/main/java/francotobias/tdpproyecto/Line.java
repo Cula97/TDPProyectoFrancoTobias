@@ -18,6 +18,7 @@ public class Line {
 		lineID = ID;
 	}
 
+	@Deprecated
 	public String getID() {
 		return lineID;
 	}
@@ -57,19 +58,21 @@ public class Line {
 	public Stop[] getClosestStops(Location location) {
 		List<Stop> stops = route.getStops();
 		Stop[] toReturn = new Stop[2];
-		float dist, minDistGo = (float) 1e5, minDistRet = (float) 1e5;
+		float dist, minDistGo = 1e5f, minDistRet = 1e5f;
 		Location stop = new Location("");
 
 		for (Stop s : stops) {
 			stop.setLatitude(s.location.latitude);
 			stop.setLatitude(s.location.longitude);
 			dist = location.distanceTo(stop);
+
 			if (dist < minDistGo && s.isGo) {
 				minDistGo = dist;
 				toReturn[0] = new Stop(stop.getLatitude(), stop.getLongitude(), true);
+				continue;
 			}
 
-			if (dist < minDistRet && !s.isGo()) {
+			if (dist < minDistRet && !s.isGo) {
 				minDistRet = dist;
 				toReturn[1] = new Stop(stop.getLatitude(), stop.getLongitude(), false);
 			}
@@ -84,10 +87,13 @@ public class Line {
 
 		for (Bus bus : updateBuses()) {
 			dist = location.distanceTo(bus.getLocation());
+
 			if (dist < minDistGo && bus.isGo()) {
 				minDistGo = dist;
 				toReturn[0] = bus;
+				continue;
 			}
+
 			if (dist < minDistRet && !bus.isGo()) {
 				minDistRet = dist;
 				toReturn[1] = bus;

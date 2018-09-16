@@ -14,7 +14,7 @@ public class LineManager {
 	private static final int LNG_COLUMN = 4;
 
 	// TODO: Reemplazar por un Map<lineID, ID> maybe?
-	protected static List<Line> lines = new LinkedList<>();
+	private static List<Line> lines = new LinkedList<>();
 
 	public static void initLines() {
 		CSVWizard CSVlines = DataManager.getInstance().requestLines();
@@ -83,6 +83,10 @@ public class LineManager {
 		Log.d("Ruta no existe", ID);
 
 		return null;
+	}
+
+	public static Iterable<Line> lines() {
+		return lines;
 	}
 
 }

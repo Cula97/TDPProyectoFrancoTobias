@@ -308,7 +308,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
 
 		Integer i = 0;
-		Location newLoc, prevLoc = BusManager.latLngToLocation(section.startPoint, "");
+		Location newLoc, prevLoc = BusManager.latLngToLocation(section.startPoint, null);
 		Float distance;
 
 		if (stops == null) {
@@ -317,7 +317,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		}
 
 		for (Stop stop : stops) {
-			newLoc = BusManager.latLngToLocation(stop.location, "");
+			newLoc = BusManager.latLngToLocation(stop.location, null);
 			distance = prevLoc.distanceTo(newLoc);
 
 			mMap.addMarker(new MarkerOptions()
