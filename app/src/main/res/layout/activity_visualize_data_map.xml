@@ -14,6 +14,15 @@
 		android:layout_height="match_parent"
 		tools:context=".DataVisualizer.VisualizeDataMapActivity" />
 
+	<TextView
+		android:id="@+id/textViewLine"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Linea"
+		android:textSize="18sp"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
 	<Button
 		android:id="@+id/buttonSection"
 		android:layout_width="wrap_content"
@@ -38,32 +47,53 @@
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
 
-	<CheckBox
-		android:id="@+id/checkBoxSectionsGo"
+	<android.support.constraint.ConstraintLayout
+		android:id="@+id/layoutOptions"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginEnd="4dp"
-		android:layout_marginTop="4dp"
-		android:checked="true"
+		tools:layout_editor_absoluteX="261dp"
+		tools:layout_editor_absoluteY="0dp"
+		android:visibility="invisible"
 		android:layoutDirection="rtl"
-		android:text="Ruta Ida"
-		android:textAlignment="viewEnd"
-		android:visibility="gone"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintRight_toRightOf="parent">
 
-	<CheckBox
-		android:id="@+id/checkBoxSectionsReturn"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginEnd="4dp"
-		android:layout_marginTop="4dp"
-		android:checked="false"
-		android:layoutDirection="rtl"
-		android:text="Ruta Vuelta"
-		android:textAlignment="viewEnd"
-		android:visibility="gone"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/checkBoxSectionsGo" />
+		<CheckBox
+			android:id="@+id/checkBoxSectionsGo"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:checked="true"
+			android:layoutDirection="inherit"
+			android:text="Ruta Ida"
+			android:textAlignment="viewEnd"
+			android:visibility="visible"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<CheckBox
+			android:id="@+id/checkBoxSectionsReturn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:checked="true"
+			android:layoutDirection="inherit"
+			android:text="Ruta Vuelta"
+			android:textAlignment="viewEnd"
+			android:visibility="visible"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/checkBoxSectionsGo" />
+
+		<CheckBox
+			android:id="@+id/checkBoxKeepStops"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:checked="true"
+			android:layoutDirection="inherit"
+			android:text="Mantener Paradas"
+			android:textAlignment="viewEnd"
+			android:visibility="gone"
+			app:layout_constraintTop_toBottomOf="@id/checkBoxSectionsReturn"
+			app:layout_constraintRight_toRightOf="parent" />
+
+	</android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

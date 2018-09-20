@@ -47,7 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 				.findFragmentById(R.id.map);
 		mapFragment.getMapAsync(this);
 
-		searchBox = (EditText) findViewById(R.id.input_search);
+		searchBox = findViewById(R.id.input_search);
 	}
 
 

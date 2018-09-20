@@ -90,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
 		Intent intent = new Intent(this, VisualizeDataMapActivity.class);
 		Spinner lineSpinner = findViewById(R.id.spinnerLines);
 		String line = lineSpinner.getSelectedItem().toString();
-		if (line.equals(""))
-			line = "504";
 
 		intent.putExtra(DEBUG_LINE, line);
 
