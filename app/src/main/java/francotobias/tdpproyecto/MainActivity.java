@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
 		manager.startUpdater(this);
 		manager.update();
 
-		askLocationPermission();
-
 		LineManager.initLines();
 
 		TextView text = findViewById(R.id.texto);
@@ -101,67 +99,4 @@ public class MainActivity extends AppCompatActivity {
 
 		startActivity(intent);
 	}
-
-
-	public void askLocationPermission() {
-		if(ContextCompat.checkSelfPermission(MainActivity.this,
-				Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-			return;
-		}
-		else {
-			requestLocationPermission();
-		}
-	}
-
-
-	public void requestLocationPermission(){
-		if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-			new AlertDialog.Builder(this)
-					.setTitle("Permission needed")
-					.setMessage("The app need this permission to be able to work properly.")
-					.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-						}
-					})
-					.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					})
-					.create().show();
-
-		} else {
-			ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-		}
-	}
-
-
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		if (requestCode == 1)  {
-			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-			} else {
-				Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
-			}
-		}
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -3,10 +3,12 @@ package francotobias.tdpproyecto;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Calendar;
+
 public class DataManager {
 	//Nota: debe ser una clase estática.
-	private static String UPDATE_FILENAME = "UpdateInformation";
-	private static String LASTDATE_KEY = "LastDate";
+	private static String UPDATE_FILENAME = "config.cfg";
+	private static String LASTDATE_KEY = "last_update";
 	private static String FIRST_TIME_KEY = "FirstTime";
 
 	private static String ROUTES_FILENAME = "RouteFile";
@@ -14,6 +16,9 @@ public class DataManager {
 	private static String STOPSGO_FILENAME = "StopsGoFile";
 	private static String STOPSRET_FILENAME = "StopsRetFile";
 	private static String STOPS_FILENAME = "StopsFile";
+
+	// private static long ONE_WEEK = 604800000;
+	private static long ONE_WEEK = 6000000;
 
 	private Context context;
 
@@ -32,7 +37,10 @@ public class DataManager {
 	public void startUpdater(Context c){ context = c;  }
 
 
-	public void forceUpdate() {
+	private void forceUpdate() {
+		SharedPreferences sp = context.getSharedPreferences(UPDATE_FILENAME, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sp.edit();
+
 		CSVWizard updatedData, CSVlines;
 		FileHandler file;
 
@@ -59,7 +67,6 @@ public class DataManager {
 			updatedData = JunarHandler.requestStopsGo(id);
 			file.writeFileData(updatedData.requestData());
 
-
 			// RET
 			file = new FileHandler(context, STOPSRET_FILENAME + id);
 			updatedData = JunarHandler.requestStopsRet(id);
@@ -68,26 +75,23 @@ public class DataManager {
 			CSVlines.advanceRow();
 		}
 
+		editor.putLong(LASTDATE_KEY, Calendar.getInstance().getTimeInMillis());
+		editor.commit();
 	}
 
-	public boolean needUpdate() {
-		boolean FT = false;
-		SharedPreferences sp = context.getSharedPreferences("UpdateInformation", 0);
-		if (sp.getBoolean(FIRST_TIME_KEY, true)) {
-			SharedPreferences.Editor editor = sp.edit();
-			editor.putBoolean(FIRST_TIME_KEY, false);
-			editor.commit();
-			FT = true;
-		}
+	public boolean needUpdate(){
+		SharedPreferences sp = context.getSharedPreferences(UPDATE_FILENAME, Context.MODE_PRIVATE);
+		boolean res = false;
 
-		return FT;
+		if(Calendar.getInstance().getTimeInMillis() - sp.getLong(LASTDATE_KEY,0)  > ONE_WEEK) res = true;
+
+		return res;
 	}
 
 	public void update() {
 		if (needUpdate())
 			forceUpdate();
 	}
-
 
 	public CSVWizard requestStopsGo(String line) {
 		FileHandler file = new FileHandler(context, STOPSGO_FILENAME + line);
