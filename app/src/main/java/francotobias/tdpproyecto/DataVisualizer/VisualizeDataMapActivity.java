@@ -7,10 +7,13 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,9 +27,14 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import francotobias.tdpproyecto.Bus;
 import francotobias.tdpproyecto.BusManager;
@@ -41,12 +49,25 @@ import francotobias.tdpproyecto.Stop;
 public class VisualizeDataMapActivity extends FragmentActivity implements OnMapReadyCallback {
 	private GoogleMap mMap;
 	private Line line;
+
+	private Set<Marker> displayedGoMarkers;
+	private Set<Marker> displayedRetMarkers;
+	private ArrayList<Stop> stopsGo;
+	private ArrayList<Stop> stopsRet;
+
 	private int goSectionIndex;
 	private int goSectionAmount;
 	private int retSectionIndex;
 	private int retSectionAmount;
-	private int stopIndex;
+	private int stopGoIndex;
+	private int stopRetIndex;
 	private int stopAmount;
+
+	private int stopCounter;
+	Marker stopGoAux1, stopGoAux2;
+	Marker stopRetAux1, stopRetAux2;
+	private boolean sectionsGoFinished = false;
+	private boolean sectionsRetFinished = false;
 
 
 	@Override
@@ -65,14 +86,28 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 			return;
 		}
 
+		((TextView) findViewById(R.id.textViewLine)).setText(lineID);
+
 		goSectionIndex = 0;
 		retSectionIndex = 0;
 		goSectionAmount = line.getRoute().getGo().size();
 		retSectionAmount = line.getRoute().getReturn().size();
-		stopIndex = 0;
+		stopGoIndex = 0;
+		stopRetIndex = 0;
+		List<Stop> stops = line.getRoute().getStops();
 
-		if (line.getRoute().getStops() != null) {
+		if (stops != null) {
 			stopAmount = line.getRoute().getStops().size();
+			displayedGoMarkers = new HashSet<>();
+			displayedRetMarkers = new HashSet<>();
+			stopsGo = new ArrayList<>();
+			stopsRet = new ArrayList<>();
+
+			for (Stop stop : stops)
+				if (stop.isGo)
+					stopsGo.add(stop);
+				else
+					stopsRet.add(stop);
 		}
 	}
 
@@ -112,6 +147,8 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 	private void displayRouteInterface() {
 		findViewById(R.id.buttonSection).setVisibility(View.VISIBLE);
 		findViewById(R.id.buttonStop).setVisibility(View.VISIBLE);
+		findViewById(R.id.layoutOptions).setVisibility(View.VISIBLE);
+		findViewById(R.id.checkBoxKeepStops).setVisibility(View.VISIBLE);
 	}
 
 
@@ -121,8 +158,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 	}
 
 	private void displaySectionInterface() {
-		findViewById(R.id.checkBoxSectionsGo).setVisibility(View.VISIBLE);
-		findViewById(R.id.checkBoxSectionsReturn).setVisibility(View.VISIBLE);
+		findViewById(R.id.layoutOptions).setVisibility(View.VISIBLE);
 
 		displayRouteButNowInAProperWay();
 
@@ -233,46 +269,125 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		List<LatLng> routeGo = line.getRoute().getGo();
 		List<LatLng> routeRet = line.getRoute().getReturn();
 
-		if (goSectionIndex < goSectionAmount - 1)
-			mMap.addPolyline(new PolylineOptions()
-					.add(routeGo.get(goSectionIndex), routeGo.get(++goSectionIndex))
-					.color(Color.BLUE));
-		else if (retSectionIndex < retSectionAmount - 1)
-			mMap.addPolyline(new PolylineOptions()
-					.add(routeRet.get(retSectionIndex), routeRet.get(++retSectionIndex))
-					.color(Color.RED));
-		else
-			Toast.makeText(getApplicationContext(), "Recorrido finalizado", Toast.LENGTH_SHORT).show();
+		boolean showGo = ((CheckBox) findViewById(R.id.checkBoxSectionsGo)).isChecked();
+		boolean showRet = ((CheckBox) findViewById(R.id.checkBoxSectionsReturn)).isChecked();
+
+		if (showGo) {
+			if (goSectionIndex < goSectionAmount - 1)
+				mMap.addPolyline(new PolylineOptions()
+						.add(routeGo.get(goSectionIndex), routeGo.get(++goSectionIndex))
+						.color(Color.BLUE));
+			else if (!sectionsGoFinished) {
+				Toast.makeText(getApplicationContext(), "Recorrido de ida finalizado", Toast.LENGTH_SHORT).show();
+				sectionsGoFinished = true;
+			}
+
+		}
+
+		if (showRet) {
+			if (retSectionIndex < retSectionAmount - 1)
+				mMap.addPolyline(new PolylineOptions()
+						.add(routeRet.get(retSectionIndex), routeRet.get(++retSectionIndex))
+						.color(Color.RED));
+			else if (!sectionsRetFinished) {
+				Toast.makeText(getApplicationContext(), "Recorrido de vuelta finalizado", Toast.LENGTH_SHORT).show();
+				sectionsRetFinished = true;
+			}
+		}
 	}
 
 
 	// Muestra las paradas de a una usando los metodos viejos
 	public void displayStop(View view) {
-		if (stopIndex < stopAmount) {
-			List<Stop> stops = line.getRoute().getStops();
-
-			String type = "_ret";
-			if (stops.get(stopIndex).isGo())
-				type = "_go";
-
-			AssetManager assetManager = getAssets();
-			Bitmap icon = null;
-			try {
-				InputStream istream = assetManager.open("bus_stop" + type + ".png");
-				icon = BitmapFactory.decodeStream(istream);
-			} catch (IOException e) {
-			}
-
-			Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
-
-			mMap.addMarker(new MarkerOptions()
-					.position(stops.get(stopIndex).getLocation())
-					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
-					.flat(true));
-
-			stopIndex++;        // Demasiadas paradas en pantalla
-		} else
+		if (stopGoIndex + stopRetIndex == stopAmount -2 || stopAmount == 0) {
 			Toast.makeText(getApplicationContext(), "No hay más paradas", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		boolean showGo = ((CheckBox) findViewById(R.id.checkBoxSectionsGo)).isChecked();
+		boolean showRet = ((CheckBox) findViewById(R.id.checkBoxSectionsReturn)).isChecked();
+		boolean keepStops = ((CheckBox) findViewById(R.id.checkBoxKeepStops)).isChecked();
+
+		if (showGo)
+			if (stopGoIndex < stopsGo.size()) {
+				AssetManager assetManager = getAssets();
+				Bitmap icon = null;
+				try {
+					InputStream istream = assetManager.open("bus_stop_go.png");
+					icon = BitmapFactory.decodeStream(istream);
+				} catch (IOException e) {}
+
+				Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
+
+				Marker marker = mMap.addMarker(new MarkerOptions()
+						.position(stopsGo.get(stopGoIndex++).location)
+						.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon)));
+
+				if (stopCounter++ % 10 == 0 && !showRet)
+					mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+
+				if (stopGoAux1 != null)
+					stopGoAux1.setVisible(keepStops);
+
+				if (stopGoAux2 != null && stopGoAux1.isVisible() != stopGoAux2.isVisible())
+					for (Marker m : displayedGoMarkers)
+						m.setVisible(keepStops);
+
+				stopGoAux2 = stopGoAux1;
+				stopGoAux1 = marker;
+				displayedGoMarkers.add(marker);
+			} else {
+				Toast.makeText(getApplicationContext(), "No hay más paradas de ida", Toast.LENGTH_SHORT).show();
+				((CheckBox) findViewById(R.id.checkBoxSectionsGo)).setChecked(false);
+				if (keepStops)
+					for (Marker m : displayedGoMarkers)
+						m.setVisible(true);
+			}
+		else
+			if (!keepStops && stopGoAux1 != null && stopGoAux1.isVisible())
+				for (Marker m : displayedGoMarkers)
+					m.setVisible(false);
+
+
+		if (showRet)
+			if (stopRetIndex < stopsRet.size()) {
+				AssetManager assetManager = getAssets();
+				Bitmap icon = null;
+				try {
+					InputStream istream = assetManager.open("bus_stop_ret.png");
+					icon = BitmapFactory.decodeStream(istream);
+				} catch (IOException e) {}
+
+				Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
+
+				Marker marker = mMap.addMarker(new MarkerOptions()
+						.position(stopsRet.get(stopRetIndex++).location)
+						.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon)));
+
+				if (stopCounter++ % 10 == 0 && !showGo)
+					mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+
+				if (stopRetAux1 != null)
+					stopRetAux1.setVisible(keepStops);
+
+				if (stopRetAux2 != null && stopRetAux1.isVisible() != stopRetAux2.isVisible())
+					for (Marker m : displayedRetMarkers)
+						m.setVisible(keepStops);
+
+				stopRetAux2 = stopRetAux1;
+				stopRetAux1 = marker;
+				displayedRetMarkers.add(marker);
+			} else {
+				Toast.makeText(getApplicationContext(), "No hay más paradas de vuelta", Toast.LENGTH_SHORT).show();
+				((CheckBox) findViewById(R.id.checkBoxSectionsReturn)).setChecked(false);
+				if (keepStops)
+					for (Marker m : displayedRetMarkers)
+						m.setVisible(true);
+			}
+		else
+			if (!keepStops && stopRetAux1 != null && stopRetAux1.isVisible())
+				for (Marker m : displayedRetMarkers)
+					m.setVisible(false);
 	}
 
 	// Muestra las paradas asociadas a una seccion

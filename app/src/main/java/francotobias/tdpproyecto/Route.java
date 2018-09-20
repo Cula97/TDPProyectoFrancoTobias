@@ -17,7 +17,7 @@ public class Route {
 	protected Line line;
 	protected boolean validStops = true;
 	protected List<Stop> stops;                             // Se puede computar
-	protected static double MIN_DISTANCE_THRESHOLD = 250;   // Podria ser menor si la data fuera mejor
+	protected static double MIN_DISTANCE_THRESHOLD = 100;    // Podria ser menor si la data fuera mejor
 
 
 	public Route(Line l, List<LatLng> rGo, List<LatLng> rReturn) {
@@ -25,8 +25,8 @@ public class Route {
 		l.setRoute(this);
 		routeGo = rGo;
 		routeReturn = rReturn;
-		routeSectionGo = new LinkedList<>();
-		routeSectionReturn = new LinkedList<>();
+		routeSectionGo = new LinkedList<>();        // ArrayList?
+		routeSectionReturn = new LinkedList<>();    // ArrayList?
 
 		Iterator<LatLng> routeIterator = rGo.iterator();
 		LatLng end, start = routeIterator.next();
@@ -63,7 +63,8 @@ public class Route {
 
 	/**
 	 * La lista de entrada contiene las paradas de ida en el sentido del recorrido (de ida)
-	 * y las de vuelta en sentido opuesto al recorrido (arrancan al final de trayecto de vuelta
+	 * y las de vuelta en sentido opuesto al recorrido (arrancan al final de trayecto de vuelta).
+	 * Algunas lineas tienen las paradas cargadas en el orden inverso y hay que corregirlo.
 	 */
 	public void setStops(List<Stop> stops) {
 		if (stops.size() == 0) {
@@ -75,11 +76,31 @@ public class Route {
 		List<Stop> stopsGo = new LinkedList<>();
 		List<Stop> stopsRet = new LinkedList<>();
 
+		// Detect and correct inverted stops
+		boolean invertedStops = false;
+	//	Stop firstStop = stops.get(0);
+	//	Section firstSection, lastSection;
+	//	firstSection = firstStop.isGo ? routeSectionGo.get(0) : routeSectionReturn.get(0);
+	//	lastSection = firstStop.isGo ? routeSectionGo.get(routeSectionGo.size() -1) : routeSectionReturn.get(routeSectionReturn.size() -1);
+	//	double distanceToFirstSection = PolyUtil.distanceToLine(firstStop.location, firstSection.startPoint, firstSection.endPoint);
+	//	double distanceToLastSection = PolyUtil.distanceToLine(firstStop.location, lastSection.startPoint, lastSection.endPoint);
+
+	//	if (distanceToFirstSection > distanceToLastSection) {
+	//		invertedStops = true;
+	//		Log.d("Paradas Invertidas", line.lineID);
+	//	}
+
 		for (Stop stop : stops)
 			if (stop.isGo)
-				stopsGo.add(stop);
+				if (invertedStops)
+					stopsGo.add(0, stop);
+				else
+					stopsGo.add(stop);
 			else
-				stopsRet.add(0, stop);      // Las paradas de vuelta vienen invertidas
+				if (invertedStops)
+					stopsRet.add(stop);
+				else
+					stopsRet.add(0, stop);
 
 		this.stops = new LinkedList<>();
 		this.stops.addAll(stopsGo);
@@ -91,12 +112,6 @@ public class Route {
 
 
 	private void addStopsToSections(List<Stop> stops, List<Section> sections) {
-		// Algunas listas de paradas vienen invertidas
-		if (PolyUtil.distanceToLine(stops.get(0).location, sections.get(0).startPoint, sections.get(0).endPoint) > 5e3f) {
-			Collections.reverse(stops);
-			Log.d("Paradas Invertidas", sections.get(0).getRoute().getLine().lineID);
-		}
-
 		Iterator<Section> sectionIterator = sections.iterator();
 		Iterator<Stop> stopIterator = stops.iterator();
 		float distance, lastDistance = -1;
@@ -221,6 +236,17 @@ public class Route {
 		}
 
 		return -1;
+	}
+
+
+	public void clearStops() {
+		for (Section s : routeSectionGo)
+			s.clearStops();
+
+		for (Section s : routeSectionReturn)
+			s.clearStops();
+
+		stops = null;
 	}
 
 
