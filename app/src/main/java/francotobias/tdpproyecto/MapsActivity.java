@@ -45,12 +45,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 	private GoogleMap mMap;
 	private LatLng bahia;
-	private LatLng userPosition;
 	private EditText searchBox;
 	private LocationManager locationManager;
 	private LocationListener locationListener;
 	private MarkerOptions userMarker;
-
+	private Location lastUserLocation;
 
 	private boolean requestedPosition;
 	@Override
@@ -69,6 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 		requestedPosition = false;
 		userMarker = null;
+		lastUserLocation = null;
 
 		locationListener = new LocationListener() {
 			@Override
@@ -94,6 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 						mMap.addMarker(userMarker);
 					}
 					userMarker.position(new LatLng(location.getLatitude(), location.getLongitude()));
+					lastUserLocation = location;
 				}
 			}
 
