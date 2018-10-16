@@ -87,8 +87,6 @@ public class JunarHandler {
 				"SAPEM,2,503,NULL,-38.756337,-62.257848,10,40" + "\n" +
 				"SAPEM,3,503,NULL,-38.74306,-62.260073,10,50" + "\n" +
 				"SAPEM,4,503,NULL,-38.722673,-62.264555,10,50" + "\n";
-
-
 		/*if (line != null)
 			FILTER_URL = "&filter0=column2[==]" + line;
 		else
