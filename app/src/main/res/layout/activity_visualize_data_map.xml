@@ -53,7 +53,7 @@
 		android:layout_height="wrap_content"
 		tools:layout_editor_absoluteX="261dp"
 		tools:layout_editor_absoluteY="0dp"
-		android:visibility="invisible"
+		android:visibility="gone"
 		android:layoutDirection="rtl"
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintRight_toRightOf="parent">
@@ -95,5 +95,31 @@
 			app:layout_constraintRight_toRightOf="parent" />
 
 	</android.support.constraint.ConstraintLayout>
+
+	<Button
+		android:id="@+id/buttonPathTest"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="8dp"
+		android:layout_marginBottom="16dp"
+		android:onClick="pathTest"
+		android:text="Next"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent" />
+
+	<TextView
+		android:id="@+id/textViewPathTest"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:layout_marginTop="8dp"
+		android:layout_marginEnd="8dp"
+		android:text="text"
+		android:textSize="18sp"
+		android:visibility="gone"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@+id/textViewLine"
+		app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

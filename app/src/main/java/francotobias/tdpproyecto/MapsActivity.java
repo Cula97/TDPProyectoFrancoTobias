@@ -133,6 +133,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		init();
 	}
 
+
 	public void displayRoute(Line line) {
 		List<LatLng> routeGo = line.getRoute().getGo();
 		List<LatLng> routeRet = line.getRoute().getReturn();
@@ -144,6 +145,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 				.color(Color.RED));
 	}
 
+	// Very laggy on Snapdragons
 	public void displayStops(Line line) {
 		List<Stop> stops = line.getRoute().getStops();
 
@@ -152,17 +154,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		try {
 			InputStream istream = assetManager.open("bus_stop.png");
 			icon = BitmapFactory.decodeStream(istream);
-		} catch (IOException e) {
-		}
+		} catch (IOException e) {}
 
 		Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
 
 		for (Stop s : stops)
 			mMap.addMarker(new MarkerOptions()
-					.position(s.getLocation())
+					.position(s.location)
 					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
 					.flat(true));
 	}
+
 
 	private void init() {
 

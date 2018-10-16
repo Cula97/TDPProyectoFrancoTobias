@@ -155,7 +155,7 @@ public class Route {
 
 
 	// Mover a Line?
-	private Section[] getClosestSectctions(LatLng latLng) {
+	private Section[] getClosestSections(LatLng latLng) {
 		double dist, minDist = 10000;
 		Section[] toRetrun = new Section[2];
 

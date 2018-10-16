@@ -41,6 +41,7 @@ import francotobias.tdpproyecto.BusManager;
 import francotobias.tdpproyecto.Line;
 import francotobias.tdpproyecto.LineManager;
 import francotobias.tdpproyecto.MainActivity;
+import francotobias.tdpproyecto.Path;
 import francotobias.tdpproyecto.R;
 import francotobias.tdpproyecto.Route;
 import francotobias.tdpproyecto.Section;
@@ -69,6 +70,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 	private boolean sectionsGoFinished = false;
 	private boolean sectionsRetFinished = false;
 
+	private int pathTestNumber;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +143,9 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 			case "Section":
 				displaySectionInterface();
 				break;
+			case "Path":
+				displayPathInterface();
+				break;
 		}
 	}
 
@@ -180,6 +185,12 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 				displayStopsWithDetails(section);
 			}
 		});
+	}
+
+
+	private void displayPathInterface() {
+		findViewById(R.id.buttonPathTest).setVisibility(View.VISIBLE);
+		findViewById(R.id.textViewPathTest).setVisibility(View.VISIBLE);
 	}
 
 
@@ -471,6 +482,117 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 						.setTag(section);
 			}
 
+    }
+
+
+    public void pathTest(View view) {
+		LatLng start = null, end = null;
+		String lineID = null, testString = null;
+	    Path path;
+
+	    switch (pathTestNumber++) {
+		    // 500
+	    	case 0:
+				start = new LatLng(-38.752981, -62.266180);
+				end = new LatLng(-38.701966, -62.270744);
+				lineID = "500";
+				testString = "Ida desde paradas";
+		    	break;
+		    case 1:
+			    start = new LatLng(-38.749684, -62.262060);
+			    end = new LatLng(-38.703716, -62.273561);
+			    lineID = "500";
+			    testString = "Ida a unas cuadras";
+		    	break;
+		    case 2:
+			    start = new LatLng(-38.710168, -62.271081);
+			    end = new LatLng(-38.739860, -62.275757);
+			    lineID = "500";
+			    testString = "Vuelta desde paradas";
+			    break;
+		    case 3:
+			    start = new LatLng(-38.708335, -62.273409);
+			    end = new LatLng(-38.742093, -62.278658);
+			    lineID = "500";
+			    testString = "Vuelta a unas cuadras";
+			    break;
+		    case 4:
+			    start = new LatLng(-38.749684, -62.262060);
+			    end = new LatLng(-38.703716, -62.273561);
+			    lineID = "ANY";
+			    testString = "Ida a unas cuadras 500";
+		    	break;
+
+			// 504
+		    case 5:
+			    start = new LatLng(-38.732851, -62.251388);
+			    end = new LatLng(-38.749118, -62.282182);
+			    lineID = "504";
+			    testString = "Ida desde paradas";
+			    break;
+		    case 6:
+			    start = new LatLng(-38.734630, -62.253609);
+			    end = new LatLng(-38.746304, -62.278730);
+			    lineID = "504";
+			    testString = "Ida a unas cuadras";
+			    break;
+		    case 7:
+			    start = new LatLng(-38.745866, -62.286506);
+			    end = new LatLng(-38.727402, -62.254607);
+			    lineID = "504";
+			    testString = "Vuelta desde paradas";
+			    break;
+		    case 8:
+			    start = new LatLng(-38.745866, -62.286506);
+			    end = new LatLng(-38.727402, -62.254607);
+			    lineID = "504";
+			    testString = "Vuelta a unas cuadras";
+			    break;
+		    case 9:
+			    start = new LatLng(-38.744988, -62.283349);
+			    end = new LatLng(-38.732018, -62.257051);
+			    lineID = "ANY";
+			    testString = "Ida a unas cuadras 504";
+			    pathTestNumber = 0;
+			    break;
+	    }
+
+	    if (!lineID.equals("ANY")) {
+	    	Line line = LineManager.getLine(lineID);
+	    	path = Path.shortestPath(start, end, line);
+	    }
+	    else
+	    	path = Path.shortestPaths(start, end).iterator().next();
+
+	    line = path.getLine();
+
+	    List<LatLng> routeGo = line.getRoute().getGo();
+	    List<LatLng> routeRet = line.getRoute().getReturn();
+	    mMap.addPolyline(new PolylineOptions()
+			    .addAll(routeGo)
+			    .color(Color.BLUE));
+	    mMap.addPolyline(new PolylineOptions()
+			    .addAll(routeRet)
+			    .color(Color.RED));
+
+	    ((TextView) findViewById(R.id.textViewLine)).setText(lineID);
+	    ((TextView) findViewById(R.id.textViewPathTest)).setText(testString);
+
+	    mMap.addMarker(new MarkerOptions()
+			    .position(start)
+			    .title("Inicio"));
+
+	    mMap.addMarker(new MarkerOptions()
+			    .position(path.firstStop().location)
+			    .title("Primer parada"));
+
+	    mMap.addMarker(new MarkerOptions()
+			    .position(path.lastStops().location)
+			    .title("Ultima parada"));
+
+	    mMap.addMarker(new MarkerOptions()
+			    .position(end)
+			    .title("Fin"));
     }
 
 }

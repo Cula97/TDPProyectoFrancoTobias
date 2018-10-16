@@ -14,17 +14,13 @@ public class Path implements Comparable<Path>{
 
 	private Stop firstStop;
 	private Stop lastStops;
-	private Line line;
 	public final float distance;
-	private boolean isGo;
 
 
-	public Path(Stop firstStop, Stop lastStops, float distance) {
+	private Path(Stop firstStop, Stop lastStops, float distance) {
 		this.firstStop = firstStop;
 		this.lastStops = lastStops;
 		this.distance = distance;
-		line = firstStop.getSection().getRoute().getLine();
-		isGo = firstStop.isGo;
 	}
 
 
@@ -115,6 +111,23 @@ public class Path implements Comparable<Path>{
 	@Override
 	public int compareTo(@NonNull Path path) {
 		return (int) (distance - path.distance);
+	}
+
+
+	public Stop firstStop() {
+		return firstStop;
+	}
+
+	public Stop lastStops() {
+		return lastStops;
+	}
+	
+	public Line getLine() {
+		return firstStop.getSection().getRoute().getLine();
+	}
+
+	public boolean isGo() {
+		return firstStop.isGo;
 	}
 
 }
