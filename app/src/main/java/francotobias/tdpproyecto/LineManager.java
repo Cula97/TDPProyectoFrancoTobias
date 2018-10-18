@@ -13,7 +13,7 @@ public class LineManager {
 	private static final int LAT_COLUMN = 3;
 	private static final int LNG_COLUMN = 4;
 
-	// TODO: Reemplazar por un Map<lineID, ID> maybe?
+	// TODO: Reemplazar por un Map<lineID, line> maybe?
 	private static List<Line> lines = new LinkedList<>();
 
 	public static void initLines() {
@@ -77,7 +77,7 @@ public class LineManager {
 
 	public static Line getLine(String ID) {
 		for (Line l : lines)
-			if (ID.equals(l.getID()))
+			if (ID.equals(l.lineID))
 				return l;
 
 		Log.d("Ruta no existe", ID);

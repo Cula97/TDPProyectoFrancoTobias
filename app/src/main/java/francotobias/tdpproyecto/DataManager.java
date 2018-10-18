@@ -16,8 +16,8 @@ public class DataManager {
 	private static String STOPSGO_FILENAME = "StopsGoFile";
 	private static String STOPSRET_FILENAME = "StopsRetFile";
 	private static String STOPS_FILENAME = "StopsFile";
-	//private static long ONE_WEEK = 604800000;
-	private static long ONE_WEEK = 6000000;
+	private static long ONE_WEEK = 604800000;
+	//private static long ONE_WEEK = 6000000;
 
 	private Context context;
 

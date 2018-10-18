@@ -73,34 +73,42 @@ public class Route {
 			return;
 		}
 
-		List<Stop> stopsGo = new LinkedList<>();
-		List<Stop> stopsRet = new LinkedList<>();
+		LinkedList<Stop> stopsGo = new LinkedList<>();
+		LinkedList<Stop> stopsRet = new LinkedList<>();
+
+		/**
+		for (Stop stop : stops)
+			if (stop.isGo)
+				stopsGo.add(stop);
+			else
+				stopsRet.add(stop);
+		**/
 
 		// Detect and correct inverted stops
 		boolean invertedStops = false;
-	//	Stop firstStop = stops.get(0);
-	//	Section firstSection, lastSection;
-	//	firstSection = firstStop.isGo ? routeSectionGo.get(0) : routeSectionReturn.get(0);
-	//	lastSection = firstStop.isGo ? routeSectionGo.get(routeSectionGo.size() -1) : routeSectionReturn.get(routeSectionReturn.size() -1);
-	//	double distanceToFirstSection = PolyUtil.distanceToLine(firstStop.location, firstSection.startPoint, firstSection.endPoint);
-	//	double distanceToLastSection = PolyUtil.distanceToLine(firstStop.location, lastSection.startPoint, lastSection.endPoint);
+		Stop firstStop = stops.get(0);
+		Section firstSection, lastSection;
+		firstSection = firstStop.isGo ? routeSectionGo.get(0) : routeSectionReturn.get(0);
+		lastSection = firstStop.isGo ? routeSectionGo.get(routeSectionGo.size() -1) : routeSectionReturn.get(routeSectionReturn.size() -1);
+		double distanceToFirstSection = PolyUtil.distanceToLine(firstStop.location, firstSection.startPoint, firstSection.endPoint);
+		double distanceToLastSection = PolyUtil.distanceToLine(firstStop.location, lastSection.startPoint, lastSection.endPoint);
 
-	//	if (distanceToFirstSection > distanceToLastSection) {
-	//		invertedStops = true;
-	//		Log.d("Paradas Invertidas", line.lineID);
-	//	}
+		if (distanceToFirstSection > distanceToLastSection) {
+			invertedStops = true;
+			Log.d("Paradas Invertidas", line.lineID);
+		}
 
 		for (Stop stop : stops)
 			if (stop.isGo)
 				if (invertedStops)
-					stopsGo.add(0, stop);
+					stopsGo.addFirst(stop);
 				else
-					stopsGo.add(stop);
+					stopsGo.addLast(stop);
 			else
 				if (invertedStops)
-					stopsRet.add(stop);
+					stopsRet.addLast(stop);
 				else
-					stopsRet.add(0, stop);
+					stopsRet.addFirst(stop);
 
 		this.stops = new LinkedList<>();
 		this.stops.addAll(stopsGo);

@@ -32,6 +32,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -69,6 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		requestedPosition = false;
 		userMarker = null;
 		lastUserLocation = null;
+
 
 		locationListener = new LocationListener() {
 			@Override
@@ -148,21 +150,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 	// Very laggy on Snapdragons
 	public void displayStops(Line line) {
 		List<Stop> stops = line.getRoute().getStops();
+		String asset;
 
-		AssetManager assetManager = getAssets();
-		Bitmap icon = null;
-		try {
-			InputStream istream = assetManager.open("bus_stop.png");
-			icon = BitmapFactory.decodeStream(istream);
-		} catch (IOException e) {}
-
-		Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
-
-		for (Stop s : stops)
+		for (Stop s : stops) {
+			asset = s.isGo ? "bus_stop_go.png" : "bus_stop_ret.png";
 			mMap.addMarker(new MarkerOptions()
 					.position(s.location)
-					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
-					.flat(true));
+					.icon(BitmapDescriptorFactory.fromAsset(asset)));
+		}
 	}
 
 

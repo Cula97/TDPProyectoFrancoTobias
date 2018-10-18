@@ -18,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -189,7 +190,8 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 
 
 	private void displayPathInterface() {
-		findViewById(R.id.buttonPathTest).setVisibility(View.VISIBLE);
+		findViewById(R.id.buttonPathTestNext).setVisibility(View.VISIBLE);
+		findViewById(R.id.buttonPathTestPrev).setVisibility(View.VISIBLE);
 		findViewById(R.id.textViewPathTest).setVisibility(View.VISIBLE);
 	}
 
@@ -485,10 +487,19 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
     }
 
 
-    public void pathTest(View view) {
+    public void pathTestPrev(View view) {
+		pathTestNumber -= 2;
+		if (pathTestNumber == -2) pathTestNumber = 8;
+		if (pathTestNumber == -1) pathTestNumber = 9;
+		pathTestNext(view);
+    }
+
+    public void pathTestNext(View view) {
 		LatLng start = null, end = null;
 		String lineID = null, testString = null;
 	    Path path;
+
+	    mMap.clear();
 
 	    switch (pathTestNumber++) {
 		    // 500
@@ -543,8 +554,8 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 			    testString = "Vuelta desde paradas";
 			    break;
 		    case 8:
-			    start = new LatLng(-38.745866, -62.286506);
-			    end = new LatLng(-38.727402, -62.254607);
+			    start = new LatLng(-38.744988, -62.283349);
+			    end = new LatLng(-38.732018, -62.257051);
 			    lineID = "504";
 			    testString = "Vuelta a unas cuadras";
 			    break;
@@ -576,19 +587,32 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 			    .color(Color.RED));
 
 	    ((TextView) findViewById(R.id.textViewLine)).setText(lineID);
-	    ((TextView) findViewById(R.id.textViewPathTest)).setText(testString);
+	    ((TextView) findViewById(R.id.textViewPathTest)).setText(testString +"  "+ path.distance +"m");
 
 	    mMap.addMarker(new MarkerOptions()
 			    .position(start)
 			    .title("Inicio"));
 
+
+	    AssetManager assetManager = getAssets();
+	    Bitmap icon = null;
+	    try {
+		    InputStream istream = assetManager.open("bus_stop.png");
+		    icon = BitmapFactory.decodeStream(istream);
+	    } catch (IOException e) {}
+
+	    Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
+
+
 	    mMap.addMarker(new MarkerOptions()
 			    .position(path.firstStop().location)
-			    .title("Primer parada"));
+			    .title("Primer parada")
+	            .icon(BitmapDescriptorFactory.fromBitmap(scaledIcon)));
 
 	    mMap.addMarker(new MarkerOptions()
 			    .position(path.lastStops().location)
-			    .title("Ultima parada"));
+			    .title("Ultima parada")
+	            .icon(BitmapDescriptorFactory.fromAsset("bus_stop.png")));
 
 	    mMap.addMarker(new MarkerOptions()
 			    .position(end)

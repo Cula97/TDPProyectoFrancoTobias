@@ -97,23 +97,35 @@
 	</android.support.constraint.ConstraintLayout>
 
 	<Button
-		android:id="@+id/buttonPathTest"
+		android:id="@+id/buttonPathTestNext"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="8dp"
-		android:layout_marginBottom="16dp"
-		android:onClick="pathTest"
+		android:layout_marginBottom="8dp"
+		android:onClick="pathTestNext"
 		android:text="Next"
 		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent" />
+
+	<Button
+		android:id="@+id/buttonPathTestPrev"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:layout_marginBottom="8dp"
+		android:onClick="pathTestPrev"
+		android:text="Prev"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
+
 
 	<TextView
 		android:id="@+id/textViewPathTest"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="8dp"
-		android:layout_marginTop="8dp"
 		android:layout_marginEnd="8dp"
 		android:text="text"
 		android:textSize="18sp"

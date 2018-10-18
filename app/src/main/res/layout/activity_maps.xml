@@ -59,7 +59,7 @@
 			android:layout_toRightOf="@+id/input_search"
 			android:entries="@array/bus_list"
 			android:prompt="@string/app_name"
-		/>
+			/>
 
 	</RelativeLayout>
 
