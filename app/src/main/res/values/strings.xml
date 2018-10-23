@@ -3,8 +3,18 @@
     <string name="title_activity_maps">TDP Proyecto</string>
     <string name="bus_stop_icon">bus_stop.png</string>
     <string name="title_activity_visualize_data_map">Map</string>
+	<string name="addEndLocation">Long press to select destination.</string>
+	<string name="addStartLocation">Want to get there? Choose the starting location.</string>
+	<string name="newLocation">New Location</string>
+	<string name="currentLocation">Current Location</string>
+	<string name="location_permission_denied">Grant Location permission to continue.</string>
+	<string name="permission_required_toast">Location permission is required.</string>
+	<string name="permission_rationale_location">Access to device\'s location  is required show your location on the map.</string>
+	<string name="gpsDisabled">GPS is disabled.</string>
+	<string name="startTrip">Start</string>
+	<string name="endTrip">Destination</string>
 
-    <string-array name="debug_modes_array">
+	<string-array name="debug_modes_array">
         <item>Route</item>
         <item>Bus</item>
         <item>Section</item>

@@ -30,8 +30,6 @@
         </activity>
 
         <activity android:name=".MainActivity">
-	        android:screenOrientation="portrait"
-	        android:configChanges="orientation|keyboardHidden"
         </activity>
         <!--
 			 The API key for Google Maps-based APIs is defined as a string resource.

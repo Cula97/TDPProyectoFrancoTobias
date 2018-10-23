@@ -14,10 +14,15 @@ public class Path implements Comparable<Path>{
 
 	private Stop firstStop;
 	private Stop lastStops;
+	private LatLng startLocation;
+	private LatLng endLocation;
 	public final float distance;
 
 
-	private Path(Stop firstStop, Stop lastStops, float distance) {
+	private Path(LatLng startLocation, LatLng endLocation,
+	             Stop firstStop, Stop lastStops, float distance) {
+		this.startLocation = startLocation;
+		this.endLocation = endLocation;
 		this.firstStop = firstStop;
 		this.lastStops = lastStops;
 		this.distance = distance;
@@ -70,7 +75,7 @@ public class Path implements Comparable<Path>{
 						travelDist = line.getRoute().distanceBetweenStops(closestStopsStart[0], closestStopsEnd[0]);
 						if (travelDist != INVALID_DISTANCE) {
 							minTravelDist = travelDist;
-							shortestPath = new Path(closestStopsStart[0], closestStopsEnd[0], minTravelDist);
+							shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[0], minTravelDist);
 						}
 					}
 
@@ -78,7 +83,7 @@ public class Path implements Comparable<Path>{
 						travelDist = line.getRoute().distanceBetweenStops(closestStopsStart[0], closestStopsEnd[1]);
 						if (travelDist != INVALID_DISTANCE && travelDist < minTravelDist) {
 							minTravelDist = travelDist;
-							shortestPath = new Path(closestStopsStart[0], closestStopsEnd[1], minTravelDist);
+							shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[1], minTravelDist);
 						}
 					}
 				}
@@ -89,7 +94,7 @@ public class Path implements Comparable<Path>{
 						travelDist = line.getRoute().distanceBetweenStops(closestStopsStart[1], closestStopsEnd[0]);
 						if (travelDist != INVALID_DISTANCE && travelDist < minTravelDist) {
 							minTravelDist = travelDist;
-							shortestPath = new Path(closestStopsStart[1], closestStopsEnd[0], minTravelDist);
+							shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[0], minTravelDist);
 						}
 					}
 
@@ -97,7 +102,7 @@ public class Path implements Comparable<Path>{
 						travelDist = line.getRoute().distanceBetweenStops(closestStopsStart[1], closestStopsEnd[1]);
 						if (travelDist != INVALID_DISTANCE && travelDist < minTravelDist) {
 							minTravelDist = travelDist;
-							shortestPath = new Path(closestStopsStart[1], closestStopsEnd[1], minTravelDist);
+							shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[1], minTravelDist);
 						}
 					}
 				}
@@ -113,6 +118,13 @@ public class Path implements Comparable<Path>{
 		return (int) (distance - path.distance);
 	}
 
+	public LatLng startLocation() {
+		return startLocation;
+	}
+
+	public LatLng endLocation() {
+		return endLocation;
+	}
 
 	public Stop firstStop() {
 		return firstStop;

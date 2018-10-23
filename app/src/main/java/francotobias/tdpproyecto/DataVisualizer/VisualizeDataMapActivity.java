@@ -7,18 +7,15 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -31,11 +28,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import francotobias.tdpproyecto.Bus;
 import francotobias.tdpproyecto.BusManager;
@@ -44,7 +38,6 @@ import francotobias.tdpproyecto.LineManager;
 import francotobias.tdpproyecto.MainActivity;
 import francotobias.tdpproyecto.Path;
 import francotobias.tdpproyecto.R;
-import francotobias.tdpproyecto.Route;
 import francotobias.tdpproyecto.Section;
 import francotobias.tdpproyecto.Stop;
 
