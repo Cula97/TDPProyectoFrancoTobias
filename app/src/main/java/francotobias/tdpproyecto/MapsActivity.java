@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -43,14 +45,16 @@ public class MapsActivity extends AppCompatActivity
 
 	private Path singlePath;
 	private Iterable<Path> multiplePaths;
-	private LatLng start, end;
+	private Marker start, end;
 
-	private  ViewGroup topBar;
+	private ViewGroup topBar;
 	private boolean topBarAndHintVisible = true;
 	private ViewGroup bottomBar;
 	private boolean  bottomBarVisible = false;
 	private TextView hintTextView;
 	private float hintTextViewHeight;
+	private ImageButton closeButton;
+	private boolean selectingNewStartLocation;
 
 
 	@Override
@@ -106,6 +110,13 @@ public class MapsActivity extends AppCompatActivity
 		buttonLayout.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
 		buttonLayout.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
 		buttonLayout.bottomMargin = buttonLayout.rightMargin;
+
+		//TODO: alinear los botones de la manera correcta y poco mas
+
+		closeButton = findViewById(R.id.closePathButton);
+		RelativeLayout.LayoutParams closeButtonLayout = (RelativeLayout.LayoutParams) closeButton.getLayoutParams();
+		closeButtonLayout.addRule(RelativeLayout.ALIGN_END, locationButton.getId());
+
 	}
 
 
@@ -203,21 +214,47 @@ public class MapsActivity extends AppCompatActivity
 
 	@Override
 	public void onMapClick(LatLng point) {
-		if (!bottomBarVisible)
-			if (!topBarAndHintVisible)
-				showTopBarAndHint();
+
+		if (selectingNewStartLocation) {
+			if (bottomBarVisible)
+				hideBottomAndTopBar();
 			else
-				hideTopBarAndHint();
+				showBottomAndTopBar();
+
+		}
 		else
-			hideBottomBar();
+			if (!bottomBarVisible)
+				if (!topBarAndHintVisible)
+					showTopBarAndHint();
+				else
+					hideTopBarAndHint();
+			else
+				hideBottomBar();
 	}
 
 
 	@Override
 	public void onMapLongClick (LatLng point) {
-		showBottomAndTopBar();
-		end = point;
 
+		if (selectingNewStartLocation) {
+			if (start != null)
+				start.remove();
+
+			start = mMap.addMarker(new MarkerOptions()
+					.position(point)
+					.title(getResources().getString(R.string.startTrip)));
+
+		}
+		else {
+			showBottomAndTopBar();
+
+			if (end != null)
+				end.remove();
+
+			end = mMap.addMarker(new MarkerOptions()
+					.position(point)
+					.title(getResources().getString(R.string.endTrip)));
+		}
 	}
 
 
@@ -241,19 +278,42 @@ public class MapsActivity extends AppCompatActivity
 		}
 	}
 
+
 	private void showBottomAndTopBar() {
 		if (!bottomBarVisible) {
-			float amount = bottomBar.getHeight() - hintTextViewHeight;
+			float amount = bottomBar.getHeight();
+
 			if (!topBarAndHintVisible) {
 				topBar.animate().translationYBy((float) topBar.getHeight());
-				amount += hintTextViewHeight;
 				topBarAndHintVisible = true;
 			}
+			else
+				if (!selectingNewStartLocation)
+					amount -= hintTextViewHeight;
+
 			//TODO: animar transicion de texto
 			hintTextView.setText(R.string.addStartLocation);
 			bottomBar.animate().translationYBy(-amount);
 			mMap.setPadding(0, topBar.getHeight(), 0, bottomBar.getHeight());
+
 			bottomBarVisible = true;
+		}
+	}
+
+	private void hideBottomAndTopBar() {
+		if (bottomBarVisible) {
+			float amount = bottomBar.getHeight();
+
+			if (topBarAndHintVisible) {
+				topBar.animate().translationYBy( - (float) topBar.getHeight());
+				topBarAndHintVisible = false;
+			}
+
+			hintTextView.setText(R.string.addStartLocation);
+			bottomBar.animate().translationYBy(amount);
+			mMap.setPadding(0, 0, 0, 0);
+
+			bottomBarVisible = false;
 		}
 	}
 
@@ -273,10 +333,30 @@ public class MapsActivity extends AppCompatActivity
 		try {
 			Location currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 			//TODO: wait for location if GPS was JUST enabled
-			start = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-			mMap.addMarker(new MarkerOptions()
-					.position(start)
-					.title(getResources().getString(R.string.startTrip)));
+			if (currentLocation == null) {
+				Toast.makeText(getApplicationContext(), R.string.unableRetriveGps, Toast.LENGTH_SHORT).show();
+				return;
+			}
+
+		/*  Manija y anda mal
+			if (currentLocation == null) {
+				Toast.makeText(getApplicationContext(), R.string.waitGps, Toast.LENGTH_SHORT).show();
+				Thread.sleep(5000);
+				currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				if (currentLocation == null) {
+					Toast.makeText(getApplicationContext(), R.string.unableRetriveGps, Toast.LENGTH_SHORT).show();
+					return;
+				}
+			}
+		*/
+
+
+			if (start != null)
+				start.remove();
+
+			start = mMap.addMarker(new MarkerOptions()
+							.position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
+							.title(getResources().getString(R.string.startTrip)));
 
 		} catch (SecurityException ex) {
 			ex.printStackTrace();
@@ -284,4 +364,12 @@ public class MapsActivity extends AppCompatActivity
 	}
 
 
+	public void onNewLocationClick(View view) {
+		selectingNewStartLocation = true;
+		hintTextView.setVisibility(View.GONE);
+	}
+
+	public void onCloseClick(View view) {
+
+	}
 }
