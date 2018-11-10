@@ -3,7 +3,9 @@
     <string name="title_activity_maps">TDP Proyecto</string>
     <string name="bus_stop_icon">bus_stop.png</string>
     <string name="title_activity_visualize_data_map">Map</string>
+	<string name="choseStartAndEnd">Please pick start and end locations</string>
 	<string name="addEndLocation">Long press to select destination.</string>
+	<string name="addStartLocationLP">Long press to select starting location.</string>
 	<string name="addStartLocation">Want to get there? Choose the starting location.</string>
 	<string name="newLocation">New Location</string>
 	<string name="currentLocation">Current Location</string>
