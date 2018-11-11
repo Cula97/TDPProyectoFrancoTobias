@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -33,6 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity
@@ -48,7 +48,7 @@ public class MapsActivity extends AppCompatActivity
 	private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
 	private Path singlePath;
-	private Iterable<Path> multiplePaths;
+	private Iterator<Path> multiplePaths;
 	private Marker start, end;
 
 	private ViewGroup topBar;
@@ -457,22 +457,46 @@ public class MapsActivity extends AppCompatActivity
 
 		}
 
+		// Multiple paths
 		if (lineSpinner.getSelectedItemPosition() == 0) {
 			multiplePaths = Path.shortestPaths(start.getPosition(), end.getPosition());
-			if (multiplePaths.iterator().hasNext())
-				singlePath = multiplePaths.iterator().next();
+			if (multiplePaths.hasNext())
+				singlePath = multiplePaths.next();
 			else
 				singlePath = null;
 
 		}
-		else
-			singlePath = Path.shortestPath(start.getPosition(), end.getPosition(), LineManager.getLine(lineSpinner.getSelectedItem().toString()));
-
-		Log.d("linea", lineSpinner.getSelectedItem().toString());
+		else {
+			// Next best path
+			if (singlePath != null &&
+					singlePath.getLine().lineID.equals(lineSpinner.getSelectedItem().toString()) &&
+					singlePath.startLocation().equals(start.getPosition()) &&
+					singlePath.endLocation().equals(end.getPosition())) {
+				if (multiplePaths.hasNext())
+					singlePath = multiplePaths.next();
+				else {
+					lineSpinner.setSelection(0);
+					singlePath = null;
+				}
+			}
+			else
+				// Single path from spinner
+				singlePath = Path.shortestPath(start.getPosition(), end.getPosition(), LineManager.getLine(lineSpinner.getSelectedItem().toString()));
+		}
 
 		if (singlePath != null) {
 			displayRoute(singlePath.getLine());
 			lineSpinner.setSelection(lineIDs.indexOf(singlePath.getLine().lineID));
+
+			// Testing
+			mMap.addPolyline(new PolylineOptions()
+					.add(start.getPosition(), singlePath.firstStop().location)
+					.color(Color.GREEN));
+
+			mMap.addPolyline(new PolylineOptions()
+					.add(singlePath.lastStops().location, end.getPosition())
+					.color(Color.GREEN));
+
 		}
 		else
 			Toast.makeText(getApplicationContext(), R.string.noRouteAvaliable, Toast.LENGTH_SHORT).show();

@@ -5,12 +5,14 @@ import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class Path implements Comparable<Path>{
 	private static final float MAX_WALKING_DISTANCE = 80000;
 	private static final float INVALID_DISTANCE = -1;
+	private static final float WALKING_DETERRENT = 2.5f;
 
 	private Stop firstStop;
 	private Stop lastStops;
@@ -29,7 +31,7 @@ public class Path implements Comparable<Path>{
 	}
 
 
-	public static Iterable<Path> shortestPaths(LatLng start, LatLng end) {
+	public static Iterator<Path> shortestPaths(LatLng start, LatLng end) {
 		SortedSet<Path> paths = new TreeSet<>();
 		Path path;
 
@@ -39,7 +41,7 @@ public class Path implements Comparable<Path>{
 				paths.add(path);
 		}
 
-		return paths;
+		return paths.iterator();
 	}
 
 
@@ -74,6 +76,7 @@ public class Path implements Comparable<Path>{
 					if (distEndGo <= MAX_WALKING_DISTANCE) {
 						travelDist = line.getRoute().distanceBetweenStops(closestStopsStart[0], closestStopsEnd[0]);
 						if (travelDist != INVALID_DISTANCE) {
+							travelDist += (distStartGo + distEndGo) * WALKING_DETERRENT;
 							minTravelDist = travelDist;
 							shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[0], minTravelDist);
 						}
@@ -81,28 +84,38 @@ public class Path implements Comparable<Path>{
 
 					if (distEndRet <= MAX_WALKING_DISTANCE) {
 						travelDist = line.getRoute().distanceBetweenStops(closestStopsStart[0], closestStopsEnd[1]);
-						if (travelDist != INVALID_DISTANCE && travelDist < minTravelDist) {
-							minTravelDist = travelDist;
-							shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[1], minTravelDist);
+						if (travelDist != INVALID_DISTANCE) {
+							travelDist += (distStartGo + distEndRet) * WALKING_DETERRENT;
+							if (travelDist < minTravelDist) {
+								minTravelDist = travelDist;
+								shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[1], minTravelDist);
+							}
 						}
 					}
 				}
 
 				// Distance on the Ret route to both closest stops
 				if (distStartRet <= MAX_WALKING_DISTANCE) {
+
 					if (distEndGo <= MAX_WALKING_DISTANCE) {
 						travelDist = line.getRoute().distanceBetweenStops(closestStopsStart[1], closestStopsEnd[0]);
-						if (travelDist != INVALID_DISTANCE && travelDist < minTravelDist) {
-							minTravelDist = travelDist;
-							shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[0], minTravelDist);
+						if (travelDist != INVALID_DISTANCE) {
+							travelDist += (distStartRet + distEndGo) * WALKING_DETERRENT;
+							if (travelDist < minTravelDist) {
+								minTravelDist = travelDist;
+								shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[0], minTravelDist);
+							}
 						}
 					}
 
 					if (distEndRet <= MAX_WALKING_DISTANCE) {
 						travelDist = line.getRoute().distanceBetweenStops(closestStopsStart[1], closestStopsEnd[1]);
-						if (travelDist != INVALID_DISTANCE && travelDist < minTravelDist) {
-							minTravelDist = travelDist;
-							shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[1], minTravelDist);
+						if (travelDist != INVALID_DISTANCE) {
+							travelDist += (distStartRet + distEndRet) * WALKING_DETERRENT;
+							if (travelDist < minTravelDist) {
+								minTravelDist = travelDist;
+								shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[1], minTravelDist);
+							}
 						}
 					}
 				}

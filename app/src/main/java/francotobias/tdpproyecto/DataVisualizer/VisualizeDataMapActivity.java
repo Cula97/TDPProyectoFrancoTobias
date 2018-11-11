@@ -568,7 +568,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 	    	path = Path.shortestPath(start, end, line);
 	    }
 	    else
-	    	path = Path.shortestPaths(start, end).iterator().next();
+	    	path = Path.shortestPaths(start, end).next();
 
 	    line = path.getLine();
 
