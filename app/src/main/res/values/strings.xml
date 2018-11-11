@@ -18,6 +18,8 @@
 	<string name="unableRetriveGps">Unable to retrieve GPS location. Try again later.</string>
 	<string name="startTrip">Start</string>
 	<string name="endTrip">Destination</string>
+	<string name="any">ANY</string>
+	<string name="noRouteAvaliable">No route avaliable.</string>
 
 	<string-array name="debug_modes_array">
         <item>Route</item>

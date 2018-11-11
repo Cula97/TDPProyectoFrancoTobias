@@ -327,7 +327,8 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 
 				Marker marker = mMap.addMarker(new MarkerOptions()
 						.position(stopsGo.get(stopGoIndex++).location)
-						.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon)));
+						.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
+						.title(stopsGo.get(stopGoIndex-1).location.toString()));
 
 				if (stopCounter++ % 10 == 0 && !showRet)
 					mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
@@ -368,7 +369,8 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 
 				Marker marker = mMap.addMarker(new MarkerOptions()
 						.position(stopsRet.get(stopRetIndex++).location)
-						.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon)));
+						.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
+						.title(stopsRet.get(stopRetIndex-1).location.toString()));
 
 				if (stopCounter++ % 10 == 0 && !showGo)
 					mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
