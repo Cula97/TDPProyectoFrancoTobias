@@ -32,6 +32,7 @@
 	<fragment
 		android:id="@+id/mapFragment"
 		android:name="com.google.android.gms.maps.SupportMapFragment"
+
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 	</fragment>
@@ -54,6 +55,7 @@
 		android:clickable="true"
 		android:focusable="true"
 		android:visibility="gone"
+		android:onClick="onGoClicked"
 		android:src="@drawable/ic_directions_bus_black_24dp" />
 
 	<RelativeLayout

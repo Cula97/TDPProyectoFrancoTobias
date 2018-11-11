@@ -9,7 +9,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class Path implements Comparable<Path>{
-	private static final float MAX_WALKING_DISTANCE = 800;
+	private static final float MAX_WALKING_DISTANCE = 80000;
 	private static final float INVALID_DISTANCE = -1;
 
 	private Stop firstStop;

@@ -11,11 +11,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity
@@ -55,6 +59,8 @@ public class MapsActivity extends AppCompatActivity
 	private float hintTextViewHeight;
 	private ImageButton exitButton;
 	private FloatingActionButton goActionButton;
+	private Spinner lineSpinner;
+	private static ArrayList<String> lineIDs;
 	private boolean selectingNewStartLocation;
 
 
@@ -70,6 +76,20 @@ public class MapsActivity extends AppCompatActivity
 				.findFragmentById(R.id.mapFragment);
 		mapFragment.getMapAsync(this);
 
+
+		// Populate Spinner
+		lineSpinner = findViewById(R.id.lineSpinner);
+		lineIDs = new ArrayList<>();
+		lineIDs.add(getString(R.string.any));
+		for (Line l : LineManager.lines())
+			lineIDs.add(l.lineID);
+
+		ArrayAdapter<String> lineSpinnerAdapter = new ArrayAdapter<>
+				(this, android.R.layout.simple_spinner_item, lineIDs);
+		lineSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		lineSpinner.setAdapter(lineSpinnerAdapter);
+
+		lineSpinner.setSelection(0);
 	}
 
 
@@ -113,6 +133,8 @@ public class MapsActivity extends AppCompatActivity
 		locationButtonLayout.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
 		locationButtonLayout.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
 		locationButtonLayout.bottomMargin = locationButtonLayout.rightMargin;
+
+
 	}
 
 
@@ -421,7 +443,39 @@ public class MapsActivity extends AppCompatActivity
 			return;
 		}
 
+		// Remove last path
+		if (singlePath != null) {
+			mMap.clear();
+			start = mMap.addMarker(new MarkerOptions()
+							.position(start.getPosition())
+							.title(start.getTitle())
+							.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
+			end = mMap.addMarker(new MarkerOptions()
+					.position(end.getPosition())
+					.title(end.getTitle()));
+
+		}
+
+		if (lineSpinner.getSelectedItemPosition() == 0) {
+			multiplePaths = Path.shortestPaths(start.getPosition(), end.getPosition());
+			if (multiplePaths.iterator().hasNext())
+				singlePath = multiplePaths.iterator().next();
+			else
+				singlePath = null;
+
+		}
+		else
+			singlePath = Path.shortestPath(start.getPosition(), end.getPosition(), LineManager.getLine(lineSpinner.getSelectedItem().toString()));
+
+		Log.d("linea", lineSpinner.getSelectedItem().toString());
+
+		if (singlePath != null) {
+			displayRoute(singlePath.getLine());
+			lineSpinner.setSelection(lineIDs.indexOf(singlePath.getLine().lineID));
+		}
+		else
+			Toast.makeText(getApplicationContext(), R.string.noRouteAvaliable, Toast.LENGTH_SHORT).show();
 	}
 
 }
