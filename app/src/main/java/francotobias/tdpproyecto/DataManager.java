@@ -93,11 +93,17 @@ public class DataManager {
 	}
 
 	public CSVWizard requestStopsGo(String line) {
+		if(line.equals("513"))
+			return new CSVWizard(context.getResources().getString(R.string.i513));
+
 		FileHandler file = new FileHandler(context, STOPSGO_FILENAME + line);
 		return new CSVWizard(file.requestFileData());
 	}
 
 	public CSVWizard requestStopsRet(String line) {
+		if(line.equals("513"))
+			return new CSVWizard(context.getResources().getString(R.string.v513));
+
 		FileHandler file = new FileHandler(context, STOPSRET_FILENAME + line);
 		return new CSVWizard(file.requestFileData());
 	}
@@ -116,6 +122,13 @@ public class DataManager {
 	public CSVWizard requestLines() {
 		FileHandler file = new FileHandler(context, LINES_FILENAME);
 		return new CSVWizard(file.requestFileData());
+	}
+
+	public boolean isInFile(String a){
+		if(a.equals("513"))
+			return true;
+
+		return false;
 	}
 
 }
