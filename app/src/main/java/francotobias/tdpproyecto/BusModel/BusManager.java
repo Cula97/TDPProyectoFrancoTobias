@@ -1,4 +1,4 @@
-package francotobias.tdpproyecto;
+package francotobias.tdpproyecto.BusModel;
 
 import android.location.Location;
 
@@ -6,6 +6,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
 import java.util.Map;
+
+import francotobias.tdpproyecto.Helpers.CSVWizard;
+import francotobias.tdpproyecto.Helpers.DataManager;
 
 public class BusManager {
 	private static final int ID_COLUMN = 2;

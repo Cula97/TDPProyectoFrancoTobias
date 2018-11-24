@@ -31,15 +31,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import francotobias.tdpproyecto.Bus;
-import francotobias.tdpproyecto.BusManager;
-import francotobias.tdpproyecto.Line;
-import francotobias.tdpproyecto.LineManager;
+import francotobias.tdpproyecto.BusModel.Bus;
+import francotobias.tdpproyecto.BusModel.BusManager;
+import francotobias.tdpproyecto.BusModel.Line;
+import francotobias.tdpproyecto.BusModel.LineManager;
 import francotobias.tdpproyecto.MainActivity;
-import francotobias.tdpproyecto.Path;
+import francotobias.tdpproyecto.PathModel.Path;
 import francotobias.tdpproyecto.R;
-import francotobias.tdpproyecto.Section;
-import francotobias.tdpproyecto.Stop;
+import francotobias.tdpproyecto.PathModel.Section;
+import francotobias.tdpproyecto.PathModel.Stop;
 
 public class VisualizeDataMapActivity extends FragmentActivity implements OnMapReadyCallback {
 	private GoogleMap mMap;

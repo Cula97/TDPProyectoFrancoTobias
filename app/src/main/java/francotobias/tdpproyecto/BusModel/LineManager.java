@@ -1,4 +1,4 @@
-package francotobias.tdpproyecto;
+package francotobias.tdpproyecto.BusModel;
 
 import android.util.Log;
 
@@ -6,6 +6,12 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import francotobias.tdpproyecto.BusModel.Line;
+import francotobias.tdpproyecto.Helpers.CSVWizard;
+import francotobias.tdpproyecto.Helpers.DataManager;
+import francotobias.tdpproyecto.PathModel.Route;
+import francotobias.tdpproyecto.PathModel.Stop;
 
 public class LineManager {
 	private static final int ID_COLUMN = 1;

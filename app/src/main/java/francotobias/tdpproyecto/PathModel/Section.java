@@ -1,4 +1,4 @@
-package francotobias.tdpproyecto;
+package francotobias.tdpproyecto.PathModel;
 
 import android.location.Location;
 
@@ -6,6 +6,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import francotobias.tdpproyecto.BusModel.BusManager;
 
 public class Section {
 	public final LatLng startPoint;

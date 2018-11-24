@@ -1,4 +1,4 @@
-package francotobias.tdpproyecto;
+package francotobias.tdpproyecto.BusModel;
 
 import android.location.Location;
 
@@ -6,6 +6,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import francotobias.tdpproyecto.PathModel.Route;
+import francotobias.tdpproyecto.PathModel.Stop;
 
 public class Line {
 	private static final long FLEET_UPDATE_TIME = 20000; // Update every 20 sec at max

@@ -3,6 +3,9 @@ package francotobias.tdpproyecto;
 
 import android.os.Handler;
 
+import francotobias.tdpproyecto.BusModel.BusManager;
+import francotobias.tdpproyecto.BusModel.Line;
+
 public class BusUpdaterThread implements Runnable {
     private Handler handler;
     private boolean active;

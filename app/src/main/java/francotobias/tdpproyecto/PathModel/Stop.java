@@ -1,6 +1,8 @@
-package francotobias.tdpproyecto;
+package francotobias.tdpproyecto.PathModel;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import francotobias.tdpproyecto.PathModel.Section;
 
 public class Stop {
 	public final LatLng location;

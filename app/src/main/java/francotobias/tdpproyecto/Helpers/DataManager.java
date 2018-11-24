@@ -1,9 +1,11 @@
-package francotobias.tdpproyecto;
+package francotobias.tdpproyecto.Helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.Calendar;
+
+import francotobias.tdpproyecto.R;
 
 public class DataManager {
 	//Nota: debe ser una clase estática.

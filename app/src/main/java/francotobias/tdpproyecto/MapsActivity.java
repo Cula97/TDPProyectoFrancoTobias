@@ -35,6 +35,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import francotobias.tdpproyecto.BusModel.Line;
+import francotobias.tdpproyecto.BusModel.LineManager;
+import francotobias.tdpproyecto.Helpers.PermissionUtils;
+import francotobias.tdpproyecto.PathModel.Path;
+import francotobias.tdpproyecto.PathModel.Stop;
+
 public class MapsActivity extends AppCompatActivity
 		implements
 		OnMapReadyCallback,

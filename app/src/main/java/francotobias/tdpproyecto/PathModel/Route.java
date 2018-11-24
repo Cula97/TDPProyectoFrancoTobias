@@ -1,4 +1,4 @@
-package francotobias.tdpproyecto;
+package francotobias.tdpproyecto.PathModel;
 
 import android.location.Location;
 import android.util.Log;
@@ -9,6 +9,9 @@ import com.google.maps.android.PolyUtil;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import francotobias.tdpproyecto.BusModel.BusManager;
+import francotobias.tdpproyecto.BusModel.Line;
 
 public class Route {
 	protected List<Section> routeSectionGo, routeSectionReturn;

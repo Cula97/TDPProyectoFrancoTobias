@@ -1,4 +1,4 @@
-package francotobias.tdpproyecto;
+package francotobias.tdpproyecto.Helpers;
 
 import android.os.StrictMode;
 import android.util.Log;
@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import francotobias.tdpproyecto.Helpers.CSVWizard;
 
 public class JunarHandler {
 	private static final String JUNAR_URL = "http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/";

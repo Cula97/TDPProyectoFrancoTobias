@@ -1,4 +1,4 @@
-package francotobias.tdpproyecto;
+package francotobias.tdpproyecto.BusModel;
 
 import android.location.Location;
 import android.util.Log;

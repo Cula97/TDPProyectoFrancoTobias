@@ -1,4 +1,4 @@
-package francotobias.tdpproyecto;
+package francotobias.tdpproyecto.PathModel;
 
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -8,6 +8,10 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import francotobias.tdpproyecto.BusModel.BusManager;
+import francotobias.tdpproyecto.BusModel.Line;
+import francotobias.tdpproyecto.BusModel.LineManager;
 
 public class Path implements Comparable<Path>{
 	private static final float MAX_WALKING_DISTANCE = 80000;
@@ -51,6 +55,10 @@ public class Path implements Comparable<Path>{
 
 			Location startLocation = BusManager.latLngToLocation(start, null);
 			Location endLocation = BusManager.latLngToLocation(end, null);
+			Location middleLocation = BusManager.latLngToLocation(new LatLng(start.latitude,end.longitude),null);
+
+			float MAX_WALKING_DISTANCE = middleLocation.distanceTo(startLocation) + middleLocation.distanceTo(endLocation);
+
 			Stop[] closestStopsStart, closestStopsEnd;
 			Location stopLocation;
 			float distStartGo, distStartRet, distEndGo, distEndRet, travelDist, minTravelDist = 1e5f;
