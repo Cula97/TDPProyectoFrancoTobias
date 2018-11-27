@@ -1,6 +1,5 @@
 package francotobias.tdpproyecto.PathModel;
 
-import android.location.Location;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -22,16 +21,19 @@ public class Path implements Comparable<Path>{
 	private Stop lastStops;
 	private LatLng startLocation;
 	private LatLng endLocation;
-	public final float distance;
-
+	private final float busDistance;
+	private final float walkingDistance;
 
 	private Path(LatLng startLocation, LatLng endLocation,
-	             Stop firstStop, Stop lastStops, float distance) {
+	             Stop firstStop, Stop lastStops,
+	             float busDistance, float walkingDistance) {
+
 		this.startLocation = startLocation;
 		this.endLocation = endLocation;
 		this.firstStop = firstStop;
 		this.lastStops = lastStops;
-		this.distance = distance;
+		this.busDistance = busDistance;
+		this.walkingDistance = walkingDistance;
 	}
 
 
@@ -48,19 +50,29 @@ public class Path implements Comparable<Path>{
 		return paths.iterator();
 	}
 
+	/**
+	 * La unica razonn por la que existe latLngToLocation y la clase
+	 * LocationUtils es para poder computar distancias entra puntos
+	 * porque por alguna razon LatLng no lo tra integrado y
+	 * Location si pero encontre esta clase re util asi que pienso
+	 * modificar las cosaspara usarla y que queden las cosas mas
+	 * limpias. Chusmeala, esta re fancy
+	 *
+		 * googlemaps.github.io/android-maps-utils/javadoc/com/google/maps/android/SphericalUtil.html
+	 */
 
 	public static Path shortestPath(LatLng start, LatLng end, Line line) {
 		Path shortestPath = null;
 		if (line.getRoute().validStops()) {
 
-			Location startLocation = BusManager.latLngToLocation(start, null);
-			Location endLocation = BusManager.latLngToLocation(end, null);
-			Location middleLocation = BusManager.latLngToLocation(new LatLng(start.latitude,end.longitude),null);
+//			Location startLocation = BusManager.latLngToLocation(start, null);
+//			Location endLocation = BusManager.latLngToLocation(end, null);
+//			Location middleLocation = BusManager.latLngToLocation(new LatLng(start.latitude,end.longitude),null);
 
-			float MAX_WALKING_DISTANCE = middleLocation.distanceTo(startLocation) + middleLocation.distanceTo(endLocation);
+//			float MAX_WALKING_DISTANCE = middleLocation.distanceTo(startLocation) + middleLocation.distanceTo(endLocation);
 
 			Stop[] closestStopsStart, closestStopsEnd;
-			Location stopLocation;
+//			Location stopLocation;
 			float distStartGo, distStartRet, distEndGo, distEndRet, travelDist, minTravelDist = 1e5f;
 
 			closestStopsStart = line.getClosestStops(startLocation);
@@ -134,24 +146,29 @@ public class Path implements Comparable<Path>{
 	}
 
 
-	@Override
-	public int compareTo(@NonNull Path path) {
-		return (int) (distance - path.distance);
+	public float getDistance() {
+		return busDistance + walkingDistance;
 	}
 
-	public LatLng startLocation() {
+
+	@Override
+	public int compareTo(@NonNull Path path) {
+		return (int) (getDistance() - path.getDistance());
+	}
+
+	public LatLng getStartLocation() {
 		return startLocation;
 	}
 
-	public LatLng endLocation() {
+	public LatLng getEndLocation() {
 		return endLocation;
 	}
 
-	public Stop firstStop() {
+	public Stop getFirstStop() {
 		return firstStop;
 	}
 
-	public Stop lastStops() {
+	public Stop getLastStop() {
 		return lastStops;
 	}
 	

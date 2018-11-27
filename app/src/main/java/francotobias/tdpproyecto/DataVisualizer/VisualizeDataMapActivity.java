@@ -37,9 +37,9 @@ import francotobias.tdpproyecto.BusModel.Line;
 import francotobias.tdpproyecto.BusModel.LineManager;
 import francotobias.tdpproyecto.MainActivity;
 import francotobias.tdpproyecto.PathModel.Path;
-import francotobias.tdpproyecto.R;
 import francotobias.tdpproyecto.PathModel.Section;
 import francotobias.tdpproyecto.PathModel.Stop;
+import francotobias.tdpproyecto.R;
 
 public class VisualizeDataMapActivity extends FragmentActivity implements OnMapReadyCallback {
 	private GoogleMap mMap;
@@ -600,12 +600,12 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 
 
 	    mMap.addMarker(new MarkerOptions()
-			    .position(path.firstStop().location)
+			    .position(path.getFirstStop().location)
 			    .title("Primer parada")
 	            .icon(BitmapDescriptorFactory.fromBitmap(scaledIcon)));
 
 	    mMap.addMarker(new MarkerOptions()
-			    .position(path.lastStops().location)
+			    .position(path.getLastStop().location)
 			    .title("Ultima parada")
 	            .icon(BitmapDescriptorFactory.fromAsset("bus_stop.png")));
 

@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,9 +15,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,14 +36,12 @@ import francotobias.tdpproyecto.BusModel.Line;
 import francotobias.tdpproyecto.BusModel.LineManager;
 import francotobias.tdpproyecto.Helpers.PermissionUtils;
 import francotobias.tdpproyecto.PathModel.Path;
-import francotobias.tdpproyecto.PathModel.Stop;
 
 public class MapsActivity extends AppCompatActivity
 		implements
 		OnMapReadyCallback,
 		GoogleMap.OnMapClickListener,
-		GoogleMap.OnMapLongClickListener,
-		GoogleMap.OnMyLocationButtonClickListener {
+		GoogleMap.OnMyLocationClickListener {
 
 	private GoogleMap mMap;
 	private LocationManager locationManager;
@@ -58,16 +53,15 @@ public class MapsActivity extends AppCompatActivity
 	private Marker start, end;
 
 	private ViewGroup topBar;
-	private boolean topBarAndHintVisible = true;
-	private ViewGroup bottomBar;
-	private boolean  bottomBarVisible = false;
-	private TextView hintTextView;
-	private float hintTextViewHeight;
+	private ViewGroup sideBar;
+	private boolean topBarAndSideBarVisible = true;
+	private boolean addingStartMarker = false;
+	private boolean addingDestinationMarker = false;
+
 	private ImageButton exitButton;
-	private FloatingActionButton goActionButton;
 	private Spinner lineSpinner;
 	private static ArrayList<String> lineIDs;
-	private boolean selectingNewStartLocation;
+
 
 
 	@Override
@@ -75,13 +69,12 @@ public class MapsActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		//TODO: no title, keep status (notification bar)
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_maps2);
+		setContentView(R.layout.activity_maps);
 
 		// Obtain the SupportMapFragment and get notified when the map is ready to be used.
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.mapFragment);
 		mapFragment.getMapAsync(this);
-
 
 		// Populate Spinner
 		lineSpinner = findViewById(R.id.lineSpinner);
@@ -111,35 +104,16 @@ public class MapsActivity extends AppCompatActivity
 	public void onMapReady(GoogleMap googleMap) {
 		mMap = googleMap;
 		topBar = findViewById(R.id.topBarLayout);
-		//TODO: bottomBar no tiene shadow
-		// github.com/miguelhincapie/CustomBottomSheetBehavior/issues/32#issuecomment-275332696
-		bottomBar = findViewById(R.id.bottomBarLayout);
-		hintTextView = findViewById(R.id.textViewBottomBar);
-
-		hintTextViewHeight = bottomBar.getPaddingTop()
-								+ hintTextView.getHeight()
-								+ hintTextView.getPaddingBottom();
-		bottomBar.setY(bottomBar.getY() + bottomBar.getHeight() - hintTextViewHeight);
+		sideBar= findViewById(R.id.conrtolsLinearLayout);
 
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-38.7171, -62.2655), 14));
 
 		mMap.setOnMapClickListener(this);
-		mMap.setOnMapLongClickListener(this);
-		mMap.setOnMyLocationButtonClickListener(this);
+		mMap.setOnMyLocationClickListener(this);
+
 		mMap.getUiSettings().setMapToolbarEnabled(false);
-		mMap.setPadding(0, topBar.getHeight(), 0, (int) hintTextViewHeight);
+		mMap.getUiSettings().setMyLocationButtonEnabled(false);
 		enableMyLocation();
-
-		exitButton = findViewById(R.id.closePathButton);
-		goActionButton = findViewById(R.id.goActionButton);
-
-		ViewGroup mapView = findViewById(R.id.mainLayout);
-		View locationButton = mapView.findViewWithTag("GoogleMapMyLocationButton");
-		RelativeLayout.LayoutParams locationButtonLayout = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
-		locationButtonLayout.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-		locationButtonLayout.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-		locationButtonLayout.bottomMargin = locationButtonLayout.rightMargin;
-
 
 	}
 
@@ -157,20 +131,6 @@ public class MapsActivity extends AppCompatActivity
 				.addAll(routeRet)
 				.zIndex(1)
 				.color(Color.RED));
-	}
-
-
-	// Very laggy on Snapdragons
-	public void displayStops(Line line) {
-		List<Stop> stops = line.getRoute().getStops();
-		String asset;
-
-		for (Stop s : stops) {
-			asset = s.isGo ? "bus_stop_go.png" : "bus_stop_ret.png";
-			mMap.addMarker(new MarkerOptions()
-					.position(s.location)
-					.icon(BitmapDescriptorFactory.fromAsset(asset)));
-		}
 	}
 
 
@@ -223,244 +183,144 @@ public class MapsActivity extends AppCompatActivity
 	}
 
 
-	@Override
-	public boolean onMyLocationButtonClick() {
+	public void onCurrentLocationButtonClick(View view) {
+		// Check for enabled GPS
 		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			Toast.makeText(getApplicationContext(), R.string.gpsDisabled, Toast.LENGTH_SHORT).show();
-			return true;
+			return;
 		}
 
-		// Return false so that we don't consume the event and the default behavior still occurs
-		// (the camera animates to the user's current position).
-		return false;
+		// Check for valid location
+		Location currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		if (currentLocation == null) {
+			Toast.makeText(getApplicationContext(), R.string.unableRetriveGps, Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+		mMap.animateCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+
+	}
+
+
+	@Override
+	public void onMyLocationClick(Location location) {
+		if (addingStartMarker || addingDestinationMarker)
+			addMarker(new LatLng(location.getLatitude(), location.getLongitude()));
 	}
 
 
 	@Override
 	public void onMapClick(LatLng point) {
-
-		if (selectingNewStartLocation) {
-			if (bottomBarVisible)
-				hideBottomAndTopBar();
-			else
-				showBottomAndTopBar();
-
-		}
+		if (addingStartMarker || addingDestinationMarker)
+			addMarker(point);
 		else
-			if (!bottomBarVisible)
-				if (!topBarAndHintVisible)
-					showTopBarAndHint();
-				else
-					hideTopBarAndHint();
-			else
-				hideBottomBar();
+			alternateMenuVisibility();
 	}
 
 
-	@Override
-	public void onMapLongClick (LatLng point) {
-
-		if (selectingNewStartLocation) {
+	private void addMarker(LatLng point) {
+		// Add start marker
+		if (addingStartMarker) {
 			if (start != null)
-				start.remove();
-			else
-				showExitAndGo();
+				start.remove(); // Remove old one
 
 			start = mMap.addMarker(new MarkerOptions()
 					.position(point)
+					.draggable(true)
 					.title(getResources().getString(R.string.startTrip))
 					.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
+			addingStartMarker = false;
 		}
+		// Or add destination marker
 		else {
-			showBottomAndTopBar();
-
 			if (end != null)
-				end.remove();
+				end.remove();   // Remove old one
 
 			end = mMap.addMarker(new MarkerOptions()
 					.position(point)
+					.draggable(true)
 					.title(getResources().getString(R.string.endTrip)));
+
+			addingDestinationMarker = false;
 		}
 	}
 
 
-	private void showTopBarAndHint() {
-		if (!topBarAndHintVisible) {
+	private void alternateMenuVisibility() {
+		if (topBarAndSideBarVisible)
+			hideTopBarAndSidebar();
+		else
+			showTopBarAndSidebar();
+	}
+
+
+	private void showTopBarAndSidebar() {
+		if (!topBarAndSideBarVisible) {
 			topBar.animate().translationYBy((float) topBar.getHeight());
-			bottomBar.animate().translationYBy(-hintTextViewHeight);
-			//TODO: sincronizar con el final de la animacion si es podible
-			mMap.setPadding(0, topBar.getHeight(), 0, (int) hintTextViewHeight);
-			topBarAndHintVisible = true;
+			sideBar.animate().translationXBy((float) -sideBar.getWidth());
+			mMap.setPadding(0, topBar.getHeight(), 0, 0);
+
+			topBarAndSideBarVisible = true;
 		}
 	}
 
 
-	private void hideTopBarAndHint() {
-		if (topBarAndHintVisible) {
+	private void hideTopBarAndSidebar() {
+		if (topBarAndSideBarVisible) {
 			topBar.animate().translationYBy((float) -topBar.getHeight());
-			bottomBar.animate().translationYBy(hintTextViewHeight);
-			mMap.setPadding(0, 0, 0, 0);
-			topBarAndHintVisible = false;
-		}
-	}
-
-
-	private void showBottomAndTopBar() {
-		if (!bottomBarVisible) {
-			float amount = bottomBar.getHeight();
-
-			if (!topBarAndHintVisible) {
-				topBar.animate().translationYBy((float) topBar.getHeight());
-				topBarAndHintVisible = true;
-			}
-			else
-				if (!selectingNewStartLocation)
-					amount -= hintTextViewHeight;
-
-			//TODO: animar transicion de texto
-			hintTextView.setText(R.string.addStartLocation);
-			bottomBar.animate().translationYBy(-amount);
-			mMap.setPadding(0, topBar.getHeight(), 0, bottomBar.getHeight());
-
-			if (exitButton.getVisibility() == ViewGroup.VISIBLE) {
-				exitButton.animate().translationYBy((float) topBar.getHeight());
-				goActionButton.animate().translationYBy(-amount);
-			}
-
-			bottomBarVisible = true;
-		}
-	}
-
-	private void hideBottomAndTopBar() {
-		if (bottomBarVisible) {
-			float amount = bottomBar.getHeight();
-
-			if (topBarAndHintVisible) {
-				topBar.animate().translationYBy( - (float) topBar.getHeight());
-				topBarAndHintVisible = false;
-			}
-
-			hintTextView.setText(R.string.addStartLocation);
-			bottomBar.animate().translationYBy(amount);
+			sideBar.animate().translationXBy((float) sideBar.getWidth());
 			mMap.setPadding(0, 0, 0, 0);
 
-
-			if (exitButton.getVisibility() == ViewGroup.VISIBLE) {
-				exitButton.animate().translationYBy(- (float) topBar.getHeight());
-				goActionButton.animate().translationYBy(amount);
-			}
-
-			bottomBarVisible = false;
+			topBarAndSideBarVisible = false;
 		}
 	}
 
-	private void hideBottomBar() {
-		if (bottomBarVisible) {
-			hintTextView.setText(R.string.addEndLocation);
-			bottomBar.animate().translationYBy(bottomBar.getHeight() - hintTextViewHeight);
-			mMap.setPadding(0, topBar.getHeight(), 0, (int) hintTextViewHeight);
-			bottomBarVisible = false;
-		}
-	}
-
-
-	public void onCurrentLocationClick(View view) {
-		if (onMyLocationButtonClick())
-			return;
-		try {
-			Location currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-			//TODO: wait for location if GPS was JUST enabled
-			if (currentLocation == null) {
-				Toast.makeText(getApplicationContext(), R.string.unableRetriveGps, Toast.LENGTH_SHORT).show();
-				return;
-			}
-
-		/*  Manija y anda mal
-			if (currentLocation == null) {
-				Toast.makeText(getApplicationContext(), R.string.waitGps, Toast.LENGTH_SHORT).show();
-				Thread.sleep(5000);
-				currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				if (currentLocation == null) {
-					Toast.makeText(getApplicationContext(), R.string.unableRetriveGps, Toast.LENGTH_SHORT).show();
-					return;
-				}
-			}
-		*/
-
-
-			if (start != null)
-				start.remove();
-			else
-				showExitAndGo();
-
-			start = mMap.addMarker(new MarkerOptions()
-							.position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
-							.title(getResources().getString(R.string.startTrip))
-							.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-
-			onNewLocationClick(view);
-
-		} catch (SecurityException ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	private void showExitAndGo() {
-		exitButton.setY(topBar.getBottom());
-		goActionButton.setY(bottomBar.getTop() - 190);
-
-		exitButton.setVisibility(View.VISIBLE);
-		goActionButton.setVisibility(View.VISIBLE);
-
-		mMap.getUiSettings().setCompassEnabled(false);
-		mMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-	}
-
-	private void hideExitAndGo() {
-		exitButton.setVisibility(View.GONE);
-		goActionButton.setVisibility(View.GONE);
-
-		mMap.getUiSettings().setCompassEnabled(true);
-		mMap.getUiSettings().setMyLocationButtonEnabled(true);
-	}
-
-	public void onNewLocationClick(View view) {
-		selectingNewStartLocation = true;
-		hintTextView.setText(R.string.addStartLocationLP);
-	}
 
 	public void onCloseClick(View view) {
-		selectingNewStartLocation = false;
+		addingStartMarker = false;
+		addingDestinationMarker = false;
 
 		mMap.clear();
 		start = null;
 		end = null;
 
-		hideExitAndGo();
-		hintTextView.setText(R.string.addEndLocation);
-		showTopBarAndHint();
 	}
 
-	public void onGoClicked(View view) {
-		if (start == null || end == null) {
-			Toast.makeText(getApplicationContext(), R.string.choseStartAndEnd, Toast.LENGTH_SHORT).show();
-			return;
-		}
 
+	public void onAddStartLocationButtonClick(View view) {
+		addingDestinationMarker = false;
+		addingStartMarker = true;
+	}
+
+
+	public void onAddDestinationLocationButtonClick(View view) {
+		addingDestinationMarker = true;
+		addingStartMarker = false;
+	}
+
+
+	public void onGoClicked(View view) {
+		if (start == null || end == null)
+			Toast.makeText(getApplicationContext(), R.string.choseStartAndEnd, Toast.LENGTH_SHORT).show();
+		else
+			displayPath();
+	}
+
+
+	private void displayPath() {
 		// Remove last path
 		if (singlePath != null) {
 			mMap.clear();
 			start = mMap.addMarker(new MarkerOptions()
-							.position(start.getPosition())
-							.title(start.getTitle())
-							.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+					.position(start.getPosition())
+					.title(start.getTitle())
+					.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
 			end = mMap.addMarker(new MarkerOptions()
 					.position(end.getPosition())
 					.title(end.getTitle()));
-
 		}
 
 		// Multiple paths
@@ -470,14 +330,10 @@ public class MapsActivity extends AppCompatActivity
 				singlePath = multiplePaths.next();
 			else
 				singlePath = null;
-
 		}
 		else {
 			// Next best path
-			if (singlePath != null &&
-					singlePath.getLine().lineID.equals(lineSpinner.getSelectedItem().toString()) &&
-					singlePath.startLocation().equals(start.getPosition()) &&
-					singlePath.endLocation().equals(end.getPosition())) {
+			if (checkingNextBestPath()) {
 				if (multiplePaths.hasNext())
 					singlePath = multiplePaths.next();
 				else {
@@ -485,27 +341,53 @@ public class MapsActivity extends AppCompatActivity
 					singlePath = null;
 				}
 			}
-			else
+			else {
 				// Single path from spinner
 				singlePath = Path.shortestPath(start.getPosition(), end.getPosition(), LineManager.getLine(lineSpinner.getSelectedItem().toString()));
+				multiplePaths = null;
+			}
 		}
 
 		if (singlePath != null) {
 			displayRoute(singlePath.getLine());
-			lineSpinner.setSelection(lineIDs.indexOf(singlePath.getLine().lineID));
 
-			// Testing
-			mMap.addPolyline(new PolylineOptions()
-					.add(start.getPosition(), singlePath.firstStop().location)
-					.color(Color.GREEN));
+			// Change the spinner to show the line's ID
+			if (multiplePaths != null)
+				lineSpinner.setSelection(lineIDs.indexOf(singlePath.getLine().lineID));
 
-			mMap.addPolyline(new PolylineOptions()
-					.add(singlePath.lastStops().location, end.getPosition())
-					.color(Color.GREEN));
+			// Add first stop
+			String assetName;
+			assetName = (singlePath.getFirstStop().isGo) ?
+					"bus_stop_go.png" :
+					"bus_stop_ret.png";
 
+			mMap.addMarker(new MarkerOptions()
+					.position(singlePath.getFirstStop().location)
+					.title(getString(R.string.firstStop))
+					.icon(BitmapDescriptorFactory.fromAsset(assetName)));
+
+			// Add last stop
+			assetName = (singlePath.getLastStop().isGo) ?
+					"bus_stop_go.png" :
+					"bus_stop_ret.png";
+
+			mMap.addMarker(new MarkerOptions()
+					.position(singlePath.getLastStop().location)
+					.title(getString(R.string.lastStop))
+					.icon(BitmapDescriptorFactory.fromAsset(assetName)));
 		}
 		else
 			Toast.makeText(getApplicationContext(), R.string.noRouteAvaliable, Toast.LENGTH_SHORT).show();
+
+	}
+
+
+	private boolean checkingNextBestPath() {
+		return  multiplePaths != null &&
+				singlePath != null &&
+				singlePath.getLine().lineID.equals(lineSpinner.getSelectedItem().toString()) &&
+				singlePath.getStartLocation().equals(start.getPosition()) &&
+				singlePath.getEndLocation().equals(end.getPosition());
 	}
 
 }
