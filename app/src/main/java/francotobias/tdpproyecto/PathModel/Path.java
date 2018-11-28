@@ -8,13 +8,14 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import francotobias.tdpproyecto.BusModel.BusManager;
 import francotobias.tdpproyecto.BusModel.Line;
 import francotobias.tdpproyecto.BusModel.LineManager;
 
+import static francotobias.tdpproyecto.Helpers.LocationUtils.walkingDistance;
+import static francotobias.tdpproyecto.PathModel.Route.INVALID_DISTANCE;
+
 public class Path implements Comparable<Path>{
-	private static final float MAX_WALKING_DISTANCE = 80000;
-	private static final float INVALID_DISTANCE = -1;
+//	private static final float MAX_WALKING_DISTANCE = 17000;
 	private static final float WALKING_DETERRENT = 2.5f;
 
 	private Stop firstStop;
@@ -22,18 +23,18 @@ public class Path implements Comparable<Path>{
 	private LatLng startLocation;
 	private LatLng endLocation;
 	private final float busDistance;
-	private final float walkingDistance;
+	private final float walkDistance;
 
 	private Path(LatLng startLocation, LatLng endLocation,
 	             Stop firstStop, Stop lastStops,
-	             float busDistance, float walkingDistance) {
+	             float walkDistance, float busDistance) {
 
 		this.startLocation = startLocation;
 		this.endLocation = endLocation;
 		this.firstStop = firstStop;
 		this.lastStops = lastStops;
 		this.busDistance = busDistance;
-		this.walkingDistance = walkingDistance;
+		this.walkDistance = walkDistance;
 	}
 
 
@@ -42,7 +43,7 @@ public class Path implements Comparable<Path>{
 		Path path;
 
 		for (Line line : LineManager.lines()) {
-			path = shortestPath(start, end, line);
+			path = shortestPath(start, end, line.getRoute());
 			if (path != null)
 				paths.add(path);
 		}
@@ -50,65 +51,54 @@ public class Path implements Comparable<Path>{
 		return paths.iterator();
 	}
 
-	/**
-	 * La unica razonn por la que existe latLngToLocation y la clase
-	 * LocationUtils es para poder computar distancias entra puntos
-	 * porque por alguna razon LatLng no lo tra integrado y
-	 * Location si pero encontre esta clase re util asi que pienso
-	 * modificar las cosaspara usarla y que queden las cosas mas
-	 * limpias. Chusmeala, esta re fancy
-	 *
-		 * googlemaps.github.io/android-maps-utils/javadoc/com/google/maps/android/SphericalUtil.html
-	 */
 
-	public static Path shortestPath(LatLng start, LatLng end, Line line) {
+	public static Path shortestPath(LatLng start, LatLng end, Route route) {
 		Path shortestPath = null;
-		if (line.getRoute().validStops()) {
 
-//			Location startLocation = BusManager.latLngToLocation(start, null);
-//			Location endLocation = BusManager.latLngToLocation(end, null);
-//			Location middleLocation = BusManager.latLngToLocation(new LatLng(start.latitude,end.longitude),null);
+		if (route.validStops()) {
 
-//			float MAX_WALKING_DISTANCE = middleLocation.distanceTo(startLocation) + middleLocation.distanceTo(endLocation);
-
+			LatLng stopPoint;
+			float distStartGo, distStartRet, distEndGo, distEndRet, busDist, totalWalked, travelDistScore, minTravelDistScore = 1e5f;
+			final float MAX_WALKING_DISTANCE = walkingDistance(start, end);
 			Stop[] closestStopsStart, closestStopsEnd;
-//			Location stopLocation;
-			float distStartGo, distStartRet, distEndGo, distEndRet, travelDist, minTravelDist = 1e5f;
 
-			closestStopsStart = line.getClosestStops(startLocation);
+			closestStopsStart = route.getClosestStops(start);
 
-			stopLocation = BusManager.latLngToLocation(closestStopsStart[0].location, null);
-			distStartGo = startLocation.distanceTo(stopLocation);
-			stopLocation = BusManager.latLngToLocation(closestStopsStart[1].location, null);
-			distStartRet = startLocation.distanceTo(stopLocation);
+			stopPoint = closestStopsStart[0].getLocation();
+			distStartGo = walkingDistance(start, stopPoint);
+			stopPoint = closestStopsStart[1].getLocation();
+			distStartRet = walkingDistance(start, stopPoint);
 
 			if (distStartGo <= MAX_WALKING_DISTANCE || distStartRet <= MAX_WALKING_DISTANCE) {
-				closestStopsEnd = line.getClosestStops(endLocation);
+				closestStopsEnd = route.getClosestStops(end);
 
-				stopLocation = BusManager.latLngToLocation(closestStopsEnd[0].location, null);
-				distEndGo = stopLocation.distanceTo(endLocation);
-				stopLocation = BusManager.latLngToLocation(closestStopsEnd[1].location, null);
-				distEndRet = stopLocation.distanceTo(endLocation);
+				stopPoint = closestStopsEnd[0].getLocation();
+				distEndGo = walkingDistance(stopPoint, end);
+				stopPoint = closestStopsEnd[1].getLocation();
+				distEndRet = walkingDistance(stopPoint, end);
 
 				// Distance on the Go route to both closest stops
 				if (distStartGo <= MAX_WALKING_DISTANCE) {
 
 					if (distEndGo <= MAX_WALKING_DISTANCE) {
-						travelDist = line.getRoute().distanceBetweenStops(closestStopsStart[0], closestStopsEnd[0]);
-						if (travelDist != INVALID_DISTANCE) {
-							travelDist += (distStartGo + distEndGo) * WALKING_DETERRENT;
-							minTravelDist = travelDist;
-							shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[0], minTravelDist);
+						totalWalked = distStartGo + distEndGo;
+						busDist = route.distanceBetweenStops(closestStopsStart[0], closestStopsEnd[0]);
+
+						if (busDist != INVALID_DISTANCE &&	busDist > totalWalked) {
+							minTravelDistScore = getDistanceScore(totalWalked, busDist);
+							shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[0], totalWalked, busDist);
 						}
 					}
 
 					if (distEndRet <= MAX_WALKING_DISTANCE) {
-						travelDist = line.getRoute().distanceBetweenStops(closestStopsStart[0], closestStopsEnd[1]);
-						if (travelDist != INVALID_DISTANCE) {
-							travelDist += (distStartGo + distEndRet) * WALKING_DETERRENT;
-							if (travelDist < minTravelDist) {
-								minTravelDist = travelDist;
-								shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[1], minTravelDist);
+						totalWalked = distStartGo + distEndRet;
+						busDist = route.distanceBetweenStops(closestStopsStart[0], closestStopsEnd[1]);
+
+						if (busDist != INVALID_DISTANCE &&	busDist > totalWalked) {
+							travelDistScore = getDistanceScore(totalWalked, busDist);
+							if (travelDistScore < minTravelDistScore) {
+								minTravelDistScore = travelDistScore;
+								shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[1], totalWalked, busDist);
 							}
 						}
 					}
@@ -118,24 +108,26 @@ public class Path implements Comparable<Path>{
 				if (distStartRet <= MAX_WALKING_DISTANCE) {
 
 					if (distEndGo <= MAX_WALKING_DISTANCE) {
-						travelDist = line.getRoute().distanceBetweenStops(closestStopsStart[1], closestStopsEnd[0]);
-						if (travelDist != INVALID_DISTANCE) {
-							travelDist += (distStartRet + distEndGo) * WALKING_DETERRENT;
-							if (travelDist < minTravelDist) {
-								minTravelDist = travelDist;
-								shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[0], minTravelDist);
+						totalWalked = distStartRet + distEndGo;
+						busDist = route.distanceBetweenStops(closestStopsStart[1], closestStopsEnd[0]);
+
+						if (busDist != INVALID_DISTANCE &&	busDist > totalWalked) {
+							travelDistScore = getDistanceScore(totalWalked, busDist);
+							if (travelDistScore < minTravelDistScore) {
+								minTravelDistScore = travelDistScore;
+								shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[0], totalWalked, busDist);
 							}
 						}
 					}
 
 					if (distEndRet <= MAX_WALKING_DISTANCE) {
-						travelDist = line.getRoute().distanceBetweenStops(closestStopsStart[1], closestStopsEnd[1]);
-						if (travelDist != INVALID_DISTANCE) {
-							travelDist += (distStartRet + distEndRet) * WALKING_DETERRENT;
-							if (travelDist < minTravelDist) {
-								minTravelDist = travelDist;
-								shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[1], minTravelDist);
-							}
+						totalWalked = distStartRet + distEndRet;
+						busDist = route.distanceBetweenStops(closestStopsStart[1], closestStopsEnd[1]);
+
+						if (busDist != INVALID_DISTANCE &&	busDist > totalWalked) {
+							travelDistScore = getDistanceScore(totalWalked, busDist);
+							if (travelDistScore < minTravelDistScore)
+								shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[1], totalWalked, busDist);
 						}
 					}
 				}
@@ -146,14 +138,25 @@ public class Path implements Comparable<Path>{
 	}
 
 
-	public float getDistance() {
-		return busDistance + walkingDistance;
+	public float getBusDistance() {
+		return busDistance;
 	}
 
+	public float getWalkDistance() {
+		return walkDistance;
+	}
+
+	// A value representing how good a given path is. Lower score is better
+	private static float getDistanceScore(float walkingDistance, float busDistance) {
+		if (walkingDistance >= busDistance)
+			return Float.MAX_VALUE;
+
+		return busDistance + walkingDistance * WALKING_DETERRENT;
+	}
 
 	@Override
 	public int compareTo(@NonNull Path path) {
-		return (int) (getDistance() - path.getDistance());
+		return (int) (getDistanceScore(walkDistance, busDistance) - getDistanceScore(path.getWalkDistance(), path.getBusDistance()));
 	}
 
 	public LatLng getStartLocation() {

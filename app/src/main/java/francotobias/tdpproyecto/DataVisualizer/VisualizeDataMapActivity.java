@@ -100,7 +100,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 			stopsRet = new ArrayList<>();
 
 			for (Stop stop : stops)
-				if (stop.isGo)
+				if (stop.isGo())
 					stopsGo.add(stop);
 				else
 					stopsRet.add(stop);
@@ -326,9 +326,9 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 				Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
 
 				Marker marker = mMap.addMarker(new MarkerOptions()
-						.position(stopsGo.get(stopGoIndex++).location)
+						.position(stopsGo.get(stopGoIndex++).getLocation())
 						.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
-						.title(stopsGo.get(stopGoIndex-1).location.toString()));
+						.title(stopsGo.get(stopGoIndex-1).getLocation().toString()));
 
 				if (stopCounter++ % 10 == 0 && !showRet)
 					mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
@@ -368,9 +368,9 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 				Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
 
 				Marker marker = mMap.addMarker(new MarkerOptions()
-						.position(stopsRet.get(stopRetIndex++).location)
+						.position(stopsRet.get(stopRetIndex++).getLocation())
 						.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
-						.title(stopsRet.get(stopRetIndex-1).location.toString()));
+						.title(stopsRet.get(stopRetIndex-1).getLocation().toString()));
 
 				if (stopCounter++ % 10 == 0 && !showGo)
 					mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
@@ -440,11 +440,11 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		}
 
 		for (Stop stop : stops) {
-			newLoc = BusManager.latLngToLocation(stop.location, null);
+			newLoc = BusManager.latLngToLocation(stop.getLocation(), null);
 			distance = prevLoc.distanceTo(newLoc);
 
 			mMap.addMarker(new MarkerOptions()
-					.position(stop.location)
+					.position(stop.getLocation())
 					.icon(BitmapDescriptorFactory.fromBitmap(scaledIcon))
 					.title((++i).toString())
 					.snippet(distance.toString()));
@@ -565,7 +565,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 
 	    if (!lineID.equals("ANY")) {
 	    	Line line = LineManager.getLine(lineID);
-	    	path = Path.shortestPath(start, end, line);
+	    	path = Path.shortestPath(start, end, line.getRoute());
 	    }
 	    else
 	    	path = Path.shortestPaths(start, end).next();
@@ -582,7 +582,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 			    .color(Color.RED));
 
 	    ((TextView) findViewById(R.id.textViewLine)).setText(lineID);
-	    ((TextView) findViewById(R.id.textViewPathTest)).setText(testString +"  "+ path.distance +"m");
+	    ((TextView) findViewById(R.id.textViewPathTest)).setText(testString +"  "+ path.getBusDistance() + path.getWalkDistance() +"m");
 
 	    mMap.addMarker(new MarkerOptions()
 			    .position(start)
@@ -600,12 +600,12 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 
 
 	    mMap.addMarker(new MarkerOptions()
-			    .position(path.getFirstStop().location)
+			    .position(path.getFirstStop().getLocation())
 			    .title("Primer parada")
 	            .icon(BitmapDescriptorFactory.fromBitmap(scaledIcon)));
 
 	    mMap.addMarker(new MarkerOptions()
-			    .position(path.getLastStop().location)
+			    .position(path.getLastStop().getLocation())
 			    .title("Ultima parada")
 	            .icon(BitmapDescriptorFactory.fromAsset("bus_stop.png")));
 

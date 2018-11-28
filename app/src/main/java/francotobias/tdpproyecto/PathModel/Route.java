@@ -13,13 +13,16 @@ import java.util.List;
 import francotobias.tdpproyecto.BusModel.BusManager;
 import francotobias.tdpproyecto.BusModel.Line;
 
+import static com.google.maps.android.SphericalUtil.computeDistanceBetween;
+
 public class Route {
 	protected List<Section> routeSectionGo, routeSectionReturn;
 	protected List<LatLng> routeGo, routeReturn;            // Se pueden computar
 	protected Line line;
 	protected boolean validStops = true;
 	protected List<Stop> stops;                             // Se puede computar
-	protected static double MIN_DISTANCE_THRESHOLD = 100;    // Podria ser menor si la data fuera mejor
+	protected static double MIN_DISTANCE_THRESHOLD = 100;   // Podria ser menor si la data fuera mejor
+	public static final float INVALID_DISTANCE = -1;
 
 
 	public Route(Line l, List<LatLng> rGo, List<LatLng> rReturn) {
@@ -164,7 +167,29 @@ public class Route {
 	}
 
 
-	// Mover a Line?
+	public Stop[] getClosestStops(LatLng point) {
+		Stop[] toReturn = new Stop[2];
+		float dist, minDistGo = 1e5f, minDistRet = 1e5f;
+
+		for (Stop s : stops) {
+			dist = (float) computeDistanceBetween(s.getLocation(), point);
+
+			if (dist < minDistGo && s.isGo) {
+				minDistGo = dist;
+				toReturn[0] = s;
+				continue;
+			}
+
+			if (dist < minDistRet && !s.isGo) {
+				minDistRet = dist;
+				toReturn[1] = s;
+			}
+		}
+
+		return toReturn;
+	}
+
+
 	private Section[] getClosestSections(LatLng latLng) {
 		double dist, minDist = 10000;
 		Section[] toRetrun = new Section[2];
@@ -245,7 +270,7 @@ public class Route {
 			distance += sectionStart.size;
 		}
 
-		return -1;
+		return INVALID_DISTANCE;
 	}
 
 

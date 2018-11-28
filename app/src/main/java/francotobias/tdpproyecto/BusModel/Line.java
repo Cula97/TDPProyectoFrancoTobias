@@ -4,11 +4,9 @@ import android.location.Location;
 
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import francotobias.tdpproyecto.PathModel.Route;
-import francotobias.tdpproyecto.PathModel.Stop;
 
 public class Line {
 	private static final long FLEET_UPDATE_TIME = 20000; // Update every 20 sec at max
@@ -55,34 +53,6 @@ public class Line {
 		}
 
 		return fleet.values();
-	}
-
-
-	// Mover a Route?
-	public Stop[] getClosestStops(Location location) {
-		List<Stop> stops = route.getStops();
-		Stop[] toReturn = new Stop[2];
-		float dist, minDistGo = 1e5f, minDistRet = 1e5f;
-		Location stop = new Location("");
-
-		for (Stop s : stops) {
-			stop.setLatitude(s.location.latitude);
-			stop.setLongitude(s.location.longitude);
-			dist = location.distanceTo(stop);
-
-			if (dist < minDistGo && s.isGo) {
-				minDistGo = dist;
-				toReturn[0] = s;
-				continue;
-			}
-
-			if (dist < minDistRet && !s.isGo) {
-				minDistRet = dist;
-				toReturn[1] = s;
-			}
-		}
-
-		return toReturn;
 	}
 
 

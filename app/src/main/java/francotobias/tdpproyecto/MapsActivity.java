@@ -52,8 +52,9 @@ public class MapsActivity extends AppCompatActivity
 	private Iterator<Path> multiplePaths;
 	private Marker start, end;
 
-	private ViewGroup topBar;
+	private ViewGroup topBarAndExit;
 	private ViewGroup sideBar;
+	private int searchBarHeight;
 	private boolean topBarAndSideBarVisible = true;
 	private boolean addingStartMarker = false;
 	private boolean addingDestinationMarker = false;
@@ -103,14 +104,17 @@ public class MapsActivity extends AppCompatActivity
 	@Override
 	public void onMapReady(GoogleMap googleMap) {
 		mMap = googleMap;
-		topBar = findViewById(R.id.topBarLayout);
+		topBarAndExit = findViewById(R.id.topBarAndExitLayout);
 		sideBar= findViewById(R.id.conrtolsLinearLayout);
+		exitButton = findViewById(R.id.closePathButton);
+		searchBarHeight = findViewById(R.id.topBarLayout).getHeight();
 
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-38.7171, -62.2655), 14));
 
 		mMap.setOnMapClickListener(this);
 		mMap.setOnMyLocationClickListener(this);
 
+		mMap.getUiSettings().setCompassEnabled(false);
 		mMap.getUiSettings().setMapToolbarEnabled(false);
 		mMap.getUiSettings().setMyLocationButtonEnabled(false);
 		enableMyLocation();
@@ -227,7 +231,6 @@ public class MapsActivity extends AppCompatActivity
 
 			start = mMap.addMarker(new MarkerOptions()
 					.position(point)
-					.draggable(true)
 					.title(getResources().getString(R.string.startTrip))
 					.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
@@ -240,11 +243,12 @@ public class MapsActivity extends AppCompatActivity
 
 			end = mMap.addMarker(new MarkerOptions()
 					.position(point)
-					.draggable(true)
 					.title(getResources().getString(R.string.endTrip)));
 
 			addingDestinationMarker = false;
 		}
+
+		exitButton.setVisibility(View.VISIBLE);
 	}
 
 
@@ -258,9 +262,8 @@ public class MapsActivity extends AppCompatActivity
 
 	private void showTopBarAndSidebar() {
 		if (!topBarAndSideBarVisible) {
-			topBar.animate().translationYBy((float) topBar.getHeight());
+			topBarAndExit.animate().translationYBy((float) searchBarHeight);
 			sideBar.animate().translationXBy((float) -sideBar.getWidth());
-			mMap.setPadding(0, topBar.getHeight(), 0, 0);
 
 			topBarAndSideBarVisible = true;
 		}
@@ -269,9 +272,8 @@ public class MapsActivity extends AppCompatActivity
 
 	private void hideTopBarAndSidebar() {
 		if (topBarAndSideBarVisible) {
-			topBar.animate().translationYBy((float) -topBar.getHeight());
+			topBarAndExit.animate().translationYBy((float) -searchBarHeight);
 			sideBar.animate().translationXBy((float) sideBar.getWidth());
-			mMap.setPadding(0, 0, 0, 0);
 
 			topBarAndSideBarVisible = false;
 		}
@@ -286,6 +288,7 @@ public class MapsActivity extends AppCompatActivity
 		start = null;
 		end = null;
 
+		exitButton.setVisibility(View.INVISIBLE);
 	}
 
 
@@ -343,7 +346,7 @@ public class MapsActivity extends AppCompatActivity
 			}
 			else {
 				// Single path from spinner
-				singlePath = Path.shortestPath(start.getPosition(), end.getPosition(), LineManager.getLine(lineSpinner.getSelectedItem().toString()));
+				singlePath = Path.shortestPath(start.getPosition(), end.getPosition(), LineManager.getLine(lineSpinner.getSelectedItem().toString()).getRoute());
 				multiplePaths = null;
 			}
 		}
@@ -357,22 +360,22 @@ public class MapsActivity extends AppCompatActivity
 
 			// Add first stop
 			String assetName;
-			assetName = (singlePath.getFirstStop().isGo) ?
+			assetName = (singlePath.getFirstStop().isGo()) ?
 					"bus_stop_go.png" :
 					"bus_stop_ret.png";
 
 			mMap.addMarker(new MarkerOptions()
-					.position(singlePath.getFirstStop().location)
+					.position(singlePath.getFirstStop().getLocation())
 					.title(getString(R.string.firstStop))
 					.icon(BitmapDescriptorFactory.fromAsset(assetName)));
 
 			// Add last stop
-			assetName = (singlePath.getLastStop().isGo) ?
+			assetName = (singlePath.getLastStop().isGo()) ?
 					"bus_stop_go.png" :
 					"bus_stop_ret.png";
 
 			mMap.addMarker(new MarkerOptions()
-					.position(singlePath.getLastStop().location)
+					.position(singlePath.getLastStop().getLocation())
 					.title(getString(R.string.lastStop))
 					.icon(BitmapDescriptorFactory.fromAsset(assetName)));
 		}
