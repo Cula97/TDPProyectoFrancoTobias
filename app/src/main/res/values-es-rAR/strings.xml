@@ -14,9 +14,9 @@
 	<string name="startTrip">Inicio</string>
 	<string name="firstStop">Primer parada</string>
 	<string name="lastStop">Última parada</string>
-	<string name="distance">"Distancia: "</string>
+	<string name="distance">"Distancia total: "</string>
 	<string name="noRouteAvaliable">No hay rutas disponibles.</string>
 	<string name="bus">"Colectivo: "</string>
 	<string name="walk">"Caminata: "</string>
-	<string name="any">any</string>
+	<string name="any">-</string>
 </resources>

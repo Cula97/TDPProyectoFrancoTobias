@@ -15,7 +15,7 @@
 	<string name="noRouteAvaliable">No route available.</string>
 	<string name="firstStop">First stop</string>
 	<string name="lastStop">Last stop</string>
-	<string name="distance">Distance: </string>
+	<string name="distance">"Total distance: "</string>
 	<string name="bus">Bus: </string>
 	<string name="walk">Walk: </string>
 
