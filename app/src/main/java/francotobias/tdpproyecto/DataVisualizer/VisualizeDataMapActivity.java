@@ -411,13 +411,13 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 
 		int color = Color.RED;
 		String type = "_ret";
-		if (section.isGo) {
+		if (section.isGo()) {
 			type = "_go";
 			color = Color.BLUE;
 		}
 
 		mMap.addPolyline(new PolylineOptions()
-				.add(section.startPoint, section.endPoint)
+				.add(section.getStartPoint(), section.getEndPoint())
 				.color(color));
 
 		AssetManager assetManager = getAssets();
@@ -431,7 +431,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		Bitmap scaledIcon = Bitmap.createScaledBitmap(icon, 128, 128, false);
 
 		Integer i = 0;
-		Location newLoc, prevLoc = BusManager.latLngToLocation(section.startPoint, null);
+		Location newLoc, prevLoc = BusManager.latLngToLocation(section.getStartPoint(), null);
 		Float distance;
 
 		if (stops == null) {
@@ -464,7 +464,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		if (showGo)
 			for (Section section : sectionsGo) {
 				mMap.addPolyline(new PolylineOptions()
-						.add(section.startPoint, section.endPoint)
+						.add(section.getStartPoint(), section.getEndPoint())
 						.color(Color.BLUE)
 						.clickable(true))
 						.setTag(section);
@@ -473,7 +473,7 @@ public class VisualizeDataMapActivity extends FragmentActivity implements OnMapR
 		if (showRet)
 			for (Section section : sectionsRet) {
 				mMap.addPolyline(new PolylineOptions()
-						.add(section.startPoint, section.endPoint)
+						.add(section.getStartPoint(), section.getEndPoint())
 						.color(Color.RED)
 						.clickable(true))
 						.setTag(section);

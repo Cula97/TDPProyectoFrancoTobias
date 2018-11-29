@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 				lines.add(line.lineID);
 		lines.add("-----");
 		for (Line line : LineManager.lines())
-			if (!line.getRoute().validStops() && line.getRoute().getStops() != null)
+			if (!line.getRoute().validStops())
 				lines.add(line.lineID);
 
 		Spinner lineSpinner = findViewById(R.id.spinnerLines);

@@ -16,6 +16,7 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -54,7 +55,7 @@ public class MapsActivity extends AppCompatActivity
 
 	private ViewGroup topBarAndExit;
 	private ViewGroup sideBar;
-	private int searchBarHeight;
+	private int topBarHeight;
 	private boolean topBarAndSideBarVisible = true;
 	private boolean addingStartMarker = false;
 	private boolean addingDestinationMarker = false;
@@ -62,13 +63,12 @@ public class MapsActivity extends AppCompatActivity
 	private ImageButton exitButton;
 	private Spinner lineSpinner;
 	private static ArrayList<String> lineIDs;
-
+	private TextView distanceTextView;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//TODO: no title, keep status (notification bar)
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_maps);
 
@@ -107,7 +107,8 @@ public class MapsActivity extends AppCompatActivity
 		topBarAndExit = findViewById(R.id.topBarAndExitLayout);
 		sideBar= findViewById(R.id.conrtolsLinearLayout);
 		exitButton = findViewById(R.id.closePathButton);
-		searchBarHeight = findViewById(R.id.topBarLayout).getHeight();
+		topBarHeight = findViewById(R.id.topBarLayout).getHeight();
+		distanceTextView = findViewById(R.id.distanceTextView);
 
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-38.7171, -62.2655), 14));
 
@@ -262,7 +263,7 @@ public class MapsActivity extends AppCompatActivity
 
 	private void showTopBarAndSidebar() {
 		if (!topBarAndSideBarVisible) {
-			topBarAndExit.animate().translationYBy((float) searchBarHeight);
+			topBarAndExit.animate().translationYBy((float) topBarHeight);
 			sideBar.animate().translationXBy((float) -sideBar.getWidth());
 
 			topBarAndSideBarVisible = true;
@@ -272,7 +273,7 @@ public class MapsActivity extends AppCompatActivity
 
 	private void hideTopBarAndSidebar() {
 		if (topBarAndSideBarVisible) {
-			topBarAndExit.animate().translationYBy((float) -searchBarHeight);
+			topBarAndExit.animate().translationYBy((float) -topBarHeight);
 			sideBar.animate().translationXBy((float) sideBar.getWidth());
 
 			topBarAndSideBarVisible = false;
@@ -287,6 +288,13 @@ public class MapsActivity extends AppCompatActivity
 		mMap.clear();
 		start = null;
 		end = null;
+
+		if (multiplePaths != null)
+			lineSpinner.setSelection(0);
+		distanceTextView.setText(getString(R.string.choseStartAndEnd));
+
+		multiplePaths = null;
+		singlePath = null;
 
 		exitButton.setVisibility(View.INVISIBLE);
 	}
@@ -378,10 +386,51 @@ public class MapsActivity extends AppCompatActivity
 					.position(singlePath.getLastStop().getLocation())
 					.title(getString(R.string.lastStop))
 					.icon(BitmapDescriptorFactory.fromAsset(assetName)));
+
+			distanceTextView.setText(stringDistance());
 		}
 		else
 			Toast.makeText(getApplicationContext(), R.string.noRouteAvaliable, Toast.LENGTH_SHORT).show();
 
+	}
+
+
+	private String stringDistance() {
+		String message = "";
+
+		if  (singlePath != null) {
+			float busDistance = singlePath.getBusDistance();
+			float walkDistance = singlePath.getWalkDistance();
+			//float walkDistance = walkingDistance(singlePath.getStartLocation(), singlePath.getEndLocation());
+			float totalDistance = busDistance + walkDistance;
+
+			String distance = getString(R.string.distance);
+			String distanceUnits;
+			if (totalDistance > 1000) {
+				distanceUnits = "km";
+				totalDistance /= 1000;
+			} else distanceUnits = "m";
+
+			String bus = getString(R.string.bus);
+			String busDistanceUnits;
+			if (busDistance > 1000) {
+				busDistanceUnits = "km";
+				busDistance /= 1000;
+			} else busDistanceUnits = "m";
+
+			String walk = getString(R.string.walk);
+			String walkDistanceUnits;
+			if (walkDistance > 1000) {
+				walkDistanceUnits = "km";
+				walkDistance /= 1000;
+			} else walkDistanceUnits = "m";
+
+			message = distance +" "+ String.format("%.2f", totalDistance) +" "+ distanceUnits +"\n"+
+						bus +" "+ String.format("%.2f", busDistance) +" "+ busDistanceUnits +"\t\t"+ walk +" "+ String.format("%.2f", walkDistance) +" "+ walkDistanceUnits;
+
+		}
+
+		return message;
 	}
 
 

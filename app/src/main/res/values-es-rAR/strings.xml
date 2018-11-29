@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">TDP Proyecto</string>
+	<string name="title_activity_visualize_data_map">Mapa</string>
+	<string name="title_activity_maps">TDP Proyecto</string>
+	<string name="choseStartAndEnd">Elija punto de partida y destino</string>
+	<string name="location_permission_denied">Otorgue permiso de Ubicación para continuar.</string>
+	<string name="permission_required_toast">Permiso de Ubicación requerido.</string>
+	<string name="permission_rationale_location">Acceso a la ubicaión del dispositivo es requerido para mostrar su ubicación en el mapa.</string>
+	<string name="gpsDisabled">GPS desactivado.</string>
+	<string name="waitGps">Espeando señal del GPS.</string>
+	<string name="unableRetriveGps">No es posible obtener su ubicación.</string>
+	<string name="endTrip">Destino</string>
+	<string name="startTrip">Inicio</string>
+	<string name="firstStop">Primer parada</string>
+	<string name="lastStop">Última parada</string>
+	<string name="distance">"Distancia: "</string>
+	<string name="noRouteAvaliable">No hay rutas disponibles.</string>
+	<string name="bus">"Colectivo: "</string>
+	<string name="walk">"Caminata: "</string>
+	<string name="any">any</string>
+</resources>

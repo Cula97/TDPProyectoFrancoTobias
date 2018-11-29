@@ -43,7 +43,7 @@ public class Path implements Comparable<Path>{
 		Path path;
 
 		for (Line line : LineManager.lines()) {
-			path = shortestPath(start, end, line.getRoute());
+			path = shortestPathAux(start, end, line.getRoute(), true);
 			if (path != null)
 				paths.add(path);
 		}
@@ -53,13 +53,17 @@ public class Path implements Comparable<Path>{
 
 
 	public static Path shortestPath(LatLng start, LatLng end, Route route) {
+		return shortestPathAux(start, end, route, false);
+	}
+
+
+	private static Path shortestPathAux(LatLng start, LatLng end, Route route, boolean checkGoodPath) {
 		Path shortestPath = null;
 
 		if (route.validStops()) {
 
 			LatLng stopPoint;
-			float distStartGo, distStartRet, distEndGo, distEndRet, busDist, totalWalked, travelDistScore, minTravelDistScore = 1e5f;
-			final float MAX_WALKING_DISTANCE = walkingDistance(start, end);
+			float distStartGo, distStartRet, distEndGo, distEndRet, busDist, totalWalked, travelDistScore, minTravelDistScore = 1e6f;
 			Stop[] closestStopsStart, closestStopsEnd;
 
 			closestStopsStart = route.getClosestStops(start);
@@ -69,69 +73,62 @@ public class Path implements Comparable<Path>{
 			stopPoint = closestStopsStart[1].getLocation();
 			distStartRet = walkingDistance(start, stopPoint);
 
-			if (distStartGo <= MAX_WALKING_DISTANCE || distStartRet <= MAX_WALKING_DISTANCE) {
-				closestStopsEnd = route.getClosestStops(end);
+			closestStopsEnd = route.getClosestStops(end);
 
-				stopPoint = closestStopsEnd[0].getLocation();
-				distEndGo = walkingDistance(stopPoint, end);
-				stopPoint = closestStopsEnd[1].getLocation();
-				distEndRet = walkingDistance(stopPoint, end);
+			stopPoint = closestStopsEnd[0].getLocation();
+			distEndGo = walkingDistance(stopPoint, end);
+			stopPoint = closestStopsEnd[1].getLocation();
+			distEndRet = walkingDistance(stopPoint, end);
 
-				// Distance on the Go route to both closest stops
-				if (distStartGo <= MAX_WALKING_DISTANCE) {
+			// Stop 1 Go, Stop 2 Go
+			totalWalked = distStartGo + distEndGo;
+			busDist = route.distanceBetweenStops(closestStopsStart[0], closestStopsEnd[0]);
 
-					if (distEndGo <= MAX_WALKING_DISTANCE) {
-						totalWalked = distStartGo + distEndGo;
-						busDist = route.distanceBetweenStops(closestStopsStart[0], closestStopsEnd[0]);
+			if (busDist != INVALID_DISTANCE) {
+				minTravelDistScore = getDistanceScore(totalWalked, busDist);
+				shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[0], totalWalked, busDist);
+			}
 
-						if (busDist != INVALID_DISTANCE &&	busDist > totalWalked) {
-							minTravelDistScore = getDistanceScore(totalWalked, busDist);
-							shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[0], totalWalked, busDist);
-						}
-					}
+			// Stop 1 Go, Stop 2 Ret
+			totalWalked = distStartGo + distEndRet;
+			busDist = route.distanceBetweenStops(closestStopsStart[0], closestStopsEnd[1]);
 
-					if (distEndRet <= MAX_WALKING_DISTANCE) {
-						totalWalked = distStartGo + distEndRet;
-						busDist = route.distanceBetweenStops(closestStopsStart[0], closestStopsEnd[1]);
-
-						if (busDist != INVALID_DISTANCE &&	busDist > totalWalked) {
-							travelDistScore = getDistanceScore(totalWalked, busDist);
-							if (travelDistScore < minTravelDistScore) {
-								minTravelDistScore = travelDistScore;
-								shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[1], totalWalked, busDist);
-							}
-						}
-					}
-				}
-
-				// Distance on the Ret route to both closest stops
-				if (distStartRet <= MAX_WALKING_DISTANCE) {
-
-					if (distEndGo <= MAX_WALKING_DISTANCE) {
-						totalWalked = distStartRet + distEndGo;
-						busDist = route.distanceBetweenStops(closestStopsStart[1], closestStopsEnd[0]);
-
-						if (busDist != INVALID_DISTANCE &&	busDist > totalWalked) {
-							travelDistScore = getDistanceScore(totalWalked, busDist);
-							if (travelDistScore < minTravelDistScore) {
-								minTravelDistScore = travelDistScore;
-								shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[0], totalWalked, busDist);
-							}
-						}
-					}
-
-					if (distEndRet <= MAX_WALKING_DISTANCE) {
-						totalWalked = distStartRet + distEndRet;
-						busDist = route.distanceBetweenStops(closestStopsStart[1], closestStopsEnd[1]);
-
-						if (busDist != INVALID_DISTANCE &&	busDist > totalWalked) {
-							travelDistScore = getDistanceScore(totalWalked, busDist);
-							if (travelDistScore < minTravelDistScore)
-								shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[1], totalWalked, busDist);
-						}
-					}
+			if (busDist != INVALID_DISTANCE) {
+				travelDistScore = getDistanceScore(totalWalked, busDist);
+				if (travelDistScore < minTravelDistScore) {
+					minTravelDistScore = travelDistScore;
+					shortestPath = new Path(start, end, closestStopsStart[0], closestStopsEnd[1], totalWalked, busDist);
 				}
 			}
+
+			// Stop 1 Ret, Stop 2 Go
+			totalWalked = distStartRet + distEndGo;
+			busDist = route.distanceBetweenStops(closestStopsStart[1], closestStopsEnd[0]);
+
+			if (busDist != INVALID_DISTANCE) {
+				travelDistScore = getDistanceScore(totalWalked, busDist);
+				if (travelDistScore < minTravelDistScore) {
+					minTravelDistScore = travelDistScore;
+					shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[0], totalWalked, busDist);
+				}
+			}
+
+			// Stop 1 Ret, Stop 2 Ret
+			totalWalked = distStartRet + distEndRet;
+			busDist = route.distanceBetweenStops(closestStopsStart[1], closestStopsEnd[1]);
+
+			if (busDist != INVALID_DISTANCE) {
+				travelDistScore = getDistanceScore(totalWalked, busDist);
+				if (travelDistScore < minTravelDistScore)
+					shortestPath = new Path(start, end, closestStopsStart[1], closestStopsEnd[1], totalWalked, busDist);
+			}
+		}
+
+		if (shortestPath != null && checkGoodPath) {
+			if (shortestPath.isGoodPath())
+				return shortestPath;
+			else
+				return null;
 		}
 
 		return shortestPath;
@@ -148,10 +145,13 @@ public class Path implements Comparable<Path>{
 
 	// A value representing how good a given path is. Lower score is better
 	private static float getDistanceScore(float walkingDistance, float busDistance) {
-		if (walkingDistance >= busDistance)
-			return Float.MAX_VALUE;
-
 		return busDistance + walkingDistance * WALKING_DETERRENT;
+	}
+
+	private boolean isGoodPath() {
+		float onlyWalkingDistance = walkingDistance(startLocation, endLocation);
+		return walkDistance < onlyWalkingDistance &&
+				walkDistance < busDistance;
 	}
 
 	@Override

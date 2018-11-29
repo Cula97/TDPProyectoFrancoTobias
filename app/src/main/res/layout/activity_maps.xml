@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/mainLayout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
@@ -21,28 +22,36 @@
 		android:layout_alignParentTop="true"
 		android:orientation="vertical">
 
-		<RelativeLayout
+		<android.support.constraint.ConstraintLayout
 			android:id="@+id/topBarLayout"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="45dp"
 			android:elevation="3dp"
 			android:background="@android:color/white">
 
-			<android.support.v7.widget.SearchView
-				android:id="@+id/locationSearchView"
-				android:layout_width="match_parent"
+			<TextView
+				android:id="@+id/distanceTextView"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_toStartOf="@+id/lineSpinner">
-			</android.support.v7.widget.SearchView>
+				android:layout_marginStart="8dp"
+				android:clickable="true"
+				android:focusable="true"
+				android:gravity="fill"
+				android:text="@string/choseStartAndEnd"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent">
+			</TextView>
 
 			<Spinner
 				android:id="@+id/lineSpinner"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_alignParentEnd="true"
-				android:layout_centerVertical="true">
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="parent">
 			</Spinner>
-		</RelativeLayout>
+		</android.support.constraint.ConstraintLayout>
 
 		<ImageButton
 			android:id="@+id/closePathButton"

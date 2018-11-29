@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="i513">"Linea,Sentido,Latitud,Longitud
+    <string name="i513" translatable="false">"Linea,Sentido,Latitud,Longitud
 513,i,-38.686634,-62.313164
 513,i,-38.687847,-62.311565
 513,i,-38.68906,-62.309967
@@ -86,7 +86,7 @@
 513,i,-38.730343,-62.218929
 513,i,-38.731148,-62.217823\n"</string>
 
-    <string name="v513">"Linea,Sentido,Latitud,Longitud
+    <string name="v513" translatable="false">"Linea,Sentido,Latitud,Longitud
 513,v,-38.687859,-62.311546
 513,v,-38.689068,-62.309952
 513,v,-38.690277,-62.308357
