@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
 		LineManager.initLines();
 
+
 		TextView text = findViewById(R.id.texto);
 		//text.setMovementMethod(new ScrollingMovementMethod());
 		FileHandler file1 = new FileHandler(this, "Data");

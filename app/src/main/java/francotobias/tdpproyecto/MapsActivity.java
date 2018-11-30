@@ -38,6 +38,7 @@ import francotobias.tdpproyecto.BusModel.LineManager;
 import francotobias.tdpproyecto.Helpers.PermissionUtils;
 import francotobias.tdpproyecto.PathModel.Path;
 
+
 public class MapsActivity extends AppCompatActivity
 		implements
 		OnMapReadyCallback,
@@ -401,6 +402,7 @@ public class MapsActivity extends AppCompatActivity
 		if  (singlePath != null) {
 			float busDistance = singlePath.getBusDistance();
 			float walkDistance = singlePath.getWalkDistance();
+			//float busDistance = (float) computeDistanceBetween(singlePath.getStartLocation(), singlePath.getEndLocation());
 			//float walkDistance = walkingDistance(singlePath.getStartLocation(), singlePath.getEndLocation());
 			float totalDistance = busDistance + walkDistance;
 

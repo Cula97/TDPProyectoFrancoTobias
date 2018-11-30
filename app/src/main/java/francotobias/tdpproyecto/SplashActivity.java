@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
 
+import francotobias.tdpproyecto.BusModel.LineManager;
 import francotobias.tdpproyecto.Helpers.DataManager;
 
 
@@ -36,7 +37,8 @@ public class SplashActivity extends Activity {
     }
 
     public void end() {
-        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+	    LineManager.initLines();
+        Intent intent = new Intent(SplashActivity.this, MapsActivity.class);
         startActivity(intent);
         finish();
     }
