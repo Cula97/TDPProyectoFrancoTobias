@@ -150,6 +150,7 @@ public class Path implements Comparable<Path>{
 
 	private boolean isGoodPath() {
 		float onlyWalkingDistance = walkingDistance(startLocation, endLocation);
+
 		return walkDistance < onlyWalkingDistance &&
 				walkDistance < busDistance;
 	}

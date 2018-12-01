@@ -38,6 +38,8 @@ import francotobias.tdpproyecto.BusModel.LineManager;
 import francotobias.tdpproyecto.Helpers.PermissionUtils;
 import francotobias.tdpproyecto.PathModel.Path;
 
+import static francotobias.tdpproyecto.Helpers.LocationUtils.walkingDistance;
+
 
 public class MapsActivity extends AppCompatActivity
 		implements
@@ -86,7 +88,7 @@ public class MapsActivity extends AppCompatActivity
 			lineIDs.add(l.lineID);
 
 		ArrayAdapter<String> lineSpinnerAdapter = new ArrayAdapter<>
-				(this, android.R.layout.simple_spinner_item, lineIDs);
+				(this, android.R.layout.simple_spinner_dropdown_item, lineIDs);
 		lineSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		lineSpinner.setAdapter(lineSpinnerAdapter);
 
@@ -373,9 +375,18 @@ public class MapsActivity extends AppCompatActivity
 					"bus_stop_go.png" :
 					"bus_stop_ret.png";
 
+			float distanceToStop = walkingDistance(start.getPosition(), singlePath.getFirstStop().getLocation());
+			String distanceUnits;
+			if (distanceToStop > 1000) {
+				distanceUnits = "km";
+				distanceToStop /= 1000;
+			} else distanceUnits = "m";
+			String distanceString = String.format("%.2f", distanceToStop) +" "+ distanceUnits;
+
 			mMap.addMarker(new MarkerOptions()
 					.position(singlePath.getFirstStop().getLocation())
 					.title(getString(R.string.firstStop))
+					.snippet(distanceString)
 					.icon(BitmapDescriptorFactory.fromAsset(assetName)));
 
 			// Add last stop
@@ -383,12 +394,20 @@ public class MapsActivity extends AppCompatActivity
 					"bus_stop_go.png" :
 					"bus_stop_ret.png";
 
+			distanceToStop = walkingDistance(end.getPosition(), singlePath.getLastStop().getLocation());
+			if (distanceToStop > 1000) {
+				distanceUnits = "km";
+				distanceToStop /= 1000;
+			} else distanceUnits = "m";
+			distanceString = String.format("%.2f", distanceToStop) +" "+ distanceUnits;
+
 			mMap.addMarker(new MarkerOptions()
 					.position(singlePath.getLastStop().getLocation())
 					.title(getString(R.string.lastStop))
+					.snippet(distanceString)
 					.icon(BitmapDescriptorFactory.fromAsset(assetName)));
 
-			distanceTextView.setText(stringDistance());
+			setDistanceInTextView();
 		}
 		else
 			Toast.makeText(getApplicationContext(), R.string.noRouteAvaliable, Toast.LENGTH_SHORT).show();
@@ -396,14 +415,11 @@ public class MapsActivity extends AppCompatActivity
 	}
 
 
-	private String stringDistance() {
-		String message = "";
-
+	private void setDistanceInTextView() {
 		if  (singlePath != null) {
+			String message;
 			float busDistance = singlePath.getBusDistance();
 			float walkDistance = singlePath.getWalkDistance();
-			//float busDistance = (float) computeDistanceBetween(singlePath.getStartLocation(), singlePath.getEndLocation());
-			//float walkDistance = walkingDistance(singlePath.getStartLocation(), singlePath.getEndLocation());
 			float totalDistance = busDistance + walkDistance;
 
 			String distance = getString(R.string.distance);
@@ -430,9 +446,8 @@ public class MapsActivity extends AppCompatActivity
 			message = distance +" "+ String.format("%.2f", totalDistance) +" "+ distanceUnits +"\n"+
 						bus +" "+ String.format("%.2f", busDistance) +" "+ busDistanceUnits +"\t\t"+ walk +" "+ String.format("%.2f", walkDistance) +" "+ walkDistanceUnits;
 
+			distanceTextView.setText(message);
 		}
-
-		return message;
 	}
 
 
