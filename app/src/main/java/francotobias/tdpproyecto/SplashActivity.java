@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import francotobias.tdpproyecto.BusModel.LineManager;
 import francotobias.tdpproyecto.Helpers.DataManager;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 
 public class SplashActivity extends Activity {
 
@@ -38,7 +40,8 @@ public class SplashActivity extends Activity {
 
     public void end() {
 	    LineManager.initLines();
-        Intent intent = new Intent(SplashActivity.this, MapsActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
