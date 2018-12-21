@@ -16,7 +16,6 @@ public class JunarHandler {
 	private static final String STOPS_URL = "PARAD-DE-COLEC/data.csv/?auth_key=";
 	private static final String LINES_URL = "LINEA-DE-COLEC/data.csv/?auth_key=";
 	private static final String ROUTES_URL = "RECOR-DE-COLEC/data.csv/?auth_key=";
-	private static final String GPS_URL = "GPS-TRANS/data.csv/?auth_key=";
 	private static final String API_KEY = "2defe16a55c65963b8212e4f9a558dfa692d443d";
 	private static final String LIMIT_URL = "&limit=10000";
 	private static String FILTER_URL = "";
@@ -78,23 +77,6 @@ public class JunarHandler {
 			FILTER_URL += "&filter1=column1[==]" + direction + "&where=(filter0)+and+(filter1)";
 
 		return new CSVWizard(makeRequest(STOPS_URL));
-	}
-
-	// NULL returns positions of all valid buses
-	public static CSVWizard requestGPS(String line) {
-		String RAW = "" +
-				"SAPEM,1,503,NULL,-38.74303,-62.260085,10,30" + "\n" +
-				"SAPEM,2,503,NULL,-38.756337,-62.257848,10,40" + "\n" +
-				"SAPEM,3,503,NULL,-38.74306,-62.260073,10,50" + "\n" +
-				"SAPEM,4,503,NULL,-38.722673,-62.264555,10,50" + "\n";
-		/*if (line != null)
-			FILTER_URL = "&filter0=column2[==]" + line;
-		else
-			FILTER_URL = "&filter0=column2[!=]";
-
-		return new CSVWizard(makeRequest(GPS_URL));
-		*/
-		return new CSVWizard(RAW);
 	}
 
 	public static CSVWizard requestRoutes() {

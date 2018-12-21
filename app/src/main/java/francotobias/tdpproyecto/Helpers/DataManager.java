@@ -110,12 +110,6 @@ public class DataManager {
 		FileHandler file = new FileHandler(context, STOPSRET_FILENAME + line);
 		return new CSVWizard(file.requestFileData());
 	}
-
-	// No es guardado
-	public CSVWizard requestGPS(String line) {
-		return JunarHandler.requestGPS(line);
-	}
-
 	public CSVWizard requestRoutes() {
 		FileHandler file = new FileHandler(context, ROUTES_FILENAME);
 		return new CSVWizard(file.requestFileData());
