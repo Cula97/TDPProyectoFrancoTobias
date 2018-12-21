@@ -2,8 +2,8 @@
 
 ## Desarrolladores
 
-Tobías Molina Blanco L.U.: 114766  
-Franco Culaciati L.U.: 114666
+Tobías Molina Blanco L.U.: 114766  (tmolinablanco@gmail.com)  
+Franco Culaciati L.U.: 114666  (francoculaciati@gmail.com)
 
 ## Idea
 
