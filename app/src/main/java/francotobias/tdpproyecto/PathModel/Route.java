@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import francotobias.tdpproyecto.BusModel.BusManager;
 import francotobias.tdpproyecto.BusModel.Line;
 
 import static com.google.maps.android.SphericalUtil.computeDistanceBetween;
@@ -234,7 +233,7 @@ public class Route {
 			return -1;
 
 		if (sectionStart == sectionEnd)
-			return BusManager.latLngToLocation(start.getLocation(), null).distanceTo(BusManager.latLngToLocation(end.getLocation(), null));
+			return (float) computeDistanceBetween(start.getLocation(), end.getLocation());
 
 		float distance = 0;
 

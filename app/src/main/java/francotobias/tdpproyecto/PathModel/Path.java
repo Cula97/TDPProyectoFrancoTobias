@@ -15,7 +15,7 @@ import static francotobias.tdpproyecto.Helpers.LocationUtils.walkingDistance;
 import static francotobias.tdpproyecto.PathModel.Route.INVALID_DISTANCE;
 
 public class Path implements Comparable<Path> {
-	//	private static final float MAX_WALKING_DISTANCE = 17000;
+
 	private static final float WALKING_DETERRENT = 2.5f;
 	private final float busDistance;
 	private final float walkDistance;
