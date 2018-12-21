@@ -14,7 +14,7 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 
 public class SplashActivity extends Activity {
-
+	// Descargo los datos por un thread
 	private Runnable task = new Runnable() {
 		public void run() {
 			DataManager.getInstance().update();
