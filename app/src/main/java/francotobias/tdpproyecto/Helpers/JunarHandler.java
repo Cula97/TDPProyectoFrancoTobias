@@ -55,7 +55,7 @@ public class JunarHandler {
 
 		return response.toString();
 	}
-
+	// A partir de aca, están todos los tipos de requests que se pueden hacer
 	public static CSVWizard requestStopsGo(String line) {
 		return requestStops(line, "i");
 	}
