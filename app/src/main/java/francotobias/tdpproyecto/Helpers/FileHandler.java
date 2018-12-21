@@ -18,6 +18,7 @@ public class FileHandler {
 		FILE_NAME = filename;
 	}
 
+	// Levanta un archivo
 	public String requestFileData() {
 		if (buffer == null) {
 			try {
@@ -37,6 +38,7 @@ public class FileHandler {
 		return buffer.toString();
 	}
 
+	// Graba la string en un archivo CSV
 	public void writeFileData(String data) {
 
 		try {
