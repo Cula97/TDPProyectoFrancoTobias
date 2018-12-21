@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">TDP Proyecto</string>
+	<string name="app_name">Colectivos Bahía Blanca</string>
 	<string name="title_activity_maps">TDP Proyecto</string>
 	<string name="title_activity_visualize_data_map">Map</string>
 	<string name="choseStartAndEnd">Pick start and end locations</string>
