@@ -4,10 +4,8 @@ import android.os.StrictMode;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class JunarHandler {
@@ -32,8 +30,8 @@ public class JunarHandler {
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 
-		URL url = null;
-		HttpURLConnection connection = null;
+		URL url;
+		HttpURLConnection connection;
 		StringBuffer response = new StringBuffer();
 
 		try {
@@ -51,9 +49,7 @@ public class JunarHandler {
 				response.append("\n"); //Esto se agrega para ayudar a reconocer el formato mas adelante
 			}
 
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

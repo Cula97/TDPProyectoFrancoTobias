@@ -77,7 +77,7 @@ public class DataManager {
 		}
 
 		editor.putLong(LASTDATE_KEY, Calendar.getInstance().getTimeInMillis());
-		editor.commit();
+		editor.apply();
 	}
 
 	public boolean needUpdate() {
@@ -110,6 +110,7 @@ public class DataManager {
 		FileHandler file = new FileHandler(context, STOPSRET_FILENAME + line);
 		return new CSVWizard(file.requestFileData());
 	}
+
 	public CSVWizard requestRoutes() {
 		FileHandler file = new FileHandler(context, ROUTES_FILENAME);
 		return new CSVWizard(file.requestFileData());
@@ -119,11 +120,6 @@ public class DataManager {
 	public CSVWizard requestLines() {
 		FileHandler file = new FileHandler(context, LINES_FILENAME);
 		return new CSVWizard(file.requestFileData());
-	}
-
-	public boolean isInFile(String a) {
-		return a.equals("513");
-
 	}
 
 }
