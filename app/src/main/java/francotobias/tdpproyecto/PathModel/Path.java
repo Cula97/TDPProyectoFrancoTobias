@@ -14,16 +14,15 @@ import francotobias.tdpproyecto.BusModel.LineManager;
 import static francotobias.tdpproyecto.Helpers.LocationUtils.walkingDistance;
 import static francotobias.tdpproyecto.PathModel.Route.INVALID_DISTANCE;
 
-public class Path implements Comparable<Path>{
-//	private static final float MAX_WALKING_DISTANCE = 17000;
+public class Path implements Comparable<Path> {
+	//	private static final float MAX_WALKING_DISTANCE = 17000;
 	private static final float WALKING_DETERRENT = 2.5f;
-
+	private final float busDistance;
+	private final float walkDistance;
 	private Stop firstStop;
 	private Stop lastStops;
 	private LatLng startLocation;
 	private LatLng endLocation;
-	private final float busDistance;
-	private final float walkDistance;
 
 	private Path(LatLng startLocation, LatLng endLocation,
 	             Stop firstStop, Stop lastStops,
@@ -134,6 +133,10 @@ public class Path implements Comparable<Path>{
 		return shortestPath;
 	}
 
+	// A value representing how good a given path is. Lower score is better
+	private static float getDistanceScore(float walkingDistance, float busDistance) {
+		return busDistance + walkingDistance * WALKING_DETERRENT;
+	}
 
 	public float getBusDistance() {
 		return busDistance;
@@ -141,11 +144,6 @@ public class Path implements Comparable<Path>{
 
 	public float getWalkDistance() {
 		return walkDistance;
-	}
-
-	// A value representing how good a given path is. Lower score is better
-	private static float getDistanceScore(float walkingDistance, float busDistance) {
-		return busDistance + walkingDistance * WALKING_DETERRENT;
 	}
 
 	private boolean isGoodPath() {
@@ -175,7 +173,7 @@ public class Path implements Comparable<Path>{
 	public Stop getLastStop() {
 		return lastStops;
 	}
-	
+
 	public Line getLine() {
 		return firstStop.getSection().getRoute().getLine();
 	}

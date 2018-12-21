@@ -86,7 +86,7 @@
 513,i,-38.730343,-62.218929
 513,i,-38.731148,-62.217823\n"</string>
 
-    <string name="v513" translatable="false">"Linea,Sentido,Latitud,Longitud
+	<string name="v513" translatable="false">"Linea,Sentido,Latitud,Longitud
 513,v,-38.687859,-62.311546
 513,v,-38.689068,-62.309952
 513,v,-38.690277,-62.308357
@@ -163,10 +163,6 @@
 513,v,-38.731609,-62.220295
 513,v,-38.732353,-62.219311
 513,v,-38.731155,-62.217812\n"</string>
-
-
-
-
 
 
 </resources>

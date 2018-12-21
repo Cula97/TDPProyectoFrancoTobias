@@ -15,37 +15,35 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 public class SplashActivity extends Activity {
 
-    private Runnable task = new Runnable() {
-        public void run() {
-            DataManager.getInstance().update();
-            end();
-        }
-    };
+	private Runnable task = new Runnable() {
+		public void run() {
+			DataManager.getInstance().update();
+			end();
+		}
+	};
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_splash);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		setContentView(R.layout.activity_splash);
 
-        DataManager.getInstance().startUpdater(getApplicationContext());
-        if(!DataManager.getInstance().needUpdate()) end();
+		DataManager.getInstance().startUpdater(getApplicationContext());
+		if (!DataManager.getInstance().needUpdate()) end();
 
-        Handler handler = new Handler();
-        handler.postDelayed(task, 1500);
+		Handler handler = new Handler();
+		handler.postDelayed(task, 1500);
 
-    }
+	}
 
-    public void end() {
-	    LineManager.initLines();
-        Intent intent = new Intent(this, MapsActivity.class);
-        intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
-    }
+	public void end() {
+		LineManager.initLines();
+		Intent intent = new Intent(this, MapsActivity.class);
+		intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+		finish();
+	}
 
 }
-
-

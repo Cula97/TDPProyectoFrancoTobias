@@ -47,24 +47,21 @@ public class MapsActivity extends AppCompatActivity
 		GoogleMap.OnMapClickListener,
 		GoogleMap.OnMyLocationClickListener {
 
+	private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+	private static ArrayList<String> lineIDs;
 	private GoogleMap mMap;
 	private LocationManager locationManager;
 	private boolean permissionDenied;
-	private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-
 	private Path singlePath;
 	private Iterator<Path> multiplePaths;
 	private Marker start, end;
-
 	private ViewGroup topBarAndExit;
 	private ViewGroup sideBar;
 	private boolean topBarAndSideBarVisible = true;
 	private boolean addingStartMarker = false;
 	private boolean addingDestinationMarker = false;
-
 	private ImageButton exitButton;
 	private Spinner lineSpinner;
-	private static ArrayList<String> lineIDs;
 	private TextView distanceTextView;
 
 
@@ -107,7 +104,7 @@ public class MapsActivity extends AppCompatActivity
 	public void onMapReady(GoogleMap googleMap) {
 		mMap = googleMap;
 		topBarAndExit = findViewById(R.id.topBarAndExitLayout);
-		sideBar= findViewById(R.id.conrtolsLinearLayout);
+		sideBar = findViewById(R.id.conrtolsLinearLayout);
 		exitButton = findViewById(R.id.closePathButton);
 		distanceTextView = findViewById(R.id.distanceTextView);
 
@@ -342,8 +339,7 @@ public class MapsActivity extends AppCompatActivity
 				singlePath = multiplePaths.next();
 			else
 				singlePath = null;
-		}
-		else {
+		} else {
 			// Next best path
 			if (checkingNextBestPath()) {
 				if (multiplePaths.hasNext())
@@ -352,8 +348,7 @@ public class MapsActivity extends AppCompatActivity
 					lineSpinner.setSelection(0);
 					singlePath = null;
 				}
-			}
-			else {
+			} else {
 				// Single path from spinner
 				singlePath = Path.shortestPath(start.getPosition(), end.getPosition(), LineManager.getLine(lineSpinner.getSelectedItem().toString()).getRoute());
 				multiplePaths = null;
@@ -379,7 +374,7 @@ public class MapsActivity extends AppCompatActivity
 				distanceUnits = "km";
 				distanceToStop /= 1000;
 			} else distanceUnits = "m";
-			String distanceString = String.format("%.2f", distanceToStop) +" "+ distanceUnits;
+			String distanceString = String.format("%.2f", distanceToStop) + " " + distanceUnits;
 
 			mMap.addMarker(new MarkerOptions()
 					.position(singlePath.getFirstStop().getLocation())
@@ -397,7 +392,7 @@ public class MapsActivity extends AppCompatActivity
 				distanceUnits = "km";
 				distanceToStop /= 1000;
 			} else distanceUnits = "m";
-			distanceString = String.format("%.2f", distanceToStop) +" "+ distanceUnits;
+			distanceString = String.format("%.2f", distanceToStop) + " " + distanceUnits;
 
 			mMap.addMarker(new MarkerOptions()
 					.position(singlePath.getLastStop().getLocation())
@@ -406,15 +401,14 @@ public class MapsActivity extends AppCompatActivity
 					.icon(BitmapDescriptorFactory.fromAsset(assetName)));
 
 			setDistanceInTextView();
-		}
-		else
+		} else
 			Toast.makeText(getApplicationContext(), R.string.noRouteAvaliable, Toast.LENGTH_SHORT).show();
 
 	}
 
 
 	private void setDistanceInTextView() {
-		if  (singlePath != null) {
+		if (singlePath != null) {
 			String message;
 			float busDistance = singlePath.getBusDistance();
 			float walkDistance = singlePath.getWalkDistance();
@@ -441,8 +435,8 @@ public class MapsActivity extends AppCompatActivity
 				walkDistance /= 1000;
 			} else walkDistanceUnits = "m";
 
-			message = distance +" "+ String.format("%.2f", totalDistance) +" "+ distanceUnits +"\n"+
-						bus +" "+ String.format("%.2f", busDistance) +" "+ busDistanceUnits +"\t\t"+ walk +" "+ String.format("%.2f", walkDistance) +" "+ walkDistanceUnits;
+			message = distance + " " + String.format("%.2f", totalDistance) + " " + distanceUnits + "\n" +
+					bus + " " + String.format("%.2f", busDistance) + " " + busDistanceUnits + "\t\t" + walk + " " + String.format("%.2f", walkDistance) + " " + walkDistanceUnits;
 
 			distanceTextView.setText(message);
 		}
@@ -450,7 +444,7 @@ public class MapsActivity extends AppCompatActivity
 
 
 	private boolean checkingNextBestPath() {
-		return  multiplePaths != null &&
+		return multiplePaths != null &&
 				singlePath != null &&
 				singlePath.getLine().lineID.equals(lineSpinner.getSelectedItem().toString()) &&
 				singlePath.getStartLocation().equals(start.getPosition()) &&

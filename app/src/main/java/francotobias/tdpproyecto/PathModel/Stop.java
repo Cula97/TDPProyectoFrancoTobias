@@ -12,12 +12,12 @@ public class Stop {
 		isGo = go;
 	}
 
-	public void setSection(Section section) {
-		this.section = section;
-	}
-
 	public Section getSection() {
 		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
 	}
 
 	public LatLng getLocation() {

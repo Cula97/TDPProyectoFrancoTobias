@@ -20,22 +20,22 @@ public class DataManager {
 	private static String STOPS_FILENAME = "StopsFile";
 	private static long ONE_WEEK = 604800000;
 	//private static long ONE_WEEK = 6000000;
-
+	private static DataManager singleObject = null;
 	private Context context;
 
-	private static DataManager singleObject = null;
-
-	private DataManager(){
+	private DataManager() {
 	}
 
-	public static DataManager getInstance(){
-		if(singleObject == null)
+	public static DataManager getInstance() {
+		if (singleObject == null)
 			singleObject = new DataManager();
 
 		return singleObject;
 	}
 
-	public void startUpdater(Context c){ context = c;  }
+	public void startUpdater(Context c) {
+		context = c;
+	}
 
 
 	private void forceUpdate() {
@@ -80,11 +80,12 @@ public class DataManager {
 		editor.commit();
 	}
 
-	public boolean needUpdate(){
+	public boolean needUpdate() {
 		SharedPreferences sp = context.getSharedPreferences(UPDATE_FILENAME, Context.MODE_PRIVATE);
 		boolean res = false;
 
-		if(Calendar.getInstance().getTimeInMillis() - sp.getLong(LASTDATE_KEY,0)  > ONE_WEEK) res = true;
+		if (Calendar.getInstance().getTimeInMillis() - sp.getLong(LASTDATE_KEY, 0) > ONE_WEEK)
+			res = true;
 
 		return res;
 	}
@@ -95,7 +96,7 @@ public class DataManager {
 	}
 
 	public CSVWizard requestStopsGo(String line) {
-		if(line.equals("513"))
+		if (line.equals("513"))
 			return new CSVWizard(context.getResources().getString(R.string.i513));
 
 		FileHandler file = new FileHandler(context, STOPSGO_FILENAME + line);
@@ -103,7 +104,7 @@ public class DataManager {
 	}
 
 	public CSVWizard requestStopsRet(String line) {
-		if(line.equals("513"))
+		if (line.equals("513"))
 			return new CSVWizard(context.getResources().getString(R.string.v513));
 
 		FileHandler file = new FileHandler(context, STOPSRET_FILENAME + line);
@@ -126,11 +127,9 @@ public class DataManager {
 		return new CSVWizard(file.requestFileData());
 	}
 
-	public boolean isInFile(String a){
-		if(a.equals("513"))
-			return true;
+	public boolean isInFile(String a) {
+		return a.equals("513");
 
-		return false;
 	}
 
 }

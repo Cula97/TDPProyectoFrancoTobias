@@ -16,12 +16,12 @@ import francotobias.tdpproyecto.BusModel.Line;
 import static com.google.maps.android.SphericalUtil.computeDistanceBetween;
 
 public class Route {
+	public static final float INVALID_DISTANCE = -1;
+	protected static double MIN_DISTANCE_THRESHOLD = 100;   // Podria ser menor si la data fuera mejor
 	protected List<Section> routeSectionGo, routeSectionReturn;
 	protected Line line;
 	protected boolean validStops = true;
 	protected boolean insertedStops = false;
-	protected static double MIN_DISTANCE_THRESHOLD = 100;   // Podria ser menor si la data fuera mejor
-	public static final float INVALID_DISTANCE = -1;
 
 
 	public Route(Line l, List<LatLng> rGo, List<LatLng> rReturn) {
@@ -35,7 +35,7 @@ public class Route {
 
 		while (routeIterator.hasNext()) {
 			end = routeIterator.next();
-			routeSectionGo.add(new Section( this, start, end, true));
+			routeSectionGo.add(new Section(this, start, end, true));
 			start = end;
 		}
 
@@ -44,7 +44,7 @@ public class Route {
 
 		while (routeIterator.hasNext()) {
 			end = routeIterator.next();
-			routeSectionReturn.add(new Section( this, start, end, false));
+			routeSectionReturn.add(new Section(this, start, end, false));
 			start = end;
 		}
 	}
@@ -61,14 +61,14 @@ public class Route {
 		List<Stop> stops = new LinkedList<>();
 
 		for (Section section : routeSectionGo) {
-			List <Stop> s = section.getStops();
+			List<Stop> s = section.getStops();
 			if (s != null)
 				stops.addAll(section.getStops());
 		}
 
 
 		for (Section section : routeSectionReturn) {
-			List <Stop> s = section.getStops();
+			List<Stop> s = section.getStops();
 			if (s != null)
 				stops.addAll(section.getStops());
 		}
@@ -103,8 +103,8 @@ public class Route {
 				routeSectionReturn.get(0);
 
 		lastSection = (firstStop.isGo) ?
-				routeSectionGo.get(routeSectionGo.size() -1) :
-				routeSectionReturn.get(routeSectionReturn.size() -1);
+				routeSectionGo.get(routeSectionGo.size() - 1) :
+				routeSectionReturn.get(routeSectionReturn.size() - 1);
 
 		double distanceToFirstSection = PolyUtil.distanceToLine(firstStop.getLocation(), firstSection.getStartPoint(), firstSection.getEndPoint());
 		double distanceToLastSection = PolyUtil.distanceToLine(firstStop.getLocation(), lastSection.getStartPoint(), lastSection.getEndPoint());
@@ -120,11 +120,10 @@ public class Route {
 					stopsGo.addFirst(stop);
 				else
 					stopsGo.addLast(stop);
+			else if (invertedStops)
+				stopsRet.addLast(stop);
 			else
-				if (invertedStops)
-					stopsRet.addLast(stop);
-				else
-					stopsRet.addFirst(stop);
+				stopsRet.addFirst(stop);
 
 		addStopsToSections(stopsGo, routeSectionGo);
 		addStopsToSections(stopsRet, routeSectionReturn);
@@ -157,12 +156,12 @@ public class Route {
 					}
 				}
 
-				// Debugging
-				if (distanceToLine > MIN_DISTANCE_THRESHOLD && validStops) {
-					Log.d("Paradas defasadas", line.lineID);
-					validStops = false;
-					//return;
-				}
+			// Debugging
+			if (distanceToLine > MIN_DISTANCE_THRESHOLD && validStops) {
+				Log.d("Paradas defasadas", line.lineID);
+				validStops = false;
+				//return;
+			}
 
 			lastDistance = distance;
 			section.addStop(stop);

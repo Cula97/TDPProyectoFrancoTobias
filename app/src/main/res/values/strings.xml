@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">TDP Proyecto</string>
-    <string name="title_activity_maps">TDP Proyecto</string>
-    <string name="title_activity_visualize_data_map">Map</string>
+	<string name="app_name">TDP Proyecto</string>
+	<string name="title_activity_maps">TDP Proyecto</string>
+	<string name="title_activity_visualize_data_map">Map</string>
 	<string name="choseStartAndEnd">Pick start and end locations</string>
 	<string name="location_permission_denied">Grant Location permission to continue.</string>
 	<string name="permission_required_toast">Location permission is required.</string>
@@ -18,21 +18,5 @@
 	<string name="distance">"Total distance: "</string>
 	<string name="bus">Bus: </string>
 	<string name="walk">Walk: </string>
-
-
-	<string-array name="debug_modes_array">
-        <item>Route</item>
-        <item>Bus</item>
-        <item>Section</item>
-	    <item>Path</item>>
-    </string-array>
-
-    <string-array name="bus_list">
-	    <item>500</item>
-	    <item>504</item>
-        <item>513</item>
-        <item>502</item>
-        <item>505</item>
-    </string-array>
 
 </resources>

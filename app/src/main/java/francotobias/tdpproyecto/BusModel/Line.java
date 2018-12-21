@@ -37,9 +37,10 @@ public class Line {
 	}
 
 
-	/** TODO: Refactory de esto, este metodo no deberia encargarse de chequear si hay que
-	 *        actulizar las posiciones de los colectivos, eso deberia ser responsabilidad
-	 *        del BusManager.
+	/**
+	 * TODO: Refactory de esto, este metodo no deberia encargarse de chequear si hay que
+	 * actulizar las posiciones de los colectivos, eso deberia ser responsabilidad
+	 * del BusManager.
 	 */
 	public Iterable<Bus> updateBuses() {
 		if (fleet.isEmpty()) {

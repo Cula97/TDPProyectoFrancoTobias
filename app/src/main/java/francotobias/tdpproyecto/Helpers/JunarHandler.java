@@ -10,8 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import francotobias.tdpproyecto.Helpers.CSVWizard;
-
 public class JunarHandler {
 	private static final String JUNAR_URL = "http://api.datos.bahiablanca.gob.ar/api/v2/datastreams/";
 	//URL DE DATO PEDIDO
