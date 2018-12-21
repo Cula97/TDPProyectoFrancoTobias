@@ -1,6 +1,5 @@
 package francotobias.tdpproyecto.PathModel;
 
-import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -135,13 +134,11 @@ public class Route {
 		float distance, lastDistance = -1;
 		double distanceToLine = -1;
 		Section section = sections.get(0);
-		Location stopLocation, epLocation = BusManager.latLngToLocation(section.getEndPoint(), null);
 		Stop stop;
 
 		while (stopIterator.hasNext()) {
 			stop = stopIterator.next();
-			stopLocation = BusManager.latLngToLocation(stop.getLocation(), null);
-			distance = stopLocation.distanceTo(epLocation);         // Mas barato
+			distance = (float) computeDistanceBetween(stop.getLocation(), section.getEndPoint());   // Mas barato
 
 			if (distance > lastDistance)
 				while (sectionIterator.hasNext()) {
@@ -149,8 +146,7 @@ public class Route {
 					distanceToLine = PolyUtil.distanceToLine(stop.getLocation(), section.getStartPoint(), section.getEndPoint());
 
 					if (distanceToLine <= MIN_DISTANCE_THRESHOLD) {
-						epLocation = BusManager.latLngToLocation(section.getEndPoint(), null);
-						distance = stopLocation.distanceTo(epLocation);
+						distance = (float) computeDistanceBetween(stop.getLocation(), section.getEndPoint());
 						break;
 					}
 				}
@@ -238,14 +234,10 @@ public class Route {
 		float distance = 0;
 
 		// Distance from start to end of section
-		Location locationStop = BusManager.latLngToLocation(start.getLocation(), null);
-		Location locationOnSection = BusManager.latLngToLocation(sectionStart.getEndPoint(), null);
-		distance += locationStop.distanceTo(locationOnSection);
+		distance += computeDistanceBetween(start.getLocation(), sectionStart.getEndPoint());
 
 		// Distance from start of last section to end
-		locationStop = BusManager.latLngToLocation(end.getLocation(), null);
-		locationOnSection = BusManager.latLngToLocation(sectionEnd.getStartPoint(), null);
-		distance += locationOnSection.distanceTo(locationStop);
+		distance += computeDistanceBetween(sectionEnd.getStartPoint(), end.getLocation());
 
 		// Iterator for the sections with the starting stop
 		Iterator<Section> iterator = start.isGo ?
