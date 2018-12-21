@@ -58,7 +58,6 @@ public class MapsActivity extends AppCompatActivity
 
 	private ViewGroup topBarAndExit;
 	private ViewGroup sideBar;
-	private int topBarHeight;
 	private boolean topBarAndSideBarVisible = true;
 	private boolean addingStartMarker = false;
 	private boolean addingDestinationMarker = false;
@@ -110,7 +109,6 @@ public class MapsActivity extends AppCompatActivity
 		topBarAndExit = findViewById(R.id.topBarAndExitLayout);
 		sideBar= findViewById(R.id.conrtolsLinearLayout);
 		exitButton = findViewById(R.id.closePathButton);
-		topBarHeight = findViewById(R.id.topBarLayout).getHeight();
 		distanceTextView = findViewById(R.id.distanceTextView);
 
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-38.7171, -62.2655), 14));
@@ -266,7 +264,7 @@ public class MapsActivity extends AppCompatActivity
 
 	private void showTopBarAndSidebar() {
 		if (!topBarAndSideBarVisible) {
-			topBarAndExit.animate().translationYBy((float) topBarHeight);
+			topBarAndExit.animate().translationYBy((float) findViewById(R.id.topBarLayout).getHeight());
 			sideBar.animate().translationXBy((float) -sideBar.getWidth());
 
 			topBarAndSideBarVisible = true;
@@ -276,7 +274,7 @@ public class MapsActivity extends AppCompatActivity
 
 	private void hideTopBarAndSidebar() {
 		if (topBarAndSideBarVisible) {
-			topBarAndExit.animate().translationYBy((float) -topBarHeight);
+			topBarAndExit.animate().translationYBy((float) -findViewById(R.id.topBarLayout).getHeight());
 			sideBar.animate().translationXBy((float) sideBar.getWidth());
 
 			topBarAndSideBarVisible = false;
