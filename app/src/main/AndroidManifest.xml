@@ -29,7 +29,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity"> </activity>
+        <activity
+            android:name=".MainActivity"
+            android:launchMode = "singleInstance"
+        />
         <!--
 			 The API key for Google Maps-based APIs is defined as a string resource.
 			 (See the file "res/values/google_maps_api.xml").
@@ -52,7 +55,9 @@
             android:name=".DataVisualizer.VisualizeDataMapActivity"
             android:label="@string/title_activity_visualize_data_map"
 	        android:screenOrientation="portrait"
-	        android:configChanges="orientation|keyboardHidden" />
+	        android:configChanges="orientation|keyboardHidden"
+            android:launchMode = "singleInstance"
+            />
     </application>
 
 </manifest>

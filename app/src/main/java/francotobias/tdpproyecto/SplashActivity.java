@@ -40,7 +40,7 @@ public class SplashActivity extends Activity {
 
     public void end() {
 	    LineManager.initLines();
-        Intent intent = new Intent(this, MapsActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
