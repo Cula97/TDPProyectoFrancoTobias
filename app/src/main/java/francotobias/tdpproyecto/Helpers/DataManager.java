@@ -95,7 +95,9 @@ public class DataManager {
 			forceUpdate();
 	}
 
+	// Paradas de ida
 	public CSVWizard requestStopsGo(String line) {
+		// Esta ruta fue acomodada manualmente, por lo que está embebida a un XML dentro de la app
 		if (line.equals("513"))
 			return new CSVWizard(context.getResources().getString(R.string.i513));
 
@@ -103,7 +105,9 @@ public class DataManager {
 		return new CSVWizard(file.requestFileData());
 	}
 
+	// Paradas de vuelta
 	public CSVWizard requestStopsRet(String line) {
+		// Esta ruta fue acomodada manualmente, por lo que está embebida a un XML dentro de la app
 		if (line.equals("513"))
 			return new CSVWizard(context.getResources().getString(R.string.v513));
 
@@ -111,12 +115,14 @@ public class DataManager {
 		return new CSVWizard(file.requestFileData());
 	}
 
+	// Rutas enteras
 	public CSVWizard requestRoutes() {
 		FileHandler file = new FileHandler(context, ROUTES_FILENAME);
 		return new CSVWizard(file.requestFileData());
 
 	}
 
+	// Lineas enteras, mas o menos te da la misma data que las rutas
 	public CSVWizard requestLines() {
 		FileHandler file = new FileHandler(context, LINES_FILENAME);
 		return new CSVWizard(file.requestFileData());
