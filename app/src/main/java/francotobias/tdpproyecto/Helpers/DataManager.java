@@ -32,12 +32,12 @@ public class DataManager {
 
 		return singleObject;
 	}
-
+	
 	public void startUpdater(Context c) {
 		context = c;
 	}
 
-
+	// Actualiza todos los datos de Junar
 	private void forceUpdate() {
 		SharedPreferences sp = context.getSharedPreferences(UPDATE_FILENAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sp.edit();
