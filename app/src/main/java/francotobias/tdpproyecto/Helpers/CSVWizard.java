@@ -5,7 +5,7 @@ public class CSVWizard {
 	private int position = 0;
 	private int columnAmount = 0;
 
-
+	// data tiene que contener todo el archivo que escupe Junar así como viene
 	public CSVWizard(String data) {
 		this.data = data;
 
